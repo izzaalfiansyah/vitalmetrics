@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalmetrics/components/bottom_bar.dart';
 import 'package:vitalmetrics/constant.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -213,7 +214,7 @@ class _IndexScreenState extends State<IndexScreen> {
                     child: InkWell(
                       onTap: () {},
                       child: Text(
-                        'Selengkapnya',
+                        'SELENGKAPNYA',
                         style: TextStyle(
                           color: cPrimary,
                         ),
@@ -227,26 +228,7 @@ class _IndexScreenState extends State<IndexScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: cPrimary,
-            ),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Saya',
-          ),
-        ],
-      ),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 

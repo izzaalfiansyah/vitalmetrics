@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vitalmetrics/components/bottom_bar.dart';
+import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -212,7 +212,9 @@ class _IndexScreenState extends State<IndexScreen> {
                       boxShadow: shadowBase,
                     ),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/report');
+                      },
                       child: Text(
                         'SELENGKAPNYA',
                         style: TextStyle(

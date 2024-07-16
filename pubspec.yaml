@@ -31,6 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.6
   google_fonts: ^6.2.1
   vertical_weight_slider: ^2.6.0
 

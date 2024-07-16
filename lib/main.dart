@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/pages/index.dart';
+import 'package:vitalmetrics/pages/report.dart';
 import 'package:vitalmetrics/splash.dart';
 
 void main() {
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
       // home: const SplashScreen(),
       routes: {
         '/': (context) => IndexScreen(),
+        '/report': (context) => ReportScreen(),
+        '/report/:id': (context) => ReportScreen(),
         '/splash': (context) => SplashScreen()
       },
       initialRoute: '/splash',

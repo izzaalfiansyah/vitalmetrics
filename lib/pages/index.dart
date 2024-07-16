@@ -15,8 +15,8 @@ class _IndexScreenState extends State<IndexScreen> {
   @override
   void initState() {
     super.initState();
-    _height = 0;
-    _weight = 0;
+    _height = 165;
+    _weight = 54;
   }
 
   @override
@@ -62,7 +62,7 @@ class _IndexScreenState extends State<IndexScreen> {
             Container(
               padding: EdgeInsets.only(top: 90),
               child: Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Container(
@@ -76,38 +76,32 @@ class _IndexScreenState extends State<IndexScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'BERAT',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '  (KG)',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
+                          Text(
+                            'BERAT',
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             alignment: Alignment.center,
-                            child: Text(
-                              "54",
-                              style: TextStyle(
-                                fontSize: 72,
-                              ),
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: _weight.toString(),
+                                  style: TextStyle(
+                                    fontSize: 72,
+                                  ),
+                                ),
+                                TextSpan(text: 'KG')
+                              ], style: TextStyle(color: Colors.black)),
                             ),
                           ),
+                          Slider(
+                            min: 0,
+                            max: 150,
+                            value: _weight,
+                            thumbColor: cPrimary,
+                            activeColor: cPrimary,
+                            onChanged: (val) {},
+                          )
                         ],
                       ),
                     ),
@@ -123,39 +117,30 @@ class _IndexScreenState extends State<IndexScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'TINGGI',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '  (CM)',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
+                          Text('TINGGI'),
                           Container(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             alignment: Alignment.center,
-                            child: Text(
-                              "165",
-                              style: TextStyle(
-                                fontSize: 72,
-                              ),
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: _height.toString(),
+                                  style: TextStyle(
+                                    fontSize: 72,
+                                  ),
+                                ),
+                                TextSpan(text: 'CM')
+                              ], style: TextStyle(color: Colors.black)),
                             ),
                           ),
-                          Slider(value: _height, onChanged: null)
+                          Slider(
+                            min: 0,
+                            max: 300,
+                            value: _height,
+                            thumbColor: cPrimary,
+                            activeColor: cPrimary,
+                            onChanged: (val) {},
+                          )
                         ],
                       ),
                     ),

@@ -41,14 +41,14 @@ class _SplashScreenState extends State<SplashScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Powered By",
+                          "powered by".toUpperCase(),
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             color: Colors.white,
                           ),
                         ),
                         Text(
-                          "Politeknik Negeri Jember",
+                          "Politeknik Negeri Jember".toUpperCase(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 10,
@@ -59,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     SizedBox(
                       width: 20,
                     ),
-                    Image.network(
-                      'https://polije.ac.id/wp-content/uploads/elementor/thumbs/LOGO-POLITEKNIK-NEGERI-JEMBER-200x200-1-qp3k01kpg4zxykv9llfm94gtknd2gp09v5rx0qkjio.png',
+                    Image.asset(
+                      'assets/images/polije.png',
                       height: 60,
                       width: 60,
                     )

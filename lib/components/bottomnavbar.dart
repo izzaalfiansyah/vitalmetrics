@@ -45,7 +45,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Navigator.of(context)
               .pushNamedAndRemoveUntil(menu.path, (route) => false);
         } else {
-          Navigator.of(context).pushNamed(menu.path);
+          if (routeLocation != menu.path) {
+            Navigator.of(context).pushNamed(menu.path);
+          }
         }
       },
       items: menus

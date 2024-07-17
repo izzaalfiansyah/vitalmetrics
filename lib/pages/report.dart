@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/constant.dart';
 
+class ReportArguments {
+  final String id;
+
+  ReportArguments({required this.id});
+}
+
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
 
@@ -12,6 +18,8 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as ReportArguments;
 
     return Scaffold(
       appBar: AppBar(

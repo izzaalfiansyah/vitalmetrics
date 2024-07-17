@@ -13,11 +13,16 @@ class Menu {
   });
 }
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends StatefulWidget {
   const BottomNavBar({
     super.key,
   });
 
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     final String routeLocation =
@@ -30,6 +35,10 @@ class BottomNavBar extends StatelessWidget {
 
     return BottomNavigationBar(
       backgroundColor: Colors.white,
+      selectedLabelStyle: TextStyle(
+        color: cPrimary,
+      ),
+      currentIndex: menus.indexWhere((menu) => menu.path == routeLocation),
       onTap: (index) {
         final menu = menus[index];
         Navigator.of(context).pushNamed(menu.path);

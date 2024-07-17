@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/pages/report.dart';
 
 class IndexScreen extends StatefulWidget {
   const IndexScreen({super.key});
@@ -30,11 +31,11 @@ class _IndexScreenState extends State<IndexScreen> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              height: size.height * 1 / 3,
+              height: size.height * .9 / 3,
               decoration: BoxDecoration(
                 color: cPrimary,
                 borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(50),
+                  bottom: Radius.circular(25),
                 ),
               ),
               child: SafeArea(
@@ -86,6 +87,7 @@ class _IndexScreenState extends State<IndexScreen> {
                             children: [
                               Text(
                                 'BERAT',
+                                style: TextStyle(color: cPrimary),
                               ),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -96,7 +98,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                       TextSpan(
                                         text: _weight.toString(),
                                         style: TextStyle(
-                                          fontSize: 50,
+                                          fontSize: 46,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -146,7 +148,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                         text: _height.toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 50,
+                                          fontSize: 46,
                                         ),
                                       ),
                                       TextSpan(text: 'CM')
@@ -201,26 +203,34 @@ class _IndexScreenState extends State<IndexScreen> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: shadowBase,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/report');
-                      },
-                      child: Text(
-                        'SELENGKAPNYA',
-                        style: TextStyle(
-                          color: cPrimary,
+                        SizedBox(height: 40),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/report',
+                                  arguments: ReportArguments(id: ''));
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: cPrimary,
+                                boxShadow: shadowBase,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                'SELENGKAPNYA',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 20),
@@ -234,15 +244,13 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
-  Container classificationItem(Size size,
+  Expanded classificationItem(Size size,
       {required IconData icon,
       required String resultValue,
       required String title,
       required String resultText,
       required Color resultColor}) {
-    return Container(
-      width: size.width * 1 / 3,
-      alignment: Alignment.center,
+    return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

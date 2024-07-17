@@ -41,7 +41,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
       currentIndex: menus.indexWhere((menu) => menu.path == routeLocation),
       onTap: (index) {
         final menu = menus[index];
-        Navigator.of(context).pushNamed(menu.path);
+        if (menu.path == '/') {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil(menu.path, (route) => false);
+        } else {
+          Navigator.of(context).pushNamed(menu.path);
+        }
       },
       items: menus
           .map((menu) => BottomNavigationBarItem(

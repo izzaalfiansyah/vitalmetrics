@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/pages/account.dart';
 import 'package:vitalmetrics/pages/history.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: const SplashScreen(),
       routes: {
+        '/splash': (context) => SplashScreen(),
         '/': (context) => IndexScreen(),
         '/report': (context) => ReportScreen(),
         '/history': (context) => HistoryScreen(),
-        '/splash': (context) => SplashScreen()
+        '/account': (context) => AccountScreen(),
       },
       initialRoute: '/splash',
     );

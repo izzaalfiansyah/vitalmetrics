@@ -143,19 +143,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   LineChartData mainData() {
     return LineChartData(
-      showingTooltipIndicators: [6]
-          .map(
-            (index) => ShowingTooltipIndicators(
-              [
-                LineBarSpot(
-                  lineBarsData[0],
-                  lineBarsData.indexOf(lineBarsData[0]),
-                  lineBarsData[0].spots[index],
-                )
-              ],
-            ),
-          )
-          .toList(),
+      // showingTooltipIndicators: [6]
+      //     .map(
+      //       (index) => ShowingTooltipIndicators(
+      //         [
+      //           LineBarSpot(
+      //             lineBarsData[0],
+      //             lineBarsData.indexOf(lineBarsData[0]),
+      //             lineBarsData[0].spots[index],
+      //           )
+      //         ],
+      //       ),
+      //     )
+      //     .toList(),
       lineTouchData: LineTouchData(
         enabled: true,
         handleBuiltInTouches: true,
@@ -221,8 +221,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       borderData: FlBorderData(
         show: true,
         border: Border(
-          left: BorderSide(color: Colors.grey.shade500),
-          bottom: BorderSide(color: Colors.grey.shade500),
+          left: BorderSide(color: cPrimary.shade300),
+          bottom: BorderSide(color: cPrimary.shade300),
         ),
       ),
       minX: 0,

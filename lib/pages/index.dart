@@ -70,106 +70,109 @@ class _IndexScreenState extends State<IndexScreen> {
               padding: EdgeInsets.only(top: 90),
               child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(16),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: shadowBase,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'BERAT',
-                                style: TextStyle(color: cPrimary),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(16),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
                               ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                alignment: Alignment.center,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: _weight.toString(),
-                                        style: TextStyle(
-                                          fontSize: 46,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      TextSpan(text: 'KG')
-                                    ],
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'BERAT',
                                     style: TextStyle(color: cPrimary),
                                   ),
-                                ),
-                              ),
-                              Slider(
-                                min: 0,
-                                max: 150,
-                                value: _weight,
-                                thumbColor: cPrimary,
-                                activeColor: cPrimary,
-                                inactiveColor: cPrimary.shade100,
-                                onChanged: (val) {},
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 14),
-                        Container(
-                          padding: EdgeInsets.all(16),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: cPrimary.withOpacity(.95),
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: shadowBase,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'TINGGI',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                alignment: Alignment.center,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: _height.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 46,
-                                        ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: _weight.toString(),
+                                            style: TextStyle(
+                                              fontSize: 46,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          TextSpan(text: 'KG')
+                                        ],
+                                        style: TextStyle(color: cPrimary),
                                       ),
-                                      TextSpan(text: 'CM')
-                                    ],
-                                    style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
-                                ),
+                                  Slider(
+                                    min: 0,
+                                    max: 150,
+                                    value: _weight,
+                                    thumbColor: cPrimary,
+                                    activeColor: cPrimary,
+                                    inactiveColor: cPrimary.shade100,
+                                    onChanged: (val) {},
+                                  )
+                                ],
                               ),
-                              Slider(
-                                min: 0,
-                                max: 300,
-                                value: _height,
-                                thumbColor: Colors.white,
-                                activeColor: Colors.white,
-                                inactiveColor: cPrimary.shade200,
-                                onChanged: (val) {},
-                              )
-                            ],
-                          ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(16),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: cPrimary.withOpacity(.95),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'TINGGI',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: _height.toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 46,
+                                            ),
+                                          ),
+                                          TextSpan(text: 'CM')
+                                        ],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Slider(
+                                    min: 0,
+                                    max: 300,
+                                    value: _height,
+                                    thumbColor: Colors.white,
+                                    activeColor: Colors.white,
+                                    inactiveColor: cPrimary.shade200,
+                                    onChanged: (val) {},
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 5),

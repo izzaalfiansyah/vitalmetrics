@@ -143,19 +143,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   LineChartData mainData() {
     return LineChartData(
-      // showingTooltipIndicators: [6]
-      //     .map(
-      //       (index) => ShowingTooltipIndicators(
-      //         [
-      //           LineBarSpot(
-      //             lineBarsData[0],
-      //             lineBarsData.indexOf(lineBarsData[0]),
-      //             lineBarsData[0].spots[index],
-      //           )
-      //         ],
-      //       ),
-      //     )
-      //     .toList(),
+      showingTooltipIndicators: [6]
+          .map(
+            (index) => ShowingTooltipIndicators(
+              [
+                LineBarSpot(
+                  lineBarsData[0],
+                  lineBarsData.indexOf(lineBarsData[0]),
+                  lineBarsData[0].spots[index],
+                )
+              ],
+            ),
+          )
+          .toList(),
       lineTouchData: LineTouchData(
         enabled: true,
         handleBuiltInTouches: true,
@@ -226,9 +226,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       ),
       minX: 0,
-      maxX: 6,
+      maxX: 8,
       minY: 0,
-      maxY: 6,
+      maxY: 150,
       lineBarsData: lineBarsData,
     );
   }
@@ -236,13 +236,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   final lineBarsData = [
     LineChartBarData(
       spots: const [
-        FlSpot(0, 3),
-        FlSpot(1, 2),
-        FlSpot(2, 5),
-        FlSpot(3, 3.1),
-        FlSpot(4, 4),
-        FlSpot(5, 3),
-        FlSpot(6, 4),
+        FlSpot(0, 71),
+        FlSpot(1, 66),
+        FlSpot(2, 62),
+        FlSpot(3, 60),
+        FlSpot(4, 57),
+        FlSpot(5, 64),
+        FlSpot(6, 64),
       ],
       isCurved: true,
       gradient: LinearGradient(
@@ -295,14 +295,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     final style = TextStyle(
       fontSize: 10,
-      color: Colors.grey.shade500,
+      color: cPrimary,
     );
     String text;
     switch (value.toInt()) {
       case 0:
         text = '0';
         break;
-      case 6:
+      case 150:
         text = '150';
         break;
       default:

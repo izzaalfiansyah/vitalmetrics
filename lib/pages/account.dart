@@ -29,7 +29,10 @@ class _AccountScreenState extends State<AccountScreen> {
 
   getUser() async {
     final userId = await getUserId();
-    user = await UserService().find(userId);
+    final data = await UserService.find(userId);
+    setState(() {
+      user = data;
+    });
   }
 
   @override

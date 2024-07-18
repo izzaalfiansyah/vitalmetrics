@@ -34,6 +34,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.6
   google_fonts: ^6.2.1
+  http: ^1.2.2
+  shared_preferences: ^2.2.3
   vertical_weight_slider: ^2.6.0
 
 dev_dependencies:

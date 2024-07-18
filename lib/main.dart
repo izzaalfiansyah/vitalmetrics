@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/pages/account.dart';
 import 'package:vitalmetrics/pages/history.dart';
 import 'package:vitalmetrics/pages/index.dart';
@@ -17,6 +18,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    setUserId(1.toString());
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

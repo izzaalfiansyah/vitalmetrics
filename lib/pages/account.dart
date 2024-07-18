@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/session.dart';
+import 'package:vitalmetrics/models/user.dart';
+import 'package:vitalmetrics/services/user.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -10,6 +13,25 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  User user = User(
+      id: '',
+      username: '',
+      email: '',
+      nama: '',
+      tanggalLahir: '',
+      jenisKelamin: '');
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
+  getUser() async {
+    final userId = await getUserId();
+    user = await UserService().find(userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,14 +63,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Muhammad Izza Alfiansyah',
+                          user.nama,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                           ),
                         ),
                         Text(
-                          'iansyah724@gmail.com',
+                          user.email,
                           style: TextStyle(
                             color: Colors.white,
                           ),

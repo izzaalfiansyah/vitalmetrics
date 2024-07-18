@@ -12,12 +12,8 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  double tinggi = 0;
-  double berat = 0;
-  double umur = 20;
+  double tinggi = 0, berat = 0, umur = 0, bmi = 0, lemak = 0;
   String jenisKelamin = "l";
-  double bmi = 0;
-  double lemak = 0;
 
   @override
   void initState() {

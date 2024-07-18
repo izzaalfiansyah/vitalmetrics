@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/pages/account.dart';
+import 'package:vitalmetrics/pages/account/management.dart';
 import 'package:vitalmetrics/pages/history.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -29,6 +30,20 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.grey[50],
         useMaterial3: true,
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          backgroundColor: cPrimary,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       // home: const SplashScreen(),
@@ -38,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/report': (context) => ReportScreen(),
         '/history': (context) => HistoryScreen(),
         '/account': (context) => AccountScreen(),
+        '/account/management': (context) => AccountManagementScreen(),
       },
       initialRoute: '/splash',
     );

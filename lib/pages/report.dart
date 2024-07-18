@@ -23,30 +23,14 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text(
           'Laporan Kesehatan',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-          ),
-        ),
-        backgroundColor: cPrimary,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
         ),
         actions: [
           IconButton(
             onPressed: () {},
             icon: Icon(
               Icons.share,
-              color: Colors.white,
             ),
           ),
         ],

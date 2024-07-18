@@ -105,7 +105,11 @@ class _AccountScreenState extends State<AccountScreen> {
               child: Column(
                 children: [
                   tileItem(
-                      label: 'Manajemen Pengguna', icon: Icons.account_box),
+                      label: 'Manajemen Pengguna',
+                      icon: Icons.account_box,
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/account/management');
+                      }),
                   tileDivider(),
                   tileItem(icon: Icons.devices, label: 'Perangkat Saya'),
                 ],
@@ -155,7 +159,8 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  ListTile tileItem({required IconData icon, required String label}) {
+  ListTile tileItem(
+      {required IconData icon, required String label, VoidCallback? onTap}) {
     return ListTile(
       leading: Icon(
         icon,
@@ -166,6 +171,7 @@ class _AccountScreenState extends State<AccountScreen> {
         Icons.chevron_right,
         color: cPrimary.withOpacity(.8),
       ),
+      onTap: onTap,
     );
   }
 }

@@ -57,7 +57,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(
-              color: Colors.grey.shade200,
+              color: Colors.grey.withOpacity(.12),
               child: Row(
                 children: [
                   boxPhillSelect(
@@ -221,8 +221,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       borderData: FlBorderData(
         show: true,
         border: Border(
-          left: BorderSide(color: cPrimary.shade300),
-          bottom: BorderSide(color: cPrimary.shade300),
+          left: BorderSide(color: cPrimary.withOpacity(.7)),
+          bottom: BorderSide(color: cPrimary.withOpacity(.7)),
         ),
       ),
       minX: 0,

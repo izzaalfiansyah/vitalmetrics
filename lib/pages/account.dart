@@ -134,12 +134,12 @@ class _AccountScreenState extends State<AccountScreen> {
     return ListTile(
       leading: Icon(
         icon,
-        color: Colors.grey.shade300,
+        color: Colors.grey.shade400,
       ),
       title: Text(label),
       trailing: Icon(
         Icons.chevron_right,
-        color: Colors.grey.shade400,
+        color: cPrimary.withOpacity(.8),
       ),
     );
   }

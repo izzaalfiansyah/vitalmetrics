@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/pages/report.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -11,14 +12,21 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  double _height = 0;
-  double _weight = 0;
+  double tinggi = 0;
+  double berat = 0;
+  double umur = 20;
+  String jenisKelamin = "l";
+  double bmi = 0;
+  double lemak = 0;
 
   @override
   void initState() {
     super.initState();
-    _height = 165;
-    _weight = 54;
+    tinggi = 165;
+    berat = 45;
+
+    bmi = getBMI(tinggi: tinggi, berat: berat, umur: umur);
+    lemak = getLemakTubuh(jenisKelamin: jenisKelamin, bmi: bmi, umur: umur);
   }
 
   @override
@@ -100,7 +108,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: _weight.toString(),
+                                            text: berat.toString(),
                                             style: TextStyle(
                                               fontSize: 46,
                                               fontWeight: FontWeight.w500,
@@ -115,7 +123,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                   Slider(
                                     min: 0,
                                     max: 150,
-                                    value: _weight,
+                                    value: berat,
                                     thumbColor: cPrimary,
                                     activeColor: cPrimary,
                                     inactiveColor: cPrimary.shade100,
@@ -146,7 +154,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: _height.toString(),
+                                            text: tinggi.toString(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 46,
@@ -161,7 +169,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                   Slider(
                                     min: 0,
                                     max: 300,
-                                    value: _height,
+                                    value: tinggi,
                                     thumbColor: Colors.white,
                                     activeColor: Colors.white,
                                     inactiveColor: cPrimary.shade200,
@@ -192,7 +200,7 @@ class _IndexScreenState extends State<IndexScreen> {
                               size,
                               icon: Icons.card_membership,
                               title: 'BMI',
-                              resultValue: '26.4',
+                              resultValue: bmi.toStringAsFixed(1),
                               resultText: 'Sehat',
                               resultColor: Colors.green,
                             ),
@@ -200,7 +208,7 @@ class _IndexScreenState extends State<IndexScreen> {
                               size,
                               icon: Icons.pie_chart_outline_sharp,
                               title: 'Lemak Tubuh',
-                              resultValue: '27.2%',
+                              resultValue: '${lemak.toStringAsFixed(1)}%',
                               resultText: 'Berlebihan',
                               resultColor: Colors.red,
                             ),

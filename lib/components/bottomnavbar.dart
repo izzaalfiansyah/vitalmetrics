@@ -29,8 +29,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ModalRoute.of(context)!.settings.name.toString();
     final List<Menu> menus = [
       Menu(icon: Icons.home, label: 'Beranda', path: '/'),
-      Menu(icon: Icons.history, label: 'Riwayat', path: '/history'),
-      Menu(icon: Icons.account_circle, label: 'Saya', path: '/account'),
+      Menu(icon: Icons.history, label: 'Riwayat', path: '/riwayat'),
+      Menu(icon: Icons.account_circle, label: 'Saya', path: '/akun'),
     ];
 
     return BottomNavigationBar(

@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/pages/akun.dart';
-import 'package:vitalmetrics/pages/account/manajemen.dart';
+import 'package:vitalmetrics/pages/akun/manajemen.dart';
+import 'package:vitalmetrics/pages/akun/perangkat.dart';
 import 'package:vitalmetrics/pages/riwayat.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -54,9 +55,10 @@ class MyApp extends StatelessWidget {
         '/splash': (context) => SplashScreen(),
         '/': (context) => IndexScreen(),
         '/report': (context) => ReportScreen(),
-        '/history': (context) => RiwayatScreen(),
-        '/account': (context) => AkunScreen(),
-        '/account/management': (context) => AkunManajemenScreen(),
+        '/riwayat': (context) => RiwayatScreen(),
+        '/akun': (context) => AkunScreen(),
+        '/akun/manajemen': (context) => AkunManajemenScreen(),
+        '/akun/perangkat': (context) => AkunPerangkatScreen(),
       },
       initialRoute: '/splash',
     );

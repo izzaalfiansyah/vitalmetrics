@@ -13,7 +13,7 @@
   "perangkat_user": [
     {
       "id": "1",
-      "nama": "12345678",
+      "nomor_serial": "ESP32-127494020",
       "user_id": "1"
     }
   ],

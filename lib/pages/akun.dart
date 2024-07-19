@@ -109,13 +109,20 @@ class _AkunScreenState extends State<AkunScreen> {
               child: Column(
                 children: [
                   tileItem(
-                      label: 'Manajemen Pengguna',
-                      icon: Icons.account_box,
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/account/management');
-                      }),
+                    label: 'Manajemen Pengguna',
+                    icon: Icons.account_box,
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/akun/manajemen');
+                    },
+                  ),
                   Hr(),
-                  tileItem(icon: Icons.devices, label: 'Perangkat Saya'),
+                  tileItem(
+                    icon: Icons.devices,
+                    label: 'Perangkat Saya',
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/akun/perangkat');
+                    },
+                  ),
                 ],
               ),
             ),

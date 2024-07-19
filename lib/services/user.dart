@@ -26,4 +26,11 @@ class UserService {
 
     return item;
   }
+
+  static Future<bool> update(String id, User user) async {
+    final body = user.toJson();
+    await client.put(Uri.parse('$url/$id'), body: body);
+
+    return true;
+  }
 }

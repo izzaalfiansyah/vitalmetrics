@@ -44,6 +44,9 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: cPrimary,
+        ),
       ),
       debugShowCheckedModeBanner: false,
       // home: const SplashScreen(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
+import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
@@ -16,6 +17,7 @@ class _AccountScreenState extends State<AccountScreen> {
   User user = User(
       id: '',
       username: '',
+      password: '',
       email: '',
       nama: '',
       tanggalLahir: '',
@@ -110,7 +112,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       onTap: () {
                         Navigator.of(context).pushNamed('/account/management');
                       }),
-                  tileDivider(),
+                  Hr(),
                   tileItem(icon: Icons.devices, label: 'Perangkat Saya'),
                 ],
               ),
@@ -124,11 +126,11 @@ class _AccountScreenState extends State<AccountScreen> {
               child: Column(
                 children: [
                   tileItem(label: 'Target Bobot', icon: Icons.monitor_weight),
-                  tileDivider(),
+                  Hr(),
                   tileItem(
                       icon: Icons.pie_chart_outline_rounded,
                       label: 'Target Lemak'),
-                  tileDivider(),
+                  Hr(),
                   tileItem(icon: Icons.card_membership, label: 'Tujuan BMI'),
                 ],
               ),
@@ -149,13 +151,6 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
-    );
-  }
-
-  Container tileDivider() {
-    return Container(
-      color: Colors.grey.shade100,
-      height: 1,
     );
   }
 

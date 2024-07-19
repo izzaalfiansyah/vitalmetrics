@@ -1,6 +1,7 @@
 class User {
   String id;
   String username;
+  String password;
   String email;
   String nama;
   String tanggalLahir;
@@ -9,6 +10,7 @@ class User {
   User({
     required this.id,
     required this.username,
+    required this.password,
     required this.email,
     required this.nama,
     required this.tanggalLahir,
@@ -19,6 +21,7 @@ class User {
     return User(
       id: map['id'],
       username: map['username'],
+      password: map['password'],
       email: map['email'],
       nama: map['nama'],
       tanggalLahir: map['tanggal_lahir'],
@@ -30,10 +33,11 @@ class User {
     return {
       'id': id,
       'username': username,
+      'password': password,
       'email': email,
       'nama': nama,
-      'tanggalLahir': tanggalLahir,
-      'jenisKelamin': jenisKelamin,
+      'tanggal_lahir': tanggalLahir,
+      'jenis_kelamin': jenisKelamin,
     };
   }
 }

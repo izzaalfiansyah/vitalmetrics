@@ -39,6 +39,20 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
     });
   }
 
+  saveUser(context) async {
+    final userId = await getUserId();
+    final data = await UserService.update(userId, user);
+
+    if (data) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Akun pengguna berhasil disimpan'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +60,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
         title: Text('Manajemen Pengguna'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => saveUser(context),
         child: Icon(
           Icons.save,
           color: Colors.white,

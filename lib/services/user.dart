@@ -28,7 +28,7 @@ class UserService {
   }
 
   static Future<bool> update(String id, User user) async {
-    final body = user.toJson();
+    final body = jsonEncode(user.toJson());
     await client.put(Uri.parse('$url/$id'), body: body);
 
     return true;

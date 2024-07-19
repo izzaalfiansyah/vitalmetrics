@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+class RiwayatScreen extends StatefulWidget {
+  const RiwayatScreen({super.key});
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<RiwayatScreen> createState() => _RiwayatScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _RiwayatScreenState extends State<RiwayatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

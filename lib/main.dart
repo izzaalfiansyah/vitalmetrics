@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
-import 'package:vitalmetrics/pages/account.dart';
-import 'package:vitalmetrics/pages/account/management.dart';
-import 'package:vitalmetrics/pages/history.dart';
+import 'package:vitalmetrics/pages/akun.dart';
+import 'package:vitalmetrics/pages/account/manajemen.dart';
+import 'package:vitalmetrics/pages/riwayat.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
 import 'package:vitalmetrics/splash.dart';
@@ -54,9 +54,9 @@ class MyApp extends StatelessWidget {
         '/splash': (context) => SplashScreen(),
         '/': (context) => IndexScreen(),
         '/report': (context) => ReportScreen(),
-        '/history': (context) => HistoryScreen(),
-        '/account': (context) => AccountScreen(),
-        '/account/management': (context) => AccountManagementScreen(),
+        '/history': (context) => RiwayatScreen(),
+        '/account': (context) => AkunScreen(),
+        '/account/management': (context) => AkunManajemenScreen(),
       },
       initialRoute: '/splash',
     );

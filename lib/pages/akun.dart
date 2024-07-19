@@ -6,14 +6,14 @@ import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/services/user.dart';
 
-class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+class AkunScreen extends StatefulWidget {
+  const AkunScreen({super.key});
 
   @override
-  State<AccountScreen> createState() => _AccountScreenState();
+  State<AkunScreen> createState() => _AkunScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
+class _AkunScreenState extends State<AkunScreen> {
   User user = User(
       id: '',
       username: '',
@@ -71,7 +71,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           user.nama,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 10,
+                            fontSize: 11,
                           ),
                         ),
                         Text(

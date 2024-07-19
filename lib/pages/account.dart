@@ -85,7 +85,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   ],
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/account/management');
+                    },
                     icon: Icon(
                       Icons.edit,
                       color: Colors.white,

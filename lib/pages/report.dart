@@ -152,19 +152,16 @@ class _ReportScreenState extends State<ReportScreen> {
             SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: InkWell(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: cPrimary,
+              child: FilledButton(
+                onPressed: () {},
+                style: FilledButton.styleFrom(
+                  backgroundColor: cPrimary,
+                  fixedSize: Size.fromWidth(size.width),
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Text(
-                    "HAPUS",
-                    style: TextStyle(color: Colors.white),
-                  ),
                 ),
+                child: Text('HAPUS'),
               ),
             ),
             SizedBox(height: 20),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
+import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -30,224 +31,180 @@ class _IndexScreenState extends State<IndexScreen> {
     final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('VitalMetrics'.toUpperCase()),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/akun');
+            },
+            icon: Icon(
+              Icons.settings,
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              height: size.height * .9 / 3,
+              height: size.height * 1 / 2 - 50,
               decoration: BoxDecoration(
                 color: cPrimary,
                 borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(25),
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'VITALMETRICS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+                  bottom: Radius.circular(50),
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 90),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(16),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'BERAT',
-                                    style: TextStyle(color: cPrimary),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    alignment: Alignment.center,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: berat.toString(),
-                                            style: TextStyle(
-                                              fontSize: 46,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          TextSpan(text: 'KG')
-                                        ],
-                                        style: TextStyle(color: cPrimary),
-                                      ),
-                                    ),
-                                  ),
-                                  Slider(
-                                    min: 0,
-                                    max: 150,
-                                    value: berat,
-                                    thumbColor: cPrimary,
-                                    activeColor: cPrimary,
-                                    inactiveColor: cPrimary.shade100,
-                                    onChanged: (val) {},
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(16),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: cPrimary.withOpacity(.95),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'TINGGI',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    alignment: Alignment.center,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: tinggi.toString(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 46,
-                                            ),
-                                          ),
-                                          TextSpan(text: 'CM')
-                                        ],
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                  Slider(
-                                    min: 0,
-                                    max: 300,
-                                    value: tinggi,
-                                    thumbColor: Colors.white,
-                                    activeColor: Colors.white,
-                                    inactiveColor: cPrimary.shade200,
-                                    onChanged: (val) {},
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 40),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                       boxShadow: shadowBase,
                     ),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            classificationItem(
-                              size,
-                              icon: Icons.card_membership,
-                              title: 'BMI',
-                              resultValue: bmi.toStringAsFixed(1),
-                              resultText: 'Sehat',
-                              resultColor: Colors.green,
-                            ),
-                            classificationItem(
-                              size,
-                              icon: Icons.pie_chart_outline_sharp,
-                              title: 'Lemak Tubuh',
-                              resultValue: '${lemak.toStringAsFixed(1)}%',
-                              resultText: 'Berlebihan',
-                              resultColor: Colors.red,
-                            ),
-                          ],
+                        displayBox(
+                          label: 'Berat'.toUpperCase(),
+                          value: berat,
+                          maxValue: 200,
+                          pcs: 'KG',
                         ),
-                        SizedBox(height: 40),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed('/report',
-                                  arguments: ReportArguments(id: ''));
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                color: cPrimary,
-                                boxShadow: shadowBase,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Text(
-                                'SELENGKAPNYA',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                        Hr(),
+                        displayBox(
+                          label: 'Tinggi'.toUpperCase(),
+                          value: tinggi,
+                          maxValue: 300,
+                          pcs: 'CM',
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                ],
-              ),
+                ),
+                SizedBox(height: 5),
+                Container(
+                  // padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: shadowBase,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          classificationItem(
+                            size,
+                            icon: Icons.card_membership,
+                            title: 'BMI',
+                            resultValue: bmi.toStringAsFixed(1),
+                            resultText: 'Sehat',
+                            resultColor: Colors.green,
+                          ),
+                          classificationItem(
+                            size,
+                            icon: Icons.sports_score,
+                            title: 'Skor badan',
+                            resultValue: '73',
+                            resultText: 'Sehat',
+                            resultColor: Colors.green,
+                          ),
+                          classificationItem(
+                            size,
+                            icon: Icons.pie_chart_outline_sharp,
+                            title: 'Lemak Tubuh',
+                            resultValue: '${lemak.toStringAsFixed(1)}%',
+                            resultText: 'Berlebihan',
+                            resultColor: Colors.red,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 20,
+                        ),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: cPrimary,
+                            fixedSize: Size.fromWidth(size.width),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/report',
+                                arguments: ReportArguments(id: ''));
+                          },
+                          child: Text(
+                            'SELENGKAPNYA',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
             )
           ],
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
+    );
+  }
+
+  Container displayBox({
+    required String label,
+    required double value,
+    required double maxValue,
+    required String pcs,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: cPrimary),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            alignment: Alignment.center,
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: value.toString(),
+                    style: TextStyle(
+                      fontSize: 46,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(text: pcs)
+                ],
+                style: TextStyle(color: cPrimary),
+              ),
+            ),
+          ),
+          Slider(
+            min: 0,
+            max: maxValue,
+            value: value,
+            thumbColor: cPrimary,
+            activeColor: cPrimary,
+            inactiveColor: cPrimary.shade100,
+            onChanged: (val) {},
+          )
+        ],
+      ),
     );
   }
 
@@ -258,47 +215,58 @@ class _IndexScreenState extends State<IndexScreen> {
       required String resultText,
       required Color resultColor}) {
     return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.grey,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: borderBase,
+            left: borderBase.copyWith(width: .5),
+            right: borderBase.copyWith(width: .5),
           ),
-          SizedBox(height: 5),
-          Text(
-            resultValue,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: cPrimary,
+        ),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.grey,
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            title,
-            style: TextStyle(fontSize: 12),
-          ),
-          SizedBox(height: 2),
-          Container(
-            alignment: Alignment.center,
-            width: 100,
-            decoration: BoxDecoration(
-              color: resultColor,
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(50),
-                right: Radius.circular(50),
-              ),
-            ),
-            child: Text(
-              resultText,
+            SizedBox(height: 3),
+            Text(
+              resultValue,
               style: TextStyle(
-                fontSize: 11,
-                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 23,
+                color: cPrimary,
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 5),
+            Text(
+              title,
+              style: TextStyle(fontSize: 12),
+            ),
+            SizedBox(height: 5),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: resultColor,
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(50),
+                  right: Radius.circular(50),
+                ),
+              ),
+              child: Text(
+                resultText,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

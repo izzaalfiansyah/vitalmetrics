@@ -162,7 +162,9 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
                               horizontal: 0,
                               vertical: 10,
                             ),
-                            actionsPadding: EdgeInsets.only(bottom: 0),
+                            actionsPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                            ),
                             title: Text(
                               'Gender',
                               style: TextStyle(fontSize: 14),
@@ -257,7 +259,9 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          actionsPadding: EdgeInsets.only(bottom: 0),
+          actionsPadding: EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
           content: TextField(
             decoration: InputDecoration(
               labelText: label,

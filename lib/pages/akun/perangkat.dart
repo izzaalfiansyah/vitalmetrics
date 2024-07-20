@@ -112,7 +112,7 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
               vertical: 5,
               horizontal: 10,
             ),
-            child: ElevatedButton(
+            child: FilledButton(
               onPressed: () {
                 if (perangkat != null) {
                   showDialog(
@@ -151,21 +151,18 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                   );
                 }
               },
-              style: ElevatedButton.styleFrom(
+              style: FilledButton.styleFrom(
                 backgroundColor: cPrimary,
-                textStyle: TextStyle(
-                  color: Colors.white,
-                ),
                 fixedSize: Size.fromWidth(size.width),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
               ),
               child: Text(
                 (perangkat != null
                         ? 'Putuskan Perangkat'
                         : 'Hubungkan Perangkat')
                     .toUpperCase(),
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
             ),
           )

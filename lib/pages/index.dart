@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
-import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -54,7 +53,7 @@ class _IndexScreenState extends State<IndexScreen> {
         child: Stack(
           children: [
             Container(
-              height: size.height * 2 / 5,
+              height: size.height * 1 / 4,
               decoration: BoxDecoration(
                 color: cPrimary,
                 borderRadius: BorderRadius.vertical(
@@ -64,31 +63,33 @@ class _IndexScreenState extends State<IndexScreen> {
             ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Container(
-                    margin: EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: shadowBase,
-                    ),
-                    child: Column(
-                      children: [
-                        displayBox(
-                          label: 'Berat'.toUpperCase(),
-                          value: berat,
-                          maxValue: 200,
-                          pcs: 'KG',
-                        ),
-                        Hr(),
-                        displayBox(
-                          label: 'Tinggi'.toUpperCase(),
-                          value: tinggi,
-                          maxValue: 300,
-                          pcs: 'CM',
-                        ),
-                      ],
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.all(20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          displayBox(
+                            label: 'Berat'.toUpperCase(),
+                            value: berat,
+                            maxValue: 200,
+                            pcs: 'KG',
+                          ),
+                          displayBox(
+                            backgroundColor: cPrimary,
+                            label: 'Tinggi'.toUpperCase(),
+                            value: tinggi,
+                            maxValue: 300,
+                            pcs: 'CM',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -171,15 +172,19 @@ class _IndexScreenState extends State<IndexScreen> {
     required double value,
     required double maxValue,
     required String pcs,
+    Color? backgroundColor,
   }) {
     return Container(
       padding: EdgeInsets.all(16),
+      color: backgroundColor ?? Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(color: cPrimary),
+            style: TextStyle(
+              color: backgroundColor != null ? Colors.white : cPrimary,
+            ),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
@@ -196,7 +201,8 @@ class _IndexScreenState extends State<IndexScreen> {
                   ),
                   TextSpan(text: pcs)
                 ],
-                style: TextStyle(color: cPrimary),
+                style: TextStyle(
+                    color: (backgroundColor != null ? Colors.white : cPrimary)),
               ),
             ),
           ),
@@ -204,9 +210,10 @@ class _IndexScreenState extends State<IndexScreen> {
             min: 0,
             max: maxValue,
             value: value,
-            thumbColor: cPrimary,
-            activeColor: cPrimary,
-            inactiveColor: cPrimary.shade100,
+            thumbColor: (backgroundColor != null ? Colors.white : cPrimary),
+            activeColor: (backgroundColor != null ? Colors.white : cPrimary),
+            inactiveColor: (backgroundColor != null ? Colors.white : cPrimary)
+                .withOpacity(.35),
             onChanged: (val) {},
           )
         ],

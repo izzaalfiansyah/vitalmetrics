@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
@@ -14,14 +15,8 @@ class AkunManajemenScreen extends StatefulWidget {
 }
 
 class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
-  User user = User(
-      id: '',
-      username: '',
-      password: '',
-      email: '',
-      nama: '',
-      tanggalLahir: DateTime.now().toString(),
-      jenisKelamin: '');
+  User user = User();
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -30,11 +25,16 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
   }
 
   getUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final userId = await getUserId();
     final data = await UserService.find(userId);
 
     setState(() {
       user = data;
+      isLoading = false;
     });
   }
 
@@ -65,171 +65,179 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
           color: Colors.white,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: shadowBase,
-              ),
+      body: isLoading
+          ? BodyLoading()
+          : SingleChildScrollView(
               child: Column(
                 children: [
-                  tileItem(
-                    label: 'Username',
-                    value: user.username,
-                    onTap: () => dialogBuilder(context,
-                        label: 'Username',
-                        value: user.username, onChange: (val) {
-                      setState(() {
-                        user.username = val;
-                      });
-                    }),
-                  ),
-                  Hr(),
-                  tileItem(
-                    label: 'Password',
-                    value: '*********',
-                    onTap: () => dialogBuilder(context,
-                        label: 'Password', value: '', onChange: (val) {
-                      setState(() {
-                        user.password = val;
-                      });
-                    }),
-                  ),
-                  Hr(),
-                  tileItem(
-                    label: 'Email',
-                    value: user.email,
-                    onTap: () => dialogBuilder(context,
-                        label: 'Email', value: user.email, onChange: (val) {
-                      setState(() {
-                        user.email = val;
-                      });
-                    }),
-                  ),
-                  Hr(),
-                  tileItem(
-                    label: 'Nama',
-                    value: user.nama,
-                    onTap: () => dialogBuilder(context,
-                        label: 'Nama', value: user.nama, onChange: (val) {
-                      setState(() {
-                        user.nama = val;
-                      });
-                    }),
-                  ),
-                  Hr(),
-                  tileItem(
-                    label: 'Tanggal Lahir',
-                    value: user.tanggalLahir,
-                    onTap: () {
-                      showDatePicker(
-                        context: context,
-                        firstDate: DateTime(1970),
-                        lastDate: DateTime.now(),
-                        initialDate: DateTime.parse(user.tanggalLahir),
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      ).then((val) {
-                        if (val != null) {
-                          final tanggal = val.toString().substring(0, 10);
-                          setState(() {
-                            user.tanggalLahir = tanggal;
-                          });
-                        }
-                      });
-                    },
-                    trailing: Text(
-                      '${getUmur(user.tanggalLahir)} tahun',
-                      style: TextStyle(
-                        color: cPrimary,
-                      ),
+                  SizedBox(height: 20),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: shadowBase,
                     ),
-                  ),
-                  Hr(),
-                  tileItem(
-                    label: 'Gender',
-                    value: user.jenisKelamin == 'l' ? 'Laki-laki' : 'Perempuan',
-                    onTap: () {
-                      String groupValue = user.jenisKelamin;
+                    child: Column(
+                      children: [
+                        tileItem(
+                          label: 'Username',
+                          value: user.username,
+                          onTap: () => dialogBuilder(context,
+                              label: 'Username',
+                              value: user.username, onChange: (val) {
+                            setState(() {
+                              user.username = val;
+                            });
+                          }),
+                        ),
+                        Hr(),
+                        tileItem(
+                          label: 'Password',
+                          value: '*********',
+                          onTap: () => dialogBuilder(context,
+                              label: 'Password', value: '', onChange: (val) {
+                            setState(() {
+                              user.password = val;
+                            });
+                          }),
+                        ),
+                        Hr(),
+                        tileItem(
+                          label: 'Email',
+                          value: user.email,
+                          onTap: () => dialogBuilder(context,
+                              label: 'Email',
+                              value: user.email, onChange: (val) {
+                            setState(() {
+                              user.email = val;
+                            });
+                          }),
+                        ),
+                        Hr(),
+                        tileItem(
+                          label: 'Nama',
+                          value: user.nama,
+                          onTap: () => dialogBuilder(context,
+                              label: 'Nama', value: user.nama, onChange: (val) {
+                            setState(() {
+                              user.nama = val;
+                            });
+                          }),
+                        ),
+                        Hr(),
+                        tileItem(
+                          label: 'Tanggal Lahir',
+                          value: user.tanggalLahir,
+                          onTap: () {
+                            showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1970),
+                              lastDate: DateTime.now(),
+                              initialDate: DateTime.parse(user.tanggalLahir),
+                              initialEntryMode:
+                                  DatePickerEntryMode.calendarOnly,
+                            ).then((val) {
+                              if (val != null) {
+                                final tanggal = val.toString().substring(0, 10);
+                                setState(() {
+                                  user.tanggalLahir = tanggal;
+                                });
+                              }
+                            });
+                          },
+                          trailing: Text(
+                            '${getUmur(user.tanggalLahir)} tahun',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ),
+                        Hr(),
+                        tileItem(
+                          label: 'Gender',
+                          value: user.jenisKelamin == 'l'
+                              ? 'Laki-laki'
+                              : 'Perempuan',
+                          onTap: () {
+                            String groupValue = user.jenisKelamin;
 
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 0,
-                              vertical: 10,
-                            ),
-                            actionsPadding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                            ),
-                            title: Text(
-                              'Gender',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            content: StatefulBuilder(
-                              builder: (context, setState) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    {
-                                      'value': 'l',
-                                      'label': 'Laki-Laki',
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 0,
+                                    vertical: 10,
+                                  ),
+                                  actionsPadding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
+                                  title: Text(
+                                    'Gender',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  content: StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          {
+                                            'value': 'l',
+                                            'label': 'Laki-Laki',
+                                          },
+                                          {
+                                            'value': 'p',
+                                            'label': 'Perempuan',
+                                          },
+                                        ]
+                                            .map(
+                                              (item) => ListTile(
+                                                title: Text(item['label']!),
+                                                leading: Radio(
+                                                  value: item['value'],
+                                                  groupValue: groupValue,
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      groupValue =
+                                                          val.toString();
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      );
                                     },
-                                    {
-                                      'value': 'p',
-                                      'label': 'Perempuan',
-                                    },
-                                  ]
-                                      .map(
-                                        (item) => ListTile(
-                                          title: Text(item['label']!),
-                                          leading: Radio(
-                                            value: item['value'],
-                                            groupValue: groupValue,
-                                            onChanged: (val) {
-                                              setState(() {
-                                                groupValue = val.toString();
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        setState(() {
+                                          user.jenisKelamin = groupValue;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
                                 );
                               },
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel'),
-                              ),
-                              TextButton(
-                                child: Text('OK'),
-                                onPressed: () {
-                                  setState(() {
-                                    user.jenisKelamin = groupValue;
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
     );
   }
 

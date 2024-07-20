@@ -3,7 +3,6 @@ import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
-import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/services/user.dart';
 
 class AkunScreen extends StatefulWidget {
@@ -14,27 +13,16 @@ class AkunScreen extends StatefulWidget {
 }
 
 class _AkunScreenState extends State<AkunScreen> {
-  User user = User(
-      id: '',
-      username: '',
-      password: '',
-      email: '',
-      nama: '',
-      tanggalLahir: '',
-      jenisKelamin: '');
+  String userId = '';
 
   @override
   void initState() {
-    getUser();
-    super.initState();
-  }
-
-  getUser() async {
-    final userId = await getUserId();
-    final data = await UserService.find(userId);
-    setState(() {
-      user = data;
+    getUserId().then((val) {
+      setState(() {
+        userId = val;
+      });
     });
+    super.initState();
   }
 
   @override
@@ -52,38 +40,44 @@ class _AkunScreenState extends State<AkunScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.account_circle,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                    SizedBox(width: 8),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.nama,
-                          style: TextStyle(
+                FutureBuilder(
+                    future: UserService.find(userId),
+                    builder: (context, snapshot) {
+                      final user = snapshot.data;
+
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.account_circle,
                             color: Colors.white,
-                            fontSize: 11,
+                            size: 50,
                           ),
-                        ),
-                        Text(
-                          user.email,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                          SizedBox(width: 8),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user != null ? user.nama : '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                ),
+                              ),
+                              Text(
+                                user != null ? user.email : '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    }),
                 IconButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('/akun/manajemen');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
@@ -13,6 +14,7 @@ class AkunPerangkatScreen extends StatefulWidget {
 
 class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   PerangkatUser? perangkat;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -21,6 +23,10 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   }
 
   getPerangkat() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final userId = await getUserId();
     final data = await PerangkatUserService.getByUserId(userId: userId);
 
@@ -30,6 +36,8 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
       } else {
         perangkat = null;
       }
+
+      isLoading = false;
     });
   }
 
@@ -72,102 +80,104 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
       appBar: AppBar(
         title: Text('Perangkat Saya'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
+      body: isLoading
+          ? BodyLoading()
+          : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                perangkat != null
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: cPrimary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-                        child: Icon(
-                          Icons.devices,
-                          color: Colors.white,
-                          size: 180,
-                        ),
-                      )
-                    : Icon(
-                        Icons.no_cell,
-                        color: cPrimary,
-                        size: 180,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      perangkat != null
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: cPrimary,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 5),
+                              child: Icon(
+                                Icons.devices,
+                                color: Colors.white,
+                                size: 180,
+                              ),
+                            )
+                          : Icon(
+                              Icons.no_cell,
+                              color: cPrimary,
+                              size: 180,
+                            ),
+                      SizedBox(height: 10),
+                      Text(perangkat != null
+                          ? 'Perangkat terhubung : ${perangkat!.nomorSerial}'
+                          : 'Tidak ada perangkat terhubung!')
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  child: FilledButton(
+                    onPressed: () {
+                      if (perangkat != null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              actionsPadding: EdgeInsets.only(bottom: 0),
+                              content: Text(
+                                  'Anda yakin memutuskan perangkat terhubung?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    removePerangkat(context);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        dialogBuilder(
+                          context,
+                          label: 'Nomor Serial',
+                          value: '',
+                          onChange: (val) async {
+                            savePerangkat(context, nomorSerial: val);
+                          },
+                        );
+                      }
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: cPrimary,
+                      fixedSize: Size.fromWidth(size.width),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                SizedBox(height: 10),
-                Text(perangkat != null
-                    ? 'Perangkat terhubung : ${perangkat!.nomorSerial}'
-                    : 'Tidak ada perangkat terhubung!')
+                    ),
+                    child: Text(
+                      (perangkat != null
+                              ? 'Putuskan Perangkat'
+                              : 'Hubungkan Perangkat')
+                          .toUpperCase(),
+                    ),
+                  ),
+                )
               ],
             ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 10,
-            ),
-            child: FilledButton(
-              onPressed: () {
-                if (perangkat != null) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        actionsPadding: EdgeInsets.only(bottom: 0),
-                        content:
-                            Text('Anda yakin memutuskan perangkat terhubung?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              removePerangkat(context);
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  dialogBuilder(
-                    context,
-                    label: 'Nomor Serial',
-                    value: '',
-                    onChange: (val) async {
-                      savePerangkat(context, nomorSerial: val);
-                    },
-                  );
-                }
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: cPrimary,
-                fixedSize: Size.fromWidth(size.width),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              child: Text(
-                (perangkat != null
-                        ? 'Putuskan Perangkat'
-                        : 'Hubungkan Perangkat')
-                    .toUpperCase(),
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 

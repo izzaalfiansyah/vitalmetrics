@@ -5,9 +5,9 @@ setUserId(String id) async {
   await prefs.setString('userId', id);
 }
 
-getUserId() async {
+Future<String> getUserId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? id = prefs.getString('userId');
 
-  return id;
+  return id ?? '';
 }

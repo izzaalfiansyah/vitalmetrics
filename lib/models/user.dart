@@ -8,13 +8,13 @@ class User {
   String jenisKelamin;
 
   User({
-    required this.id,
-    required this.username,
-    required this.password,
-    required this.email,
-    required this.nama,
-    required this.tanggalLahir,
-    required this.jenisKelamin,
+    this.id = '',
+    this.username = '',
+    this.password = '',
+    this.email = '',
+    this.nama = '',
+    this.tanggalLahir = '',
+    this.jenisKelamin = '',
   });
 
   factory User.fromJson(Map<String, dynamic> map) {

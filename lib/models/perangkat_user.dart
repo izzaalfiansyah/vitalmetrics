@@ -4,9 +4,9 @@ class PerangkatUser {
   String userId;
 
   PerangkatUser({
-    required this.id,
-    required this.nomorSerial,
-    required this.userId,
+    this.id = '',
+    this.nomorSerial = '',
+    this.userId = '',
   });
 
   factory PerangkatUser.fromJson(Map<String, dynamic> map) {

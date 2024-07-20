@@ -34,8 +34,12 @@ double getLemakTubuh({
   return lemak;
 }
 
-int getUmur(String date) {
-  DateTime tanggalLahir = DateTime.parse(date);
+int getUmur(String dateString) {
+  if (dateString == '') {
+    dateString = DateTime.now().toString();
+  }
+
+  DateTime tanggalLahir = DateTime.parse(dateString);
   DateTime tanggalSekarang = DateTime.now();
 
   int age = tanggalSekarang.year - tanggalLahir.year;

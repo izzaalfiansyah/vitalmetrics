@@ -32,7 +32,12 @@ class _IndexScreenState extends State<IndexScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('VitalMetrics'.toUpperCase()),
+        title: Text(
+          'VitalMetrics'.toUpperCase(),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: false,
         actions: [
           IconButton(
@@ -49,7 +54,7 @@ class _IndexScreenState extends State<IndexScreen> {
         child: Stack(
           children: [
             Container(
-              height: size.height * 1 / 2 - 50,
+              height: size.height * 2 / 5,
               decoration: BoxDecoration(
                 color: cPrimary,
                 borderRadius: BorderRadius.vertical(
@@ -62,6 +67,7 @@ class _IndexScreenState extends State<IndexScreen> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Container(
+                    margin: EdgeInsets.only(top: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),

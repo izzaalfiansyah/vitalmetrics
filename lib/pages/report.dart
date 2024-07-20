@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 
 class ReportArguments {
@@ -115,6 +116,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
               ),
             ),
+            Hr(),
             Column(
               children: [
                 listItem(label: "Berat", value: "71.8kg"),
@@ -139,6 +141,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
               ),
             ),
+            Hr(),
             Column(
               children: [
                 listItem(label: "Berat", value: "71.8kg"),
@@ -171,30 +174,25 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  InkWell listItem({required String label, required String value}) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Colors.grey.shade200,
+  Widget listItem({required String label, required String value}) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: borderBase,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label),
+          Text(
+            value,
+            style: TextStyle(
+              color: cPrimary,
             ),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label),
-            Text(
-              value,
-              style: TextStyle(
-                color: cPrimary,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -11,6 +11,9 @@ class RiwayatScreen extends StatefulWidget {
 }
 
 class _RiwayatScreenState extends State<RiwayatScreen> {
+  String filterWaktu = 'Hari';
+  String filterKategori = "Berat";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,14 +35,14 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.all(3),
+              padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Row(
                 children: [
-                  phillSelect(label: 'Hari', isSelected: true),
+                  phillSelect(label: 'Hari'),
                   phillSelect(label: 'Minggu'),
                   phillSelect(label: 'Bulan'),
                   phillSelect(label: 'Tahun'),
@@ -54,16 +57,16 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
               child: LineChart(mainData()),
             ),
           ),
+          SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(
-              color: Colors.grey.withOpacity(.12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+              ),
               child: Row(
                 children: [
-                  boxPhillSelect(
-                      label: 'Berat',
-                      icon: Icons.monitor_weight,
-                      isSelected: true),
+                  boxPhillSelect(label: 'Berat', icon: Icons.monitor_weight),
                   boxPhillSelect(label: 'Tinggi', icon: Icons.height),
                   boxPhillSelect(label: 'BMI', icon: Icons.card_membership),
                   boxPhillSelect(
@@ -79,62 +82,76 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
     );
   }
 
-  Container boxPhillSelect(
-      {required IconData icon,
-      required String label,
-      bool isSelected = false}) {
-    return Container(
-      width: 130,
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-          color: isSelected ? Colors.white : null,
-          border: Border(
-            top: isSelected
-                ? BorderSide(
-                    width: 2.5,
-                    color: cPrimary,
-                  )
-                : BorderSide.none,
-            left: BorderSide(
-              width: 1,
-              color: Colors.grey.shade300,
+  Widget boxPhillSelect({required IconData icon, required String label}) {
+    bool isSelected = filterKategori == label;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          filterKategori = label;
+        });
+      },
+      child: Container(
+        width: 130,
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+            color: isSelected ? Colors.white : null,
+            border: Border(
+              top: isSelected
+                  ? BorderSide(
+                      width: 2.5,
+                      color: cPrimary,
+                    )
+                  : borderBase,
+              left: borderBase.copyWith(color: Colors.grey.shade300),
+              right: borderBase.copyWith(color: Colors.grey.shade300),
+            )),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? cPrimary : Colors.grey.shade400,
             ),
-            right: BorderSide(
-              width: 1,
-              color: Colors.grey.shade300,
+            SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12),
             ),
-          )),
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? cPrimary : Colors.grey.shade400,
-          ),
-          SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Expanded phillSelect({bool isSelected = false, required String label}) {
+  Widget phillSelect({required String label}) {
+    bool isSelected = label == filterWaktu;
+
     return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? cPrimary : null,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            filterWaktu = label;
+          });
+        },
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? cPrimary : null,
+              ),
+            ),
           ),
         ),
       ),

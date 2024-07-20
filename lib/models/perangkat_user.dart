@@ -1,16 +1,16 @@
-class UserPerangkat {
+class PerangkatUser {
   String id;
   String nomorSerial;
   String userId;
 
-  UserPerangkat({
+  PerangkatUser({
     required this.id,
     required this.nomorSerial,
     required this.userId,
   });
 
-  factory UserPerangkat.fromJson(Map<String, dynamic> map) {
-    return UserPerangkat(
+  factory PerangkatUser.fromJson(Map<String, dynamic> map) {
+    return PerangkatUser(
       id: map['id'],
       nomorSerial: map['nomor_serial'],
       userId: map['user_id'],
@@ -19,7 +19,6 @@ class UserPerangkat {
 
   toJson() {
     return {
-      'id': id,
       'nomor_serial': nomorSerial,
       'user_id': userId,
     };

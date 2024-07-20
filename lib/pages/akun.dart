@@ -86,7 +86,7 @@ class _AkunScreenState extends State<AkunScreen> {
                 ),
                 IconButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/account/management');
+                      Navigator.of(context).pushNamed('/akun/manajemen');
                     },
                     icon: Icon(
                       Icons.edit,

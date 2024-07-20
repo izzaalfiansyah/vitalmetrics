@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
-import 'package:vitalmetrics/models/user_perangkat.dart';
-import 'package:vitalmetrics/services/user_perangkat.dart';
+import 'package:vitalmetrics/models/perangkat_user.dart';
+import 'package:vitalmetrics/services/perangkat_user.dart';
 
 class AkunPerangkatScreen extends StatefulWidget {
   const AkunPerangkatScreen({super.key});
@@ -12,11 +12,7 @@ class AkunPerangkatScreen extends StatefulWidget {
 }
 
 class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
-  UserPerangkat perangkat = UserPerangkat(
-    id: '',
-    nomorSerial: '',
-    userId: '',
-  );
+  PerangkatUser? perangkat;
 
   @override
   void initState() {
@@ -26,80 +22,155 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
 
   getPerangkat() async {
     final userId = await getUserId();
-    final data = await UserPerangkatService.getByUserId(userId: userId);
+    final data = await PerangkatUserService.getByUserId(userId: userId);
 
     setState(() {
-      perangkat = data;
+      if (data != null) {
+        perangkat = data;
+      } else {
+        perangkat = null;
+      }
     });
   }
 
-  savePerangkat(context) async {
-    final data = await UserPerangkatService.update(perangkat.id, perangkat);
+  savePerangkat(context, {required String nomorSerial}) async {
+    final userId = await getUserId();
+    PerangkatUser perangkatBaru =
+        PerangkatUser(id: '', nomorSerial: nomorSerial, userId: userId);
+    final data = await PerangkatUserService.create(perangkatBaru);
 
     if (data) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Perangkat berhasil disimpan'),
+          content: Text('Perangkat berhasil dihubungkan.'),
         ),
       );
+
+      await getPerangkat();
+    }
+  }
+
+  removePerangkat(context) async {
+    final data = await PerangkatUserService.delete(perangkat!.id);
+
+    if (data) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Perangkat berhasil diputuskan.'),
+        ),
+      );
+
+      await getPerangkat();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Perangkat Saya'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => savePerangkat(context),
-        child: Icon(
-          Icons.save,
-          color: Colors.white,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: shadowBase,
-              ),
-              child: Column(
-                children: [
-                  tileItem(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                perangkat != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: cPrimary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                        child: Icon(
+                          Icons.devices,
+                          color: Colors.white,
+                          size: 180,
+                        ),
+                      )
+                    : Icon(
+                        Icons.no_cell,
+                        color: cPrimary,
+                        size: 180,
+                      ),
+                SizedBox(height: 10),
+                Text(perangkat != null
+                    ? 'Perangkat terhubung : ${perangkat!.nomorSerial}'
+                    : 'Tidak ada perangkat terhubung!')
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 10,
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                if (perangkat != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        actionsPadding: EdgeInsets.only(bottom: 0),
+                        content:
+                            Text('Anda yakin memutuskan perangkat terhubung?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              removePerangkat(context);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  dialogBuilder(
+                    context,
                     label: 'Nomor Serial',
-                    value: perangkat.nomorSerial,
-                    onTap: () => dialogBuilder(context,
-                        label: 'Nomor Serial',
-                        value: perangkat.nomorSerial, onChange: (val) {
-                      setState(() {
-                        perangkat.nomorSerial = val;
-                      });
-                    }),
-                  ),
-                ],
+                    value: '',
+                    onChange: (val) async {
+                      savePerangkat(context, nomorSerial: val);
+                    },
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: cPrimary,
+                textStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                fixedSize: Size.fromWidth(size.width),
               ),
-            )
-          ],
-        ),
+              child: Text(
+                (perangkat != null
+                        ? 'Putuskan Perangkat'
+                        : 'Hubungkan Perangkat')
+                    .toUpperCase(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-    );
-  }
-
-  ListTile tileItem({
-    required String label,
-    required String value,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      title: Text(label),
-      subtitle: Text(value),
-      trailing: trailing,
-      onTap: onTap,
     );
   }
 

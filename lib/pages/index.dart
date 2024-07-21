@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
+import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -53,112 +54,185 @@ class _IndexScreenState extends State<IndexScreen> {
         child: Stack(
           children: [
             Container(
-              height: size.height * 1 / 4,
+              alignment: Alignment.center,
+              height: size.height * 1 / 2,
               decoration: BoxDecoration(
                 color: cPrimary,
                 borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(50),
+                  bottom: Radius.circular(60),
                 ),
               ),
-            ),
-            Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  padding: EdgeInsets.all(20),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      decoration: BoxDecoration(
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    color: Colors.orange,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      'Perangkat tidak terhubung'.toUpperCase(),
+                      style: TextStyle(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          displayBox(
-                            label: 'Berat'.toUpperCase(),
-                            value: berat,
-                            maxValue: 200,
-                            pcs: 'KG',
-                          ),
-                          displayBox(
-                            backgroundColor: cPrimary,
-                            label: 'Tinggi'.toUpperCase(),
-                            value: tinggi,
-                            maxValue: 300,
-                            pcs: 'CM',
-                          ),
-                        ],
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  // padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: shadowBase,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          classificationItem(
-                            size,
-                            icon: Icons.card_membership,
-                            title: 'BMI',
-                            resultValue: bmi.toStringAsFixed(1),
-                            resultText: 'Sehat',
-                            resultColor: Colors.green,
-                          ),
-                          classificationItem(
-                            size,
-                            icon: Icons.sports_score,
-                            title: 'Skor badan',
-                            resultValue: '73',
-                            resultText: 'Sehat',
-                            resultColor: Colors.green,
-                          ),
-                          classificationItem(
-                            size,
-                            icon: Icons.pie_chart_outline_sharp,
-                            title: 'Lemak Tubuh',
-                            resultValue: '${lemak.toStringAsFixed(1)}%',
-                            resultText: 'Berlebihan',
-                            resultColor: Colors.red,
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 20,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        displayBox(
+                          label: 'Berat',
+                          value: berat,
+                          pcs: 'KG',
+                          maxValue: 150,
                         ),
-                        child: FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: cPrimary,
-                            fixedSize: Size.fromWidth(size.width),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                        displayBox(
+                          label: 'Tinggi',
+                          value: tinggi,
+                          pcs: 'CM',
+                          maxValue: 300,
+                        ),
+                        SizedBox(height: 60),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: size.height * 1 / 2 - 50,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    // height: 200,
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: shadowBase,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            '21 Juli 2024 14:39',
+                            style: TextStyle(
+                              color: cPrimary,
+                              // fontSize: 12,
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('/report',
-                                arguments: ReportArguments(id: ''));
-                          },
-                          child: Text(
-                            'SELENGKAPNYA',
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Hr(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            perbandinganItem(
+                              label: 'BMI',
+                              value: '+2.5',
+                              naik: true,
+                            ),
+                            perbandinganItem(
+                              label: 'Skor Badan',
+                              value: '-2',
+                              naik: false,
+                            ),
+                            perbandinganItem(
+                              label: 'Lemak (%)',
+                              value: '+7.2',
+                              naik: false,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Bandingkan dengan 20 Juli 2024 15:00',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-              ],
+                  SizedBox(height: 20),
+                  Container(
+                    // padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: shadowBase,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            classificationItem(
+                              size,
+                              icon: Icons.card_membership,
+                              title: 'BMI',
+                              resultValue: bmi.toStringAsFixed(1),
+                              resultText: 'Sehat',
+                              resultColor: Colors.green,
+                            ),
+                            classificationItem(
+                              size,
+                              icon: Icons.sports_score,
+                              title: 'Skor badan',
+                              resultValue: '73',
+                              resultText: 'Sehat',
+                              resultColor: Colors.green,
+                            ),
+                            classificationItem(
+                              size,
+                              icon: Icons.pie_chart_outline_sharp,
+                              title: 'Lemak Tubuh',
+                              resultValue: '${lemak.toStringAsFixed(1)}%',
+                              resultText: 'Berlebihan',
+                              resultColor: Colors.red,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 20,
+                          ),
+                          child: FilledButton(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: cPrimary,
+                              fixedSize: Size.fromWidth(size.width),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/report',
+                                  arguments: ReportArguments(id: ''));
+                            },
+                            child: Text(
+                              'SELENGKAPNYA',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
             )
           ],
         ),
@@ -167,55 +241,93 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
+  Expanded perbandinganItem({
+    required String label,
+    required String value,
+    bool naik = false,
+  }) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: cPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                naik ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                color: Colors.orange,
+              ),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Container displayBox({
     required String label,
     required double value,
-    required double maxValue,
     required String pcs,
-    Color? backgroundColor,
+    required double maxValue,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
-      color: backgroundColor ?? Colors.white,
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: backgroundColor != null ? Colors.white : cPrimary,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            alignment: Alignment.center,
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: value.toString(),
-                    style: TextStyle(
-                      fontSize: 46,
-                      fontWeight: FontWeight.w500,
-                    ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  label.toUpperCase(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                RichText(
+                    text: TextSpan(
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                  TextSpan(text: pcs)
-                ],
-                style: TextStyle(
-                    color: (backgroundColor != null ? Colors.white : cPrimary)),
-              ),
+                  children: [
+                    TextSpan(
+                      text: value.toStringAsFixed(1),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    TextSpan(text: ' $pcs')
+                  ],
+                ))
+              ],
             ),
           ),
           Slider(
+            value: value,
             min: 0,
             max: maxValue,
-            value: value,
-            thumbColor: (backgroundColor != null ? Colors.white : cPrimary),
-            activeColor: (backgroundColor != null ? Colors.white : cPrimary),
-            inactiveColor: (backgroundColor != null ? Colors.white : cPrimary)
-                .withOpacity(.35),
+            thumbColor: Colors.white,
+            activeColor: Colors.white,
+            inactiveColor: Colors.white.withOpacity(.4),
             onChanged: (val) {},
-          )
+          ),
         ],
       ),
     );

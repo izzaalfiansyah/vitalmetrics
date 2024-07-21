@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 
@@ -54,6 +55,50 @@ class _ReportScreenState extends State<ReportScreen> {
                         value: '54',
                         satuan: 'KG',
                       ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 180,
+                          child: SfRadialGauge(
+                            title: GaugeTitle(
+                              text: 'Skor Badan',
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            axes: [
+                              RadialAxis(
+                                minimum: 0,
+                                maximum: 100,
+                                axisLineStyle: AxisLineStyle(
+                                  color: Colors.white.withOpacity(.5),
+                                  thickness: 5,
+                                ),
+                                showLabels: false,
+                                showTicks: false,
+                                pointers: [
+                                  RangePointer(
+                                    value: 73,
+                                    color: Colors.white,
+                                    enableAnimation: true,
+                                    width: 5,
+                                  ),
+                                ],
+                                annotations: [
+                                  GaugeAnnotation(
+                                    widget: Text(
+                                      '73',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 40,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                       topItem(
                         size,
                         text: 'Tinggi Badan',
@@ -63,11 +108,10 @@ class _ReportScreenState extends State<ReportScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Container(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
-                      color: Colors.white,
-                      thickness: .25,
+                    child: Hr(
+                      color: Colors.white.withOpacity(.5),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -238,41 +282,49 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Container topItem(Size size,
-      {required String text, required String value, required String satuan}) {
-    return Container(
-      alignment: Alignment.center,
-      width: size.width / 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: value,
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
-                ),
-                TextSpan(
-                  text: ' $satuan',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
+  Widget topItem(
+    Size size, {
+    required String text,
+    required String value,
+    required String satuan,
+    bool important = false,
+  }) {
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              text,
               style: TextStyle(
                 color: Colors.white,
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 5),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: value,
+                    style: TextStyle(
+                      fontSize: important ? 50 : 30,
+                      fontWeight: important ? FontWeight.w500 : null,
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' $satuan',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

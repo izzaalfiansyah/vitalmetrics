@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
@@ -64,18 +65,6 @@ class _IndexScreenState extends State<IndexScreen> {
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    color: Colors.orange,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Text(
-                      'Perangkat tidak terhubung'.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -92,13 +81,15 @@ class _IndexScreenState extends State<IndexScreen> {
                           pcs: 'CM',
                           maxValue: 300,
                         ),
-                        SizedBox(height: 60),
+                        SizedBox(height: 20),
+                        SizedBox(height: 50),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
+            // perangkatTidakTerhubung(),
             Container(
               padding: EdgeInsets.only(
                 top: size.height * 1 / 2 - 50,
@@ -241,6 +232,21 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
+  Container perangkatTidakTerhubung() {
+    return Container(
+      width: double.infinity,
+      color: Colors.orange,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: EdgeInsets.only(bottom: 20),
+      child: Text(
+        'Perangkat tidak terhubung'.toUpperCase(),
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
   Expanded perbandinganItem({
     required String label,
     required String value,
@@ -310,7 +316,7 @@ class _IndexScreenState extends State<IndexScreen> {
                       text: value.toStringAsFixed(1),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: 22,
                       ),
                     ),
                     TextSpan(text: ' $pcs')
@@ -319,14 +325,37 @@ class _IndexScreenState extends State<IndexScreen> {
               ],
             ),
           ),
-          Slider(
-            value: value,
-            min: 0,
-            max: maxValue,
-            thumbColor: Colors.white,
-            activeColor: Colors.white,
-            inactiveColor: Colors.white.withOpacity(.4),
-            onChanged: (val) {},
+          SizedBox(height: 5),
+          SfLinearGauge(
+            axisLabelStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+            ),
+            axisTrackStyle: LinearAxisTrackStyle(
+              color: Colors.white.withOpacity(.55),
+            ),
+            majorTickStyle: LinearTickStyle(
+              color: Colors.white.withOpacity(.55),
+              length: 10,
+            ),
+            minorTickStyle: LinearTickStyle(
+              color: Colors.white.withOpacity(.55),
+              length: 4,
+            ),
+            minimum: 0,
+            maximum: maxValue,
+            barPointers: [
+              LinearBarPointer(
+                value: value,
+                color: Colors.white,
+              ),
+            ],
+            markerPointers: [
+              LinearShapePointer(
+                value: value,
+                color: Colors.white,
+              ),
+            ],
           ),
         ],
       ),

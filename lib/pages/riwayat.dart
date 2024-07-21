@@ -1,7 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/models/chartdata.dart';
 
 class RiwayatScreen extends StatefulWidget {
   const RiwayatScreen({super.key});
@@ -51,13 +52,75 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
             ),
           ),
           Expanded(
-            child: Container(
-              height: 800,
-              padding: EdgeInsets.only(top: 20, right: 30),
-              child: LineChart(mainData()),
+            child: SfCartesianChart(
+              tooltipBehavior: TooltipBehavior(
+                enable: true,
+                color: cPrimary,
+                header: '',
+                activationMode: ActivationMode.longPress,
+              ),
+              plotAreaBorderColor: Colors.grey.shade50,
+              primaryXAxis: CategoryAxis(
+                axisLine: AxisLine(
+                  color: cPrimary,
+                ),
+                labelStyle: TextStyle(
+                  fontSize: 10,
+                ),
+                majorTickLines: MajorTickLines(
+                  size: 0,
+                  width: 0,
+                ),
+              ),
+              primaryYAxis: NumericAxis(
+                axisLine: AxisLine(
+                  color: cPrimary,
+                ),
+                majorTickLines: MajorTickLines(
+                  size: 0,
+                  width: 0,
+                ),
+                majorGridLines: MajorGridLines(width: 0),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 10,
+                ),
+              ),
+              series: [
+                SplineAreaSeries<ChartData, String>(
+                  onPointTap: (pointInteractionDetails) {
+                    final item = pointInteractionDetails
+                        .dataPoints![pointInteractionDetails.pointIndex as int];
+
+                    print(item);
+                  },
+                  enableTooltip: true,
+                  dataSource: [
+                    ChartData('MEI', 49),
+                    ChartData('JUN', 51),
+                    ChartData('JUL', 44),
+                  ],
+                  xValueMapper: (data, _) => data.x,
+                  yValueMapper: (data, _) => data.y,
+                  borderWidth: 2,
+                  borderColor: cPrimary,
+                  gradient: LinearGradient(
+                    colors: [
+                      cPrimary.withOpacity(.1),
+                      cPrimary.withOpacity(0),
+                    ],
+                    transform: GradientRotation(90),
+                  ),
+                  markerSettings: MarkerSettings(
+                    isVisible: true,
+                    borderColor: cPrimary,
+                    width: 10,
+                    height: 10,
+                  ),
+                )
+              ],
             ),
           ),
-          SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(
@@ -156,176 +219,5 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
         ),
       ),
     );
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      showingTooltipIndicators: [6]
-          .map(
-            (index) => ShowingTooltipIndicators(
-              [
-                LineBarSpot(
-                  lineBarsData[0],
-                  lineBarsData.indexOf(lineBarsData[0]),
-                  lineBarsData[0].spots[index],
-                )
-              ],
-            ),
-          )
-          .toList(),
-      lineTouchData: LineTouchData(
-        enabled: true,
-        handleBuiltInTouches: true,
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (touchedSpot) => Colors.pink,
-          tooltipRoundedRadius: 4,
-          getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
-            return lineBarsSpot.map((lineBarSpot) {
-              return LineTooltipItem(
-                lineBarSpot.y.toString(),
-                const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              );
-            }).toList();
-          },
-        ),
-      ),
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: Colors.transparent,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: Colors.transparent,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 30,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border(
-          left: BorderSide(color: cPrimary.withOpacity(.7)),
-          bottom: BorderSide(color: cPrimary.withOpacity(.7)),
-        ),
-      ),
-      minX: 0,
-      maxX: 8,
-      minY: 0,
-      maxY: 150,
-      lineBarsData: lineBarsData,
-    );
-  }
-
-  final lineBarsData = [
-    LineChartBarData(
-      spots: const [
-        FlSpot(0, 71),
-        FlSpot(1, 66),
-        FlSpot(2, 62),
-        FlSpot(3, 60),
-        FlSpot(4, 57),
-        FlSpot(5, 64),
-        FlSpot(6, 64),
-      ],
-      isCurved: true,
-      gradient: LinearGradient(
-        colors: [cPrimary, cPrimary],
-      ),
-      barWidth: 3,
-      isStrokeCapRound: true,
-      dotData: const FlDotData(
-        show: false,
-      ),
-      belowBarData: BarAreaData(
-        show: true,
-        gradient: LinearGradient(
-          colors: [
-            cPrimary.withOpacity(0),
-            cPrimary.withOpacity(.1),
-          ],
-        ),
-      ),
-    ),
-  ];
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    final style = TextStyle(
-      fontSize: 10,
-      color: Colors.black,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = Text('MAR', style: style);
-        break;
-      case 5:
-        text = Text('JUN', style: style);
-        break;
-      case 8:
-        text = Text('SEP', style: style);
-        break;
-      default:
-        text = Text('', style: style);
-        break;
-    }
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    final style = TextStyle(
-      fontSize: 10,
-      color: cPrimary,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = '0';
-        break;
-      case 150:
-        text = '150';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.center);
   }
 }

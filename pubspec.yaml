@@ -29,13 +29,13 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.6
-  fl_chart: ^0.68.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
   google_fonts: ^6.2.1
   http: ^1.2.2
   shared_preferences: ^2.2.3
+  syncfusion_flutter_charts: ^26.1.42
   syncfusion_flutter_gauges: ^26.1.42
   vertical_weight_slider: ^2.6.0
 

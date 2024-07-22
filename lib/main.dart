@@ -17,25 +17,36 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  UserBloc userBloc = UserBloc();
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
+  getUser() async {
+    setUserId('1');
+    getUserId().then((val) {
+      if (val != '') {
+        userBloc.add(UserGetById(val));
+      }
+    });
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        UserBloc userBloc = UserBloc();
-
-        setUserId('1');
-        getUserId().then((val) {
-          if (val != '') {
-            userBloc.add(UserGetById(val));
-          }
-        });
-
-        return userBloc;
-      },
+      create: (context) => userBloc,
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           return MaterialApp(
@@ -69,7 +80,8 @@ class MyApp extends StatelessWidget {
             // home: const SplashScreen(),
             routes: {
               '/splash': (context) => SplashScreen(),
-              '/': (context) => state.isLogin ? IndexScreen() : LoginScreen(),
+              '/login': (context) => LoginScreen(),
+              '/': (context) => IndexScreen(),
               '/report': (context) => ReportScreen(),
               '/riwayat': (context) => RiwayatScreen(),
               '/akun': (context) => AkunScreen(),

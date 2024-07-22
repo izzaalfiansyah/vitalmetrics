@@ -23,21 +23,21 @@ class PerangkatUserService {
 
   static Future<bool> create(PerangkatUser perangkat) async {
     final data = jsonEncode(perangkat.toJson());
-    await client.post(Uri.parse(url), body: data);
+    final response = await client.post(Uri.parse(url), body: data);
 
-    return true;
+    return response.statusCode < 400;
   }
 
   static Future<bool> update(String id, PerangkatUser perangkat) async {
     final data = jsonEncode(perangkat.toJson());
-    await client.put(Uri.parse('$url/$id'), body: data);
+    final response = await client.put(Uri.parse('$url/$id'), body: data);
 
-    return true;
+    return response.statusCode < 400;
   }
 
   static Future<bool> delete(String id) async {
-    await client.delete(Uri.parse('$url/$id'));
+    final response = await client.delete(Uri.parse('$url/$id'));
 
-    return true;
+    return response.statusCode < 400;
   }
 }

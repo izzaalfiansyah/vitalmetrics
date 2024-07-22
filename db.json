@@ -4,7 +4,7 @@
       "id": "1",
       "username": "izzaalfiansyah",
       "password": "12345678",
-      "email": "izzaalfiansyah@gmail.com",
+      "email": "iansyah724@gmail.com",
       "nama": "Muhammad Izza Alfiansyah",
       "tanggal_lahir": "2004-02-07",
       "jenis_kelamin": "l"
@@ -12,8 +12,8 @@
   ],
   "perangkat_user": [
     {
-      "id": "8197",
-      "nomor_serial": "ESP32-72488",
+      "id": "f3d7",
+      "nomor_serial": "ESP32-24788",
       "user_id": "1"
     }
   ],

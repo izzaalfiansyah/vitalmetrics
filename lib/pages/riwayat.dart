@@ -57,7 +57,7 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
                 enable: true,
                 color: cPrimary,
                 header: '',
-                activationMode: ActivationMode.longPress,
+                activationMode: ActivationMode.singleTap,
               ),
               plotAreaBorderColor: Colors.grey.shade50,
               primaryXAxis: CategoryAxis(
@@ -89,10 +89,8 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
               series: [
                 SplineAreaSeries<ChartData, String>(
                   onPointTap: (pointInteractionDetails) {
-                    final item = pointInteractionDetails
-                        .dataPoints![pointInteractionDetails.pointIndex as int];
-
-                    print(item);
+                    // final item = pointInteractionDetails
+                    //     .dataPoints![pointInteractionDetails.pointIndex as int];
                   },
                   enableTooltip: true,
                   dataSource: [

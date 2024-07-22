@@ -6,14 +6,16 @@ import 'package:vitalmetrics/models/pengukuran.dart';
 
 class PengukuranService {
   static String url = '$apiUrl/data_pengukuran';
-  static Client http = Client();
+  static Client client = Client();
 
-  static Future<Pengukuran?> getLatest() async {
+  static Future<List<Pengukuran>> getLatest() async {
     final response =
-        await http.get(Uri.parse('$url?_sort=-created_at&_limit=1'));
+        await client.get(Uri.parse('$url?_sort=-created_at&_limit=2'));
     final data = jsonDecode(response.body);
-    final pengukuran = Pengukuran.fromJSON(data[0]);
 
-    return pengukuran;
+    final items =
+        List<Pengukuran>.from(data.map((item) => Pengukuran.fromJson(item)));
+
+    return items;
   }
 }

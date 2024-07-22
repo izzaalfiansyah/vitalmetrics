@@ -17,7 +17,7 @@ class Pengukuran {
     this.createdAt = '',
   });
 
-  factory Pengukuran.fromJSON(Map<String, dynamic> map) {
+  factory Pengukuran.fromJson(Map<String, dynamic> map) {
     return Pengukuran(
       id: map['id'],
       userId: map['user_id'],

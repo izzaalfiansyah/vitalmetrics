@@ -5,10 +5,12 @@ import 'package:vitalmetrics/services/pengukuran_service.dart';
 class PengukuranState {
   bool isLoading;
   Pengukuran? item;
+  List<Pengukuran>? items;
 
   PengukuranState({
     this.isLoading = false,
     this.item,
+    this.items,
   });
 }
 
@@ -27,7 +29,7 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
 
       emit(PengukuranState(
         isLoading: false,
-        item: pengukuran,
+        items: pengukuran,
       ));
     });
   }

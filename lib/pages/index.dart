@@ -58,16 +58,37 @@ class _IndexScreenState extends State<IndexScreen> {
         create: (context) => pengukuranBloc,
         child: BlocBuilder<PengukuranBloc, PengukuranState>(
           builder: (context, state) {
-            Pengukuran pengukuran = state.item ?? Pengukuran();
+            Pengukuran dataTerakhir = Pengukuran(),
+                dataPembanding = Pengukuran();
+
+            if (state.items != null) {
+              if (state.items!.isNotEmpty) {
+                dataTerakhir = state.items?[0] ?? Pengukuran();
+                dataPembanding = state.items?[1] ?? Pengukuran();
+              }
+            }
+
             User user = context.read<UserBloc>().state.item ?? User();
 
-            double bmi = getBMI(
-                tinggi: pengukuran.tinggi,
-                berat: pengukuran.berat,
-                umur: user.umur);
+            double bmiTerakhir = getBMI(
+                  tinggi: dataTerakhir.tinggi,
+                  berat: dataTerakhir.berat,
+                  umur: dataTerakhir.userUmur,
+                ),
+                bmiPembanding = getBMI(
+                  tinggi: dataPembanding.tinggi,
+                  berat: dataPembanding.berat,
+                  umur: dataPembanding.userUmur,
+                );
 
-            double lemak = getLemakTubuh(
-                jenisKelamin: user.jenisKelamin, bmi: bmi, umur: user.umur);
+            double lemakTerakhir = getLemakTubuh(
+                    jenisKelamin: user.jenisKelamin,
+                    bmi: bmiTerakhir,
+                    umur: user.umur),
+                lemakPembanding = getLemakTubuh(
+                    jenisKelamin: user.jenisKelamin,
+                    bmi: bmiPembanding,
+                    umur: user.umur);
 
             return SingleChildScrollView(
               child: Stack(
@@ -89,13 +110,13 @@ class _IndexScreenState extends State<IndexScreen> {
                             children: [
                               displayBox(
                                 label: 'Berat',
-                                value: pengukuran.berat,
+                                value: dataTerakhir.berat,
                                 pcs: 'KG',
                                 maxValue: 200,
                               ),
                               displayBox(
                                 label: 'Tinggi',
-                                value: pengukuran.tinggi,
+                                value: dataTerakhir.tinggi,
                                 pcs: 'CM',
                                 maxValue: 300,
                               ),
@@ -129,7 +150,7 @@ class _IndexScreenState extends State<IndexScreen> {
                             children: [
                               Center(
                                 child: Text(
-                                  formatDateTime(pengukuran.createdAt),
+                                  formatDateTime(dataTerakhir.createdAt),
                                   style: TextStyle(
                                     color: cPrimary,
                                     // fontSize: 12,
@@ -147,18 +168,18 @@ class _IndexScreenState extends State<IndexScreen> {
                                 children: [
                                   perbandinganItem(
                                     label: 'BMI',
-                                    value: '+2.5',
-                                    naik: true,
+                                    value: bmiTerakhir - bmiPembanding,
+                                    naik: bmiTerakhir - bmiPembanding > 0,
                                   ),
                                   perbandinganItem(
                                     label: 'Skor Badan',
-                                    value: '-2',
+                                    value: 0,
                                     naik: false,
                                   ),
                                   perbandinganItem(
                                     label: 'Lemak (%)',
-                                    value: '+7.2',
-                                    naik: false,
+                                    value: lemakTerakhir - lemakPembanding,
+                                    naik: lemakTerakhir - lemakPembanding > 0,
                                   ),
                                 ],
                               ),
@@ -193,7 +214,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.card_membership,
                                     title: 'BMI',
-                                    resultValue: bmi.toStringAsFixed(1),
+                                    resultValue: bmiTerakhir.toStringAsFixed(1),
                                     resultText: 'Sehat',
                                     resultColor: Colors.green,
                                   ),
@@ -209,7 +230,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.pie_chart_outline_sharp,
                                     title: 'Lemak Tubuh',
-                                    resultValue: '${lemak.toStringAsFixed(1)}%',
+                                    resultValue:
+                                        '${lemakTerakhir.toStringAsFixed(1)}%',
                                     resultText: 'Berlebihan',
                                     resultColor: Colors.red,
                                   ),
@@ -271,7 +293,7 @@ class _IndexScreenState extends State<IndexScreen> {
 
   Expanded perbandinganItem({
     required String label,
-    required String value,
+    required double value,
     bool naik = false,
   }) {
     return Expanded(
@@ -279,7 +301,7 @@ class _IndexScreenState extends State<IndexScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            value,
+            '${naik ? '+' : ''}${value.toStringAsFixed(1)}',
             style: TextStyle(
               color: cPrimary,
               fontSize: 18,

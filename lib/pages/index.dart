@@ -366,7 +366,6 @@ class _IndexScreenState extends State<IndexScreen> {
           ),
           SizedBox(height: 5),
           SfLinearGauge(
-            animationDuration: 0,
             axisLabelStyle: TextStyle(
               color: Colors.white,
               fontSize: 10,

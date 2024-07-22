@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
-import 'package:vitalmetrics/services/user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AkunScreen extends StatefulWidget {
   const AkunScreen({super.key});
@@ -14,15 +15,21 @@ class AkunScreen extends StatefulWidget {
 
 class _AkunScreenState extends State<AkunScreen> {
   String userId = '';
+  late UserBloc userBloc;
 
   @override
   void initState() {
+    userBloc = UserBloc();
     getUserId().then((val) {
-      setState(() {
-        userId = val;
-      });
+      userBloc.add(UserEventGetById(val));
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    userBloc.close();
+    super.dispose();
   }
 
   @override
@@ -40,10 +47,29 @@ class _AkunScreenState extends State<AkunScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                FutureBuilder(
-                    future: UserService.find(userId),
-                    builder: (context, snapshot) {
-                      final user = snapshot.data;
+                BlocBuilder<UserBloc, UserState>(
+                  bloc: userBloc,
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 20),
+                          Text(
+                            'Memuat....',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (state.item != null) {
+                      final user = state.item;
 
                       return Row(
                         mainAxisSize: MainAxisSize.min,
@@ -77,7 +103,14 @@ class _AkunScreenState extends State<AkunScreen> {
                           )
                         ],
                       );
-                    }),
+                    }
+
+                    return Text(
+                      'Terjadi kesalahan',
+                      style: TextStyle(color: Colors.white),
+                    );
+                  },
+                ),
                 IconButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('/akun/manajemen');

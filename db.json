@@ -35,6 +35,15 @@
       "tinggi": "165",
       "berat": "45",
       "created_at": "2024-07-18 21:50:23"
+    },
+    {
+      "id": "2",
+      "user_id": "1",
+      "user_umur": "20",
+      "perangkat_id": "1",
+      "tinggi": "167",
+      "berat": "44.7",
+      "created_at": "2024-07-21 14:50:23"
     }
   ]
 }

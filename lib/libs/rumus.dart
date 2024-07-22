@@ -3,7 +3,7 @@ import 'dart:math';
 double getBMI({
   required double tinggi,
   required double berat,
-  required double umur,
+  required int umur,
 }) {
   double bmi = berat / pow(tinggi / 100, 2);
 
@@ -21,7 +21,7 @@ double getBMI({
 double getLemakTubuh({
   required String jenisKelamin,
   required double bmi,
-  required double umur,
+  required int umur,
 }) {
   double lemak;
 

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
+import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/dates.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
+import 'package:vitalmetrics/models/pengukuran.dart';
+import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/pages/report.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -14,17 +20,12 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  double tinggi = 0, berat = 0, umur = 0, bmi = 0, lemak = 0;
-  String jenisKelamin = "l";
+  PengukuranBloc pengukuranBloc = PengukuranBloc();
 
   @override
   void initState() {
+    pengukuranBloc.add(PengukuranGetLatest());
     super.initState();
-    tinggi = 165;
-    berat = 45;
-
-    bmi = getBMI(tinggi: tinggi, berat: berat, umur: umur);
-    lemak = getLemakTubuh(jenisKelamin: jenisKelamin, bmi: bmi, umur: umur);
   }
 
   @override
@@ -39,6 +40,8 @@ class _IndexScreenState extends State<IndexScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        leading: SizedBox(),
+        leadingWidth: 0,
         centerTitle: false,
         actions: [
           IconButton(
@@ -51,181 +54,200 @@ class _IndexScreenState extends State<IndexScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              height: size.height * 1 / 2,
-              decoration: BoxDecoration(
-                color: cPrimary,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(60),
-                ),
-              ),
-              child: Column(
+      body: BlocProvider(
+        create: (context) => pengukuranBloc,
+        child: BlocBuilder<PengukuranBloc, PengukuranState>(
+          builder: (context, state) {
+            Pengukuran pengukuran = state.item ?? Pengukuran();
+            User user = context.read<UserBloc>().state.item ?? User();
+
+            double bmi = getBMI(
+                tinggi: pengukuran.tinggi,
+                berat: pengukuran.berat,
+                umur: user.umur);
+
+            double lemak = getLemakTubuh(
+                jenisKelamin: user.jenisKelamin, bmi: bmi, umur: user.umur);
+
+            return SingleChildScrollView(
+              child: Stack(
                 children: [
-                  Expanded(
+                  Container(
+                    alignment: Alignment.center,
+                    height: size.height * 1 / 2,
+                    decoration: BoxDecoration(
+                      color: cPrimary,
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(60),
+                      ),
+                    ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        displayBox(
-                          label: 'Berat',
-                          value: berat,
-                          pcs: 'KG',
-                          maxValue: 150,
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              displayBox(
+                                label: 'Berat',
+                                value: pengukuran.berat,
+                                pcs: 'KG',
+                                maxValue: 200,
+                              ),
+                              displayBox(
+                                label: 'Tinggi',
+                                value: pengukuran.tinggi,
+                                pcs: 'CM',
+                                maxValue: 300,
+                              ),
+                              SizedBox(height: 20),
+                              SizedBox(height: 50),
+                            ],
+                          ),
                         ),
-                        displayBox(
-                          label: 'Tinggi',
-                          value: tinggi,
-                          pcs: 'CM',
-                          maxValue: 300,
+                      ],
+                    ),
+                  ),
+                  // perangkatTidakTerhubung(),
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: size.height * 1 / 2 - 50,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          // height: 200,
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: shadowBase,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  formatDateTime(pengukuran.createdAt),
+                                  style: TextStyle(
+                                    color: cPrimary,
+                                    // fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Hr(),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  perbandinganItem(
+                                    label: 'BMI',
+                                    value: '+2.5',
+                                    naik: true,
+                                  ),
+                                  perbandinganItem(
+                                    label: 'Skor Badan',
+                                    value: '-2',
+                                    naik: false,
+                                  ),
+                                  perbandinganItem(
+                                    label: 'Lemak (%)',
+                                    value: '+7.2',
+                                    naik: false,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                'Bandingkan dengan 20 Juli 2024 15:00',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
-                        SizedBox(height: 50),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // perangkatTidakTerhubung(),
-            Container(
-              padding: EdgeInsets.only(
-                top: size.height * 1 / 2 - 50,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    // height: 200,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: shadowBase,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            '21 Juli 2024 14:39',
-                            style: TextStyle(
-                              color: cPrimary,
-                              // fontSize: 12,
-                            ),
+                        Container(
+                          // padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: shadowBase,
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Hr(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            perbandinganItem(
-                              label: 'BMI',
-                              value: '+2.5',
-                              naik: true,
-                            ),
-                            perbandinganItem(
-                              label: 'Skor Badan',
-                              value: '-2',
-                              naik: false,
-                            ),
-                            perbandinganItem(
-                              label: 'Lemak (%)',
-                              value: '+7.2',
-                              naik: false,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Bandingkan dengan 20 Juli 2024 15:00',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    // padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: shadowBase,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            classificationItem(
-                              size,
-                              icon: Icons.card_membership,
-                              title: 'BMI',
-                              resultValue: bmi.toStringAsFixed(1),
-                              resultText: 'Sehat',
-                              resultColor: Colors.green,
-                            ),
-                            classificationItem(
-                              size,
-                              icon: Icons.sports_score,
-                              title: 'Skor badan',
-                              resultValue: '73',
-                              resultText: 'Sehat',
-                              resultColor: Colors.green,
-                            ),
-                            classificationItem(
-                              size,
-                              icon: Icons.pie_chart_outline_sharp,
-                              title: 'Lemak Tubuh',
-                              resultValue: '${lemak.toStringAsFixed(1)}%',
-                              resultText: 'Berlebihan',
-                              resultColor: Colors.red,
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 20,
-                          ),
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: cPrimary,
-                              fixedSize: Size.fromWidth(size.width),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  classificationItem(
+                                    size,
+                                    icon: Icons.card_membership,
+                                    title: 'BMI',
+                                    resultValue: bmi.toStringAsFixed(1),
+                                    resultText: 'Sehat',
+                                    resultColor: Colors.green,
+                                  ),
+                                  classificationItem(
+                                    size,
+                                    icon: Icons.sports_score,
+                                    title: 'Skor badan',
+                                    resultValue: '73',
+                                    resultText: 'Sehat',
+                                    resultColor: Colors.green,
+                                  ),
+                                  classificationItem(
+                                    size,
+                                    icon: Icons.pie_chart_outline_sharp,
+                                    title: 'Lemak Tubuh',
+                                    resultValue: '${lemak.toStringAsFixed(1)}%',
+                                    resultText: 'Berlebihan',
+                                    resultColor: Colors.red,
+                                  ),
+                                ],
                               ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/report',
-                                  arguments: ReportArguments(id: ''));
-                            },
-                            child: Text(
-                              'SELENGKAPNYA',
-                            ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 20,
+                                ),
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: cPrimary,
+                                    fixedSize: Size.fromWidth(size.width),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed('/report',
+                                        arguments: ReportArguments(id: ''));
+                                  },
+                                  child: Text(
+                                    'SELENGKAPNYA',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        SizedBox(height: 20),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 20),
+                  )
                 ],
               ),
-            )
-          ],
+            );
+          },
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
@@ -327,6 +349,7 @@ class _IndexScreenState extends State<IndexScreen> {
           ),
           SizedBox(height: 5),
           SfLinearGauge(
+            animationDuration: 0,
             axisLabelStyle: TextStyle(
               color: Colors.white,
               fontSize: 10,
@@ -346,12 +369,14 @@ class _IndexScreenState extends State<IndexScreen> {
             maximum: maxValue,
             barPointers: [
               LinearBarPointer(
+                animationDuration: 0,
                 value: value,
                 color: Colors.white,
               ),
             ],
             markerPointers: [
               LinearShapePointer(
+                animationDuration: 0,
                 value: value,
                 color: Colors.white,
               ),

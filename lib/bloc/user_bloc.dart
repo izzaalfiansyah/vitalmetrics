@@ -9,6 +9,7 @@ class UserState {
   bool isLoading;
   bool isSaved;
   bool isError;
+  bool isLogin;
 
   UserState({
     this.id,
@@ -17,27 +18,28 @@ class UserState {
     this.isLoading = false,
     this.isSaved = false,
     this.isError = false,
+    this.isLogin = false,
   });
 }
 
 sealed class UserEvent {}
 
-class UserEventGetById extends UserEvent {
+class UserGetById extends UserEvent {
   String id;
 
-  UserEventGetById(this.id);
+  UserGetById(this.id);
 }
 
-class UserEventUpdate extends UserEvent {
+class UserUpdate extends UserEvent {
   String id;
   User user;
 
-  UserEventUpdate(this.id, this.user);
+  UserUpdate(this.id, this.user);
 }
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc() : super(UserState()) {
-    on<UserEventGetById>((event, emit) async {
+    on<UserGetById>((event, emit) async {
       emit(UserState(
         isLoading: true,
       ));
@@ -48,10 +50,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         id: event.id,
         item: user,
         isLoading: false,
+        isLogin: true,
       ));
     });
 
-    on<UserEventUpdate>((event, emit) async {
+    on<UserUpdate>((event, emit) async {
       emit(UserState(
         isLoading: true,
       ));

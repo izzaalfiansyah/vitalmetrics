@@ -20,8 +20,6 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as ReportArguments;
 
     return Scaffold(
       appBar: AppBar(

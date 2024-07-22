@@ -3,7 +3,6 @@ import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
-import 'package:vitalmetrics/libs/session.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AkunScreen extends StatefulWidget {
@@ -14,24 +13,6 @@ class AkunScreen extends StatefulWidget {
 }
 
 class _AkunScreenState extends State<AkunScreen> {
-  String userId = '';
-  late UserBloc userBloc;
-
-  @override
-  void initState() {
-    userBloc = UserBloc();
-    getUserId().then((val) {
-      userBloc.add(UserEventGetById(val));
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    userBloc.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +29,6 @@ class _AkunScreenState extends State<AkunScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 BlocBuilder<UserBloc, UserState>(
-                  bloc: userBloc,
                   builder: (context, state) {
                     if (state.isLoading) {
                       return Row(

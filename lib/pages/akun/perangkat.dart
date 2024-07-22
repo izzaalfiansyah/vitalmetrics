@@ -3,7 +3,7 @@ import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
-import 'package:vitalmetrics/services/perangkat_user.dart';
+import 'package:vitalmetrics/services/perangkat_user_service.dart';
 
 class AkunPerangkatScreen extends StatefulWidget {
   const AkunPerangkatScreen({super.key});

@@ -11,7 +11,6 @@ class UserService {
   static Future<List<User>> get() async {
     final response = await client.get(Uri.parse('$url/'));
     final data = jsonDecode(response.body);
-    print(data);
 
     List<User> items = data.map((item) => User.fromJson(item));
 

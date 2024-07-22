@@ -5,7 +5,6 @@ import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
-import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
 
 class AkunManajemenScreen extends StatefulWidget {
@@ -16,29 +15,6 @@ class AkunManajemenScreen extends StatefulWidget {
 }
 
 class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
-  late UserBloc userBloc;
-
-  @override
-  void initState() {
-    userBloc = UserBloc();
-
-    getUserId().then((val) {
-      userBloc.add(UserEventGetById(val));
-    });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    userBloc.close();
-    super.dispose();
-  }
-
-  saveUser(context, {required String id, required User user}) async {
-    userBloc.add(UserEventUpdate(id, user));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,12 +22,12 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
         title: Text('Manajemen Pengguna'),
       ),
       floatingActionButton: BlocBuilder<UserBloc, UserState>(
-        bloc: userBloc,
         builder: (context, state) {
           return FloatingActionButton(
             onPressed: () {
-              userBloc
-                  .add(UserEventUpdate(state.id as String, state.item as User));
+              context
+                  .read<UserBloc>()
+                  .add(UserUpdate(state.id as String, state.item as User));
             },
             child: Icon(
               Icons.save,
@@ -61,7 +37,6 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
         },
       ),
       body: BlocListener<UserBloc, UserState>(
-        bloc: userBloc,
         listener: (context, state) {
           if (state.isSaved) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +47,6 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
           }
         },
         child: BlocBuilder<UserBloc, UserState>(
-          bloc: userBloc,
           builder: (context, state) {
             if (state.isLoading) {
               return BodyLoading();

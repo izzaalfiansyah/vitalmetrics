@@ -169,17 +169,14 @@ class _IndexScreenState extends State<IndexScreen> {
                                   perbandinganItem(
                                     label: 'BMI',
                                     value: bmiTerakhir - bmiPembanding,
-                                    naik: bmiTerakhir - bmiPembanding > 0,
                                   ),
                                   perbandinganItem(
                                     label: 'Skor Badan',
                                     value: 0,
-                                    naik: false,
                                   ),
                                   perbandinganItem(
                                     label: 'Lemak (%)',
                                     value: lemakTerakhir - lemakPembanding,
-                                    naik: lemakTerakhir - lemakPembanding > 0,
                                   ),
                                 ],
                               ),
@@ -187,7 +184,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                 height: 20,
                               ),
                               Text(
-                                'Bandingkan dengan 20 Juli 2024 15:00',
+                                'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
@@ -294,14 +291,13 @@ class _IndexScreenState extends State<IndexScreen> {
   Expanded perbandinganItem({
     required String label,
     required double value,
-    bool naik = false,
   }) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            '${naik ? '+' : ''}${value.toStringAsFixed(1)}',
+            '${value > 0 ? '+' : ''}${value.toStringAsFixed(1)}',
             style: TextStyle(
               color: cPrimary,
               fontSize: 18,
@@ -311,10 +307,9 @@ class _IndexScreenState extends State<IndexScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                naik ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                color: Colors.orange,
-              ),
+              value > 0
+                  ? Icon(Icons.arrow_drop_up, color: Colors.green)
+                  : Icon(Icons.arrow_drop_down, color: Colors.orange),
               Text(
                 label,
                 style: TextStyle(

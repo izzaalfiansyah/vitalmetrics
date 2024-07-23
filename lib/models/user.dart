@@ -1,7 +1,7 @@
 import 'package:vitalmetrics/libs/rumus.dart';
 
 class User {
-  String id;
+  dynamic id;
   String username;
   String password;
   String email;
@@ -25,7 +25,7 @@ class User {
     return User(
       id: map['id'],
       username: map['username'],
-      password: map['password'],
+      password: '',
       email: map['email'],
       nama: map['nama'],
       tanggalLahir: map['tanggal_lahir'],

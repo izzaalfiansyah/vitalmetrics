@@ -3,7 +3,7 @@ import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/services/user_service.dart';
 
 class UserState {
-  String? id;
+  dynamic id;
   User? item;
   List<User>? items;
   bool isLoading;
@@ -44,10 +44,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         isLoading: true,
       ));
 
-      User user = await UserService.find(event.id);
+      User user = await UserService.find();
 
       emit(UserState(
-        id: event.id,
+        id: user.id,
         item: user,
         isLoading: false,
         isLogin: true,

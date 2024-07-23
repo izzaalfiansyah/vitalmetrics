@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:vitalmetrics/libs/api.dart';
+import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
 
 class UserService {
-  static String url = '$apiUrl/user';
+  static String url = '$apiUrlDebug/user';
   static Client client = Client();
 
   static Future<List<User>> get() async {
@@ -17,11 +17,11 @@ class UserService {
     return items;
   }
 
-  static Future<User> find(String id) async {
-    final response = await client.get(Uri.parse('$url/$id'));
-    final data = jsonDecode(response.body);
+  static Future<User> find() async {
+    final token = await getToken();
+    final res = await http(token).get('/user');
 
-    User item = User.fromJson(data);
+    User item = User.fromJson(res.data);
 
     return item;
   }

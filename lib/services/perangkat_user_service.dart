@@ -5,7 +5,7 @@ import 'package:vitalmetrics/libs/api.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
 
 class PerangkatUserService {
-  static String url = '$apiUrl/perangkat_user';
+  static String url = '$apiUrlDebug/perangkat_user';
   static Client client = Client();
 
   static Future<PerangkatUser?> getByUserId({required String userId}) async {

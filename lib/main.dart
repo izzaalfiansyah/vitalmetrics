@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   getUser() async {
-    setUserId('1');
+    setToken('1|JRS0KIFWxGi7iR97CafXsxjx51lIiM42wdmnrcKn0725e8d9');
     getUserId().then((val) {
       if (val != '') {
         userBloc.add(UserGetById(val));

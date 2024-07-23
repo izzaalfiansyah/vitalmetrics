@@ -5,7 +5,7 @@ import 'package:vitalmetrics/libs/api.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
 
 class PengukuranService {
-  static String url = '$apiUrl/data_pengukuran';
+  static String url = '$apiUrlDebug/data_pengukuran';
   static Client client = Client();
 
   static Future<List<Pengukuran>> getLatest() async {

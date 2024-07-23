@@ -31,8 +31,14 @@ formatDateTime(String date) {
   }
 
   DateTime dateTime = DateTime.parse(date);
+
+  String hour =
+      dateTime.hour < 10 ? '0${dateTime.hour}' : dateTime.hour.toString();
+  String minute =
+      dateTime.minute < 10 ? '0${dateTime.minute}' : dateTime.minute.toString();
+
   String result =
-      '${dateTime.day} ${bulan[dateTime.month]} ${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
+      '${dateTime.day} ${bulan[dateTime.month]} ${dateTime.year} $hour:$minute';
 
   return result;
 }

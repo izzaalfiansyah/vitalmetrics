@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DataPengukuranController;
 use App\Http\Controllers\PerangkatUserController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
@@ -13,9 +14,12 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/perangkat_user/by_user_id/{userId}', [PerangkatUserController::class, 'getByUserId']);
+    Route::get('/measurement/latest', [DataPengukuranController::class, 'getLatest']);
+
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);
-    Route::get('/perangkat_user/by_user_id/{userId}', [PerangkatUserController::class, 'getByUserId']);
+    Route::resource('/measurement', DataPengukuranController::class);
 });
 
 Route::post('/sanctum/token', function (Request $request) {

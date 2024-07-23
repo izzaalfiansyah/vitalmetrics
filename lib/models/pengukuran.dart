@@ -5,6 +5,8 @@ class Pengukuran {
   dynamic perangkatId;
   double tinggi;
   double berat;
+  double bmi;
+  double lemakTubuh;
   String createdAt;
 
   Pengukuran({
@@ -14,6 +16,8 @@ class Pengukuran {
     this.perangkatId = '',
     this.tinggi = 0,
     this.berat = 0,
+    this.bmi = 0,
+    this.lemakTubuh = 0,
     this.createdAt = '',
   });
 
@@ -21,10 +25,12 @@ class Pengukuran {
     return Pengukuran(
       id: map['id'],
       userId: map['user_id'],
-      userUmur: num.parse(map['user_umur']).toInt(),
+      userUmur: map['user_umur'],
       perangkatId: map['perangkat_id'],
-      tinggi: num.parse(map['tinggi']).toDouble(),
-      berat: num.parse(map['berat']).toDouble(),
+      tinggi: map['tinggi'].toDouble(),
+      berat: map['berat'].toDouble(),
+      bmi: map['bmi'].toDouble(),
+      lemakTubuh: map['lemak_tubuh'].toDouble(),
       createdAt: map['created_at'],
     );
   }

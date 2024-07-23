@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
+import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/dates.dart';
-import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
-import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/pages/report.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -24,7 +23,8 @@ class _IndexScreenState extends State<IndexScreen> {
 
   @override
   void initState() {
-    pengukuranBloc.add(PengukuranGetLatest());
+    final userId = context.read<UserBloc>().state.id;
+    pengukuranBloc.add(PengukuranGetLatest(userId: userId));
     super.initState();
   }
 
@@ -61,34 +61,19 @@ class _IndexScreenState extends State<IndexScreen> {
             Pengukuran dataTerakhir = Pengukuran(),
                 dataPembanding = Pengukuran();
 
+            bool isEmpty = true, pembandingIsEmpty = true;
+
             if (state.items != null) {
               if (state.items!.isNotEmpty) {
+                isEmpty = false;
                 dataTerakhir = state.items?[0] ?? Pengukuran();
-                dataPembanding = state.items?[1] ?? Pengukuran();
+
+                if (state.items!.length > 1) {
+                  pembandingIsEmpty = false;
+                  dataPembanding = state.items?[1] ?? Pengukuran();
+                }
               }
             }
-
-            User user = context.read<UserBloc>().state.item ?? User();
-
-            double bmiTerakhir = getBMI(
-                  tinggi: dataTerakhir.tinggi,
-                  berat: dataTerakhir.berat,
-                  umur: dataTerakhir.userUmur,
-                ),
-                bmiPembanding = getBMI(
-                  tinggi: dataPembanding.tinggi,
-                  berat: dataPembanding.berat,
-                  umur: dataPembanding.userUmur,
-                );
-
-            double lemakTerakhir = getLemakTubuh(
-                    jenisKelamin: user.jenisKelamin,
-                    bmi: bmiTerakhir,
-                    umur: user.umur),
-                lemakPembanding = getLemakTubuh(
-                    jenisKelamin: user.jenisKelamin,
-                    bmi: bmiPembanding,
-                    umur: user.umur);
 
             return SingleChildScrollView(
               child: Stack(
@@ -105,25 +90,31 @@ class _IndexScreenState extends State<IndexScreen> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              displayBox(
-                                label: 'Berat',
-                                value: dataTerakhir.berat,
-                                pcs: 'KG',
-                                maxValue: 200,
-                              ),
-                              displayBox(
-                                label: 'Tinggi',
-                                value: dataTerakhir.tinggi,
-                                pcs: 'CM',
-                                maxValue: 300,
-                              ),
-                              SizedBox(height: 20),
-                              SizedBox(height: 50),
-                            ],
-                          ),
+                          child: !state.isLoading
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    displayBox(
+                                      label: 'Berat',
+                                      value: dataTerakhir.berat,
+                                      pcs: 'KG',
+                                      maxValue: 200,
+                                    ),
+                                    displayBox(
+                                      label: 'Tinggi',
+                                      value: dataTerakhir.tinggi,
+                                      pcs: 'CM',
+                                      maxValue: 300,
+                                    ),
+                                    SizedBox(height: 20),
+                                    SizedBox(height: 50),
+                                  ],
+                                )
+                              : Center(
+                                  child: BodyLoading(
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -148,19 +139,24 @@ class _IndexScreenState extends State<IndexScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Center(
-                                child: Text(
-                                  formatDateTime(dataTerakhir.createdAt),
-                                  style: TextStyle(
-                                    color: cPrimary,
-                                    // fontSize: 12,
-                                  ),
+                              if (!isEmpty)
+                                Column(
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        formatDateTime(dataTerakhir.createdAt),
+                                        style: TextStyle(
+                                          color: cPrimary,
+                                          // fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Hr(),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Hr(),
                               SizedBox(
                                 height: 20,
                               ),
@@ -168,7 +164,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                 children: [
                                   perbandinganItem(
                                     label: 'BMI',
-                                    value: bmiTerakhir - bmiPembanding,
+                                    value:
+                                        dataTerakhir.bmi - dataPembanding.bmi,
                                   ),
                                   perbandinganItem(
                                     label: 'Skor Badan',
@@ -176,20 +173,22 @@ class _IndexScreenState extends State<IndexScreen> {
                                   ),
                                   perbandinganItem(
                                     label: 'Lemak (%)',
-                                    value: lemakTerakhir - lemakPembanding,
+                                    value: dataTerakhir.lemakTubuh -
+                                        dataPembanding.lemakTubuh,
                                   ),
                                 ],
                               ),
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                              if (!pembandingIsEmpty)
+                                Text(
+                                  'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -211,7 +210,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.card_membership,
                                     title: 'BMI',
-                                    resultValue: bmiTerakhir.toStringAsFixed(1),
+                                    resultValue:
+                                        dataTerakhir.bmi.toStringAsFixed(1),
                                     resultText: 'Sehat',
                                     resultColor: Colors.green,
                                   ),
@@ -219,7 +219,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.sports_score,
                                     title: 'Skor badan',
-                                    resultValue: '73',
+                                    resultValue: '75',
                                     resultText: 'Sehat',
                                     resultColor: Colors.green,
                                   ),
@@ -228,7 +228,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                     icon: Icons.pie_chart_outline_sharp,
                                     title: 'Lemak Tubuh',
                                     resultValue:
-                                        '${lemakTerakhir.toStringAsFixed(1)}%',
+                                        '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
                                     resultText: 'Berlebihan',
                                     resultColor: Colors.red,
                                   ),
@@ -239,22 +239,31 @@ class _IndexScreenState extends State<IndexScreen> {
                                   horizontal: 20,
                                   vertical: 20,
                                 ),
-                                child: FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: cPrimary,
-                                    fixedSize: Size.fromWidth(size.width),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed('/report',
-                                        arguments: ReportArguments(id: ''));
-                                  },
-                                  child: Text(
-                                    'SELENGKAPNYA',
-                                  ),
-                                ),
+                                child: isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'Anda belum melakukan pengukuran',
+                                        ),
+                                      )
+                                    : FilledButton(
+                                        style: FilledButton.styleFrom(
+                                          backgroundColor: cPrimary,
+                                          fixedSize: Size.fromWidth(size.width),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                              '/report',
+                                              arguments:
+                                                  ReportArguments(id: ''));
+                                        },
+                                        child: Text(
+                                          'SELENGKAPNYA',
+                                        ),
+                                      ),
                               ),
                             ],
                           ),
@@ -385,14 +394,14 @@ class _IndexScreenState extends State<IndexScreen> {
             maximum: maxValue,
             barPointers: [
               LinearBarPointer(
-                animationDuration: 0,
+                // animationDuration: 0,
                 value: value,
                 color: Colors.white,
               ),
             ],
             markerPointers: [
               LinearShapePointer(
-                animationDuration: 0,
+                // animationDuration: 0,
                 value: value,
                 color: Colors.white,
               ),

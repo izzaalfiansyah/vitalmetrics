@@ -22,12 +22,12 @@ class DataPengukuran extends Model
 
     protected $with = ['user', 'perangkat'];
 
-    protected function user()
+    function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    protected function perangkat()
+    function perangkat()
     {
         return $this->belongsTo(PerangkatUser::class);
     }
@@ -54,7 +54,7 @@ class DataPengukuran extends Model
         );
     }
 
-    protected function lemak_tubuh(): Attribute
+    protected function lemakTubuh(): Attribute
     {
         return new Attribute(
             get: function () {

@@ -1,14 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:http/http.dart';
 import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
 import 'package:vitalmetrics/services/type.dart';
 
 class PerangkatUserService {
-  static String url = '$apiUrlDebug/perangkat_user';
-  static Client client = Client();
-
   static Future<PerangkatUser?> getByUserId({required dynamic userId}) async {
     try {
       final token = await getToken();

@@ -92,9 +92,9 @@ class DataPengukuranController extends Controller
         ]);
     }
 
-    function getLatest(): Response
+    function getLatestByUserId($userId): Response
     {
-        $pengukuran = DataPengukuran::limit(2)->orderBy('created_at', 'desc')->get();
+        $pengukuran = DataPengukuran::where('user_id', $userId)->limit(2)->orderBy('created_at', 'desc')->get();
 
         return Response([
             'success' => true,

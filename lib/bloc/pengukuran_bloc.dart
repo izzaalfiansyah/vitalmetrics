@@ -1,22 +1,30 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/bloc/state.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
 import 'package:vitalmetrics/services/pengukuran_service.dart';
 
-class PengukuranState {
-  bool isLoading;
+class PengukuranState extends AppState {
   Pengukuran? item;
   List<Pengukuran>? items;
 
   PengukuranState({
-    this.isLoading = false,
     this.item,
     this.items,
+    super.isLoading,
+    super.isError,
+    super.message,
   });
 }
 
 class PengukuranEvent {}
 
-class PengukuranGetLatest extends PengukuranEvent {}
+class PengukuranGetLatest extends PengukuranEvent {
+  dynamic userId;
+
+  PengukuranGetLatest({
+    required this.userId,
+  });
+}
 
 class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
   PengukuranBloc() : super(PengukuranState()) {
@@ -25,10 +33,10 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
         isLoading: true,
       ));
 
-      final pengukuran = await PengukuranService.getLatest();
+      final pengukuran =
+          await PengukuranService.getLatest(userId: event.userId);
 
       emit(PengukuranState(
-        isLoading: false,
         items: pengukuran,
       ));
     });

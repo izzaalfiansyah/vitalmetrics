@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-const String apiUrlDebug = 'http://10.0.2.2:3000';
+const String apiUrl = 'http://10.0.2.2:8000/api';
 
 Dio http(String? token) {
-  final options = BaseOptions(baseUrl: 'http://10.0.2.2:8000/api', headers: {
+  final options = BaseOptions(baseUrl: apiUrl, headers: {
     'Accept': 'application/json',
     'Authorization': token != null ? 'Bearer $token' : '',
     'Access-Control-Allow-Credentials': true,

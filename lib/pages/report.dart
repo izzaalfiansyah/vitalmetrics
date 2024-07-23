@@ -223,10 +223,21 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                     listItem(
                       label: "Air Dalam Tubuh",
-                      value: "26.4",
+                      value:
+                          "${dataTerakhir.airDalamTubuh.toStringAsFixed(1)}%",
                     ),
-                    listItem(label: "Berat", value: "71.8kg"),
-                    listItem(label: "BMI", value: "26.4"),
+                    listItem(
+                        label: "Massa Otot Tubuh",
+                        value:
+                            "${dataTerakhir.massaOtotTubuh.toStringAsFixed(1)}kg"),
+                    listItem(
+                        label: "Massa Tulang",
+                        value:
+                            "${dataTerakhir.massaTulangPersentase.toStringAsFixed(1)}%"),
+                    listItem(
+                        label: "Massa Protein",
+                        value:
+                            "${dataTerakhir.massaProtein.toStringAsFixed(1)}%"),
                   ],
                 ),
                 Container(
@@ -246,12 +257,10 @@ class _ReportScreenState extends State<ReportScreen> {
                 Hr(),
                 Column(
                   children: [
-                    listItem(label: "Berat", value: "71.8kg"),
-                    listItem(label: "BMI", value: "26.4"),
-                    listItem(label: "Berat", value: "71.8kg"),
-                    listItem(label: "BMI", value: "26.4"),
-                    listItem(label: "Berat", value: "71.8kg"),
-                    listItem(label: "BMI", value: "26.4"),
+                    listItem(
+                        label: "Berat Badan Ideal",
+                        value:
+                            "${dataTerakhir.beratBadanIdeal.toStringAsFixed(1)}kg"),
                   ],
                 ),
                 SizedBox(height: 20),

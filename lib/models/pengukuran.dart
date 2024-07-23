@@ -7,6 +7,13 @@ class Pengukuran {
   double berat;
   double bmi;
   double lemakTubuh;
+  double airDalamTubuh;
+  double massaOtotTubuh;
+  double massaTulang;
+  double massaTulangPersentase;
+  double massaProtein;
+  double massaProteinPersentase;
+  double beratBadanIdeal;
   String createdAt;
 
   Pengukuran({
@@ -18,6 +25,13 @@ class Pengukuran {
     this.berat = 0,
     this.bmi = 0,
     this.lemakTubuh = 0,
+    this.airDalamTubuh = 0,
+    this.massaOtotTubuh = 0,
+    this.massaTulang = 0,
+    this.massaTulangPersentase = 0,
+    this.massaProtein = 0,
+    this.massaProteinPersentase = 0,
+    this.beratBadanIdeal = 0,
     this.createdAt = '',
   });
 
@@ -31,6 +45,13 @@ class Pengukuran {
       berat: map['berat'].toDouble(),
       bmi: map['bmi'].toDouble(),
       lemakTubuh: map['lemak_tubuh'].toDouble(),
+      airDalamTubuh: map['air_dalam_tubuh'].toDouble(),
+      massaOtotTubuh: map['massa_otot_tubuh'].toDouble(),
+      massaTulang: map['massa_tulang'].toDouble(),
+      massaTulangPersentase: map['massa_tulang_persentase'].toDouble(),
+      massaProtein: map['massa_protein'].toDouble(),
+      massaProteinPersentase: map['massa_protein_persentase'].toDouble(),
+      beratBadanIdeal: map['berat_badan_ideal'].toDouble(),
       createdAt: map['created_at'],
     );
   }

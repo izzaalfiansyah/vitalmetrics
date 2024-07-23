@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::resource('/users', UsersController::class);
+});
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([

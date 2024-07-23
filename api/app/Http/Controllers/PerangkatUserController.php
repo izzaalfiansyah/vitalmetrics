@@ -27,7 +27,7 @@ class PerangkatUserController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data perangkat tidak ditemukan'
-            ]);
+            ], 400);
         }
 
         return Response([
@@ -44,7 +44,7 @@ class PerangkatUserController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data perangkat gagal disimpan'
-            ]);
+            ], 400);
         }
 
         return Response([
@@ -61,7 +61,7 @@ class PerangkatUserController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data perangkat tidak ditemukan',
-            ]);
+            ], 400);
         }
 
         $data = $this->validate($req);
@@ -70,7 +70,7 @@ class PerangkatUserController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data perangkat user gagal disimpan',
-            ]);
+            ], 400);
         }
 
         return Response([
@@ -97,7 +97,7 @@ class PerangkatUserController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data perangkat tidak ditemukan'
-            ]);
+            ], 400);
         }
 
         return Response([

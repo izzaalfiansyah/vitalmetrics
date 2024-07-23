@@ -1,27 +1,22 @@
 import 'package:bloc/bloc.dart';
+import 'package:vitalmetrics/bloc/state.dart';
 import 'package:vitalmetrics/models/user.dart';
-import 'package:vitalmetrics/services/type.dart';
 import 'package:vitalmetrics/services/user_service.dart';
 
-class UserState {
+class UserState extends AppState {
   dynamic id;
   User? item;
   List<User>? items;
-  bool isLoading;
-  bool isSaved;
   bool isLogin;
-  bool isError;
-  String? message;
 
   UserState({
     this.id,
     this.item,
     this.items,
-    this.isLoading = false,
-    this.isSaved = false,
     this.isLogin = false,
-    this.isError = false,
-    this.message,
+    super.isLoading,
+    super.isError,
+    super.message,
   });
 }
 
@@ -58,17 +53,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         isLoading: true,
       ));
 
-      ServiceResponse res = await UserService.update(event.id, event.user);
+      final res = await UserService.update(event.id, event.user);
+      final user = await UserService.find();
 
       if (res.success) {
         emit(UserState(
-          isLoading: false,
           message: res.message,
+          item: user,
         ));
       } else {
         emit(UserState(
           isError: true,
           message: res.message,
+          item: user,
         ));
       }
     });

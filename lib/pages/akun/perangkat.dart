@@ -15,11 +15,13 @@ class AkunPerangkatScreen extends StatefulWidget {
 
 class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   PerangkatUserBloc perangkatUserBloc = PerangkatUserBloc();
-  String userId = '';
+  dynamic userId;
 
   @override
   void initState() {
-    userId = context.read<UserBloc>().state.id as String;
+    setState(() {
+      userId = context.read<UserBloc>().state.id;
+    });
     perangkatUserBloc.add(PerangkatUserGetByUserId(userId: userId));
     super.initState();
   }
@@ -36,18 +38,10 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
         create: (context) => perangkatUserBloc,
         child: BlocListener<PerangkatUserBloc, PerangkatUserState>(
           listener: (context, state) {
-            if (state.isSaved) {
+            if (state.message != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Perangkat berhasil dihubungkan.'),
-                ),
-              );
-            }
-
-            if (state.isRemoved) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Perangkat berhasil diputuskan.'),
+                  content: Text(state.message.toString()),
                 ),
               );
             }

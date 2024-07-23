@@ -1,27 +1,23 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/bloc/state.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
 import 'package:vitalmetrics/services/perangkat_user_service.dart';
 
-class PerangkatUserState {
+class PerangkatUserState extends AppState {
   PerangkatUser? item;
-  bool isLoading;
-  bool isSaved;
-  bool isRemoved;
-  bool isError;
 
   PerangkatUserState({
     this.item,
-    this.isLoading = false,
-    this.isSaved = false,
-    this.isRemoved = false,
-    this.isError = false,
+    super.isError,
+    super.isLoading,
+    super.message,
   });
 }
 
 class PerangkatUserEvent {}
 
 class PerangkatUserGetByUserId extends PerangkatUserEvent {
-  String userId;
+  dynamic userId;
 
   PerangkatUserGetByUserId({required this.userId});
 }
@@ -33,7 +29,7 @@ class PerangkatUserAdd extends PerangkatUserEvent {
 }
 
 class PerangkatUserRemove extends PerangkatUserEvent {
-  String id;
+  dynamic id;
 
   PerangkatUserRemove(this.id);
 }
@@ -50,8 +46,8 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
       final perangkat = await PerangkatUserService.getByUserId(userId: userId);
 
       emit(PerangkatUserState(
-        item: perangkat,
         isLoading: false,
+        item: perangkat,
       ));
     });
 
@@ -67,13 +63,13 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
       if (isSaved) {
         emit(PerangkatUserState(
           isLoading: false,
-          isSaved: true,
           item: perangkat,
         ));
       } else {
         emit(PerangkatUserState(
           isLoading: false,
           isError: true,
+          item: perangkat,
         ));
       }
     });
@@ -88,7 +84,6 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
       if (isRemoved) {
         emit(PerangkatUserState(
           isLoading: false,
-          isRemoved: true,
           item: null,
         ));
       } else {

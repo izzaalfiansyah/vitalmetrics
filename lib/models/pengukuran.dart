@@ -1,8 +1,8 @@
 class Pengukuran {
-  String id;
-  String userId;
+  dynamic id;
+  dynamic userId;
   int userUmur;
-  String perangkatId;
+  dynamic perangkatId;
   double tinggi;
   double berat;
   String createdAt;

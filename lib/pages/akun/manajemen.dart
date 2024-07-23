@@ -17,6 +17,12 @@ class AkunManajemenScreen extends StatefulWidget {
 
 class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
   @override
+  void initState() {
+    context.read<UserBloc>().add(UserGet());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +35,6 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
               context
                   .read<UserBloc>()
                   .add(UserUpdate(state.id, state.item as User));
-              context.read<UserBloc>().add(UserGet());
             },
             child: Icon(
               Icons.save,

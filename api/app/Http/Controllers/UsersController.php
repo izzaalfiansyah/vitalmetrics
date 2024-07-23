@@ -31,7 +31,7 @@ class UsersController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data user gagal ditambah',
-            ]);
+            ], 400);
         }
 
         return Response([
@@ -48,7 +48,7 @@ class UsersController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data user tidak ditemukan',
-            ]);
+            ], 400);
         }
 
         $data = $this->validate($req, $user);
@@ -61,7 +61,7 @@ class UsersController extends Controller
             return Response([
                 'success' => false,
                 'message' => 'data user gagal disimpan',
-            ]);
+            ], 400);
         }
 
         return Response([

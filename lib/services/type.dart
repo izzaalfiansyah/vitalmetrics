@@ -1,7 +1,7 @@
-class ServiceResponse {
+class ServiceResponse<Data> {
   bool success;
   String message;
-  dynamic data;
+  Data? data;
   dynamic errors;
 
   ServiceResponse({

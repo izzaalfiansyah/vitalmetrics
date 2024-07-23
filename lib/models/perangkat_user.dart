@@ -1,7 +1,7 @@
 class PerangkatUser {
-  String id;
+  dynamic id;
   String nomorSerial;
-  String userId;
+  dynamic userId;
 
   PerangkatUser({
     this.id = '',

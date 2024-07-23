@@ -1,9 +1,9 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:http/http.dart';
 import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
+import 'package:vitalmetrics/services/type.dart';
 
 class PerangkatUserService {
   static String url = '$apiUrlDebug/perangkat_user';
@@ -22,23 +22,30 @@ class PerangkatUserService {
     }
   }
 
-  static Future<bool> create(PerangkatUser perangkat) async {
-    final data = jsonEncode(perangkat.toJson());
-    final response = await client.post(Uri.parse(url), body: data);
+  static Future<ServiceResponse> create(PerangkatUser perangkat) async {
+    try {
+      final token = await getToken();
+      final res =
+          await http(token).post('/perangkat_user', data: perangkat.toJson());
 
-    return response.statusCode < 400;
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
+    }
   }
 
-  static Future<bool> update(dynamic id, PerangkatUser perangkat) async {
-    final data = jsonEncode(perangkat.toJson());
-    final response = await client.put(Uri.parse('$url/$id'), body: data);
+  static Future<ServiceResponse> delete(dynamic id) async {
+    try {
+      final token = await getToken();
+      final res = await http(token).delete('/perangkat_user/$id');
 
-    return response.statusCode < 400;
-  }
-
-  static Future<bool> delete(dynamic id) async {
-    final response = await client.delete(Uri.parse('$url/$id'));
-
-    return response.statusCode < 400;
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
+    }
   }
 }

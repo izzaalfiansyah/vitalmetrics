@@ -56,19 +56,19 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
         isLoading: true,
       ));
 
-      final isSaved = await PerangkatUserService.create(event.perangkat);
+      final res = await PerangkatUserService.create(event.perangkat);
       final perangkat = await PerangkatUserService.getByUserId(
           userId: event.perangkat.userId);
 
-      if (isSaved) {
+      if (res.success) {
         emit(PerangkatUserState(
-          isLoading: false,
           item: perangkat,
+          message: res.message,
         ));
       } else {
         emit(PerangkatUserState(
-          isLoading: false,
           isError: true,
+          message: res.message,
           item: perangkat,
         ));
       }
@@ -79,17 +79,16 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
         isLoading: true,
       ));
 
-      final isRemoved = await PerangkatUserService.delete(event.id);
+      final res = await PerangkatUserService.delete(event.id);
 
-      if (isRemoved) {
+      if (res.success) {
         emit(PerangkatUserState(
-          isLoading: false,
-          item: null,
+          message: res.message,
         ));
       } else {
         emit(PerangkatUserState(
-          isLoading: false,
           isError: true,
+          message: res.message,
         ));
       }
     });

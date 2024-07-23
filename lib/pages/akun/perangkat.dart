@@ -45,15 +45,6 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                 ),
               );
             }
-
-            if (state.isError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Terjadi kesalahan.'),
-                  backgroundColor: Colors.orange,
-                ),
-              );
-            }
           },
           child: BlocBuilder<PerangkatUserBloc, PerangkatUserState>(
             builder: (context, state) {

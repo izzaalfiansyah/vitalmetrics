@@ -38,14 +38,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         isLoading: true,
       ));
 
-      User user = await UserService.find();
+      User? user = await UserService.find();
 
-      emit(UserState(
-        id: user.id,
-        item: user,
-        isLoading: false,
-        isLogin: true,
-      ));
+      if (user != null) {
+        emit(UserState(
+          id: user.id,
+          item: user,
+          isLogin: true,
+        ));
+      } else {
+        emit(UserState(
+          isLogin: false,
+        ));
+      }
     });
 
     on<UserUpdate>((event, emit) async {

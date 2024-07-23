@@ -79,7 +79,7 @@ class PerangkatUserController extends Controller
         ]);
     }
 
-    function delete($id): Response
+    function destroy($id): Response
     {
         PerangkatUser::destroy($id);
 

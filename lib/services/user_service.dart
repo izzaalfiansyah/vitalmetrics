@@ -15,13 +15,17 @@ class UserService {
     return items;
   }
 
-  static Future<User> find() async {
-    final token = await getToken();
-    final res = await http(token).get('/user');
+  static Future<User?> find() async {
+    try {
+      final token = await getToken();
+      final res = await http(token).get('/user');
 
-    User item = User.fromJson(res.data);
+      User item = User.fromJson(res.data);
 
-    return item;
+      return item;
+    } catch (e) {
+      return null;
+    }
   }
 
   static Future<ServiceResponse> update(dynamic id, User user) async {

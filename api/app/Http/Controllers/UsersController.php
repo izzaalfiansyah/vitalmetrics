@@ -22,9 +22,9 @@ class UsersController extends Controller
 
     function store(Request $req): Response
     {
-        $this->validate($req);
+        $data = $this->validate($req);
 
-        $user = User::create($req->validated());
+        $user = User::create($data);
 
         if (!$user) {
             return Response([
@@ -50,9 +50,13 @@ class UsersController extends Controller
             ]);
         }
 
-        $this->validate($req, $user);
+        $data = $this->validate($req, $user);
 
-        if (!$user->update($req->validated())) {
+        if (!$data['password']) {
+            unset($data['password']);
+        }
+
+        if (!$user->update($data)) {
             return Response([
                 'success' => false,
                 'message' => 'data user gagal disimpan',
@@ -65,15 +69,15 @@ class UsersController extends Controller
         ]);
     }
 
-    private function validate(Request $req, User $user = null)
+    private function validate(Request $req, User $user = null): array
     {
-        $req->validate([
+        return $req->validate([
             'username' => ['required', $user ? Rule::unique('users')->ignore($user->id) : Rule::unique('users')],
             'email' => ['required', 'email', $user ? Rule::unique('users')->ignore($user->id) : Rule::unique('users')],
             'nama' => 'required',
-            'tanggal_lahir' => 'required|tanggal_lahir',
+            'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:l,p',
-            'password' => [$user ? 'required' : 'nullable', Password::default(), 'confirmed']
+            'password' => [$user ? 'nullable' : 'required', Password::default(), 'confirmed']
         ]);
     }
 }

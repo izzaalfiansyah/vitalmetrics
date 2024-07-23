@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:vitalmetrics/libs/api.dart';
+import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
 
 class PengukuranService {

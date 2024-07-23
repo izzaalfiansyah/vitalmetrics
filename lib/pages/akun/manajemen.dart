@@ -4,6 +4,7 @@ import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/libs/rumus.dart';
 import 'package:vitalmetrics/models/user.dart';
 
@@ -27,7 +28,8 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
             onPressed: () {
               context
                   .read<UserBloc>()
-                  .add(UserUpdate(state.id as String, state.item as User));
+                  .add(UserUpdate(state.id, state.item as User));
+              context.read<UserBloc>().add(UserGet());
             },
             child: Icon(
               Icons.save,
@@ -38,12 +40,8 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
       ),
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
-          if (state.isSaved) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Akun pengguna berhasil disimpan'),
-              ),
-            );
+          if (state.message != null) {
+            notif(context, text: state.message.toString());
           }
         },
         child: BlocBuilder<UserBloc, UserState>(
@@ -230,9 +228,7 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
               );
             }
 
-            return Center(
-              child: Text('Terjadi kesalahan'),
-            );
+            return Center();
           },
         ),
       ),

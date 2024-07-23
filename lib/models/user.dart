@@ -1,5 +1,3 @@
-import 'package:vitalmetrics/libs/rumus.dart';
-
 class User {
   dynamic id;
   String username;
@@ -30,13 +28,12 @@ class User {
       nama: map['nama'],
       tanggalLahir: map['tanggal_lahir'],
       jenisKelamin: map['jenis_kelamin'],
-      umur: getUmur(map['tanggal_lahir']),
+      umur: map['umur'],
     );
   }
 
   toJson() {
     return {
-      'id': id,
       'username': username,
       'password': password,
       'email': email,

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,9 +20,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'username',
         'name',
         'email',
         'password',
+        'tanggal_lahir',
+        'jenis_kelamin',
     ];
 
     /**
@@ -32,6 +37,24 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $appends = [
+        'umur'
+    ];
+
+    protected function umur(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $dateNow = new \DateTime();
+                $dateBirth = new \DateTime($this->tanggal_lahir);
+
+                $age = $dateBirth->diff($dateNow)->y;
+
+                return $age;
+            }
+        );
+    }
 
     /**
      * Get the attributes that should be cast.

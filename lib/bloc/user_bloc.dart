@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:vitalmetrics/models/user.dart';
+import 'package:vitalmetrics/services/type.dart';
 import 'package:vitalmetrics/services/user_service.dart';
 
 class UserState {
@@ -8,8 +9,9 @@ class UserState {
   List<User>? items;
   bool isLoading;
   bool isSaved;
-  bool isError;
   bool isLogin;
+  bool isError;
+  String? message;
 
   UserState({
     this.id,
@@ -17,21 +19,18 @@ class UserState {
     this.items,
     this.isLoading = false,
     this.isSaved = false,
-    this.isError = false,
     this.isLogin = false,
+    this.isError = false,
+    this.message,
   });
 }
 
 sealed class UserEvent {}
 
-class UserGetById extends UserEvent {
-  String id;
-
-  UserGetById(this.id);
-}
+class UserGet extends UserEvent {}
 
 class UserUpdate extends UserEvent {
-  String id;
+  dynamic id;
   User user;
 
   UserUpdate(this.id, this.user);
@@ -39,7 +38,7 @@ class UserUpdate extends UserEvent {
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc() : super(UserState()) {
-    on<UserGetById>((event, emit) async {
+    on<UserGet>((event, emit) async {
       emit(UserState(
         isLoading: true,
       ));
@@ -59,18 +58,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         isLoading: true,
       ));
 
-      bool saved = await UserService.update(event.id, event.user);
+      ServiceResponse res = await UserService.update(event.id, event.user);
 
-      if (saved) {
+      if (res.success) {
         emit(UserState(
-          id: event.id,
-          item: event.user,
           isLoading: false,
-          isSaved: true,
+          message: res.message,
         ));
       } else {
         emit(UserState(
           isError: true,
+          message: res.message,
         ));
       }
     });

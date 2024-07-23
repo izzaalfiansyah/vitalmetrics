@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:vitalmetrics/libs/api.dart';
+import 'package:dio/dio.dart';
+import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
+import 'package:vitalmetrics/services/type.dart';
 
 class UserService {
-  static String url = '$apiUrlDebug/user';
-  static Client client = Client();
-
   static Future<List<User>> get() async {
-    final response = await client.get(Uri.parse('$url/'));
-    final data = jsonDecode(response.body);
+    final token = await getToken();
+    final res = await http(token).get('/users');
+    final data = res.data['data'];
 
     List<User> items = data.map((item) => User.fromJson(item));
 
@@ -26,10 +24,16 @@ class UserService {
     return item;
   }
 
-  static Future<bool> update(String id, User user) async {
-    final body = jsonEncode(user.toJson());
-    final response = await client.put(Uri.parse('$url/$id'), body: body);
+  static Future<ServiceResponse> update(dynamic id, User user) async {
+    try {
+      final token = await getToken();
+      final res = await http(token).put('/users/$id', data: user.toJson());
 
-    return response.statusCode == 200;
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'terjadi kesalahan');
+    }
   }
 }

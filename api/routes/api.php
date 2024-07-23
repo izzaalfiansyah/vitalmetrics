@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PerangkatUserController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/users', UsersController::class);
+    Route::resource('/perangkat_user', PerangkatUserController::class);
+    Route::get('/perangkat_user/by_user_id/{userId}', [PerangkatUserController::class, 'getByUserId']);
 });
 
 Route::post('/sanctum/token', function (Request $request) {

@@ -15,6 +15,7 @@ class UsersController extends Controller
         $user = User::paginate(10);
 
         return Response([
+            'success' => true,
             'data' => $user,
             'message' => 'data user berhasil diambil',
         ]);

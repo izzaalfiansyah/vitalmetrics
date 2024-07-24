@@ -139,6 +139,8 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
                               value = item.bmi;
                             } else if (filter == 'lemak tubuh') {
                               value = item.lemakTubuh;
+                            } else if (filter == 'skor badan') {
+                              value = item.skorBadan;
                             }
 
                             return ChartData(
@@ -198,6 +200,10 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
                   {
                     'label': 'Lemak Tubuh',
                     'icon': Icons.pie_chart_outline_rounded,
+                  },
+                  {
+                    'label': 'Skor Badan',
+                    'icon': Icons.sports_score,
                   },
                 ]
                     .map((item) => boxPhillSelect(

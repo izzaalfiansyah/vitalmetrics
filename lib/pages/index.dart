@@ -169,7 +169,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                   ),
                                   perbandinganItem(
                                     label: 'Skor Badan',
-                                    value: 0,
+                                    value: dataTerakhir.skorBadan -
+                                        dataPembanding.skorBadan,
                                   ),
                                   perbandinganItem(
                                     label: 'Lemak (%)',
@@ -219,7 +220,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.sports_score,
                                     title: 'Skor badan',
-                                    resultValue: '75',
+                                    resultValue: dataTerakhir.skorBadan
+                                        .toStringAsFixed(1),
                                     resultText: 'Sehat',
                                     resultColor: Colors.green,
                                   ),

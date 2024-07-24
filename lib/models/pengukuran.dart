@@ -14,6 +14,7 @@ class Pengukuran {
   double massaProtein;
   double massaProteinPersentase;
   double beratBadanIdeal;
+  double skorBadan;
   String createdAt;
 
   Pengukuran({
@@ -32,6 +33,7 @@ class Pengukuran {
     this.massaProtein = 0,
     this.massaProteinPersentase = 0,
     this.beratBadanIdeal = 0,
+    this.skorBadan = 0,
     this.createdAt = '',
   });
 
@@ -52,6 +54,7 @@ class Pengukuran {
       massaProtein: map['massa_protein'].toDouble(),
       massaProteinPersentase: map['massa_protein_persentase'].toDouble(),
       beratBadanIdeal: map['berat_badan_ideal'].toDouble(),
+      skorBadan: map['skor_badan'].toDouble(),
       createdAt: map['created_at'] ?? map['time'],
     );
   }

@@ -117,7 +117,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                         showTicks: false,
                                         pointers: [
                                           RangePointer(
-                                            value: 75,
+                                            value: dataTerakhir.skorBadan,
                                             color: Colors.white,
                                             enableAnimation: true,
                                             width: 5,
@@ -126,7 +126,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                         annotations: [
                                           GaugeAnnotation(
                                             widget: Text(
-                                              '75',
+                                              dataTerakhir.skorBadan
+                                                  .toStringAsFixed(0),
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 36,
@@ -186,7 +187,8 @@ class _ReportScreenState extends State<ReportScreen> {
                               topSubItem(
                                 size,
                                 label: 'Skor Badan',
-                                value: 0,
+                                value: dataTerakhir.skorBadan -
+                                    dataPembanding.skorBadan,
                               ),
                               topSubItem(
                                 size,

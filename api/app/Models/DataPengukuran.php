@@ -42,6 +42,7 @@ class DataPengukuran extends Model
         'massa_protein',
         'massa_protein_persentase',
         'berat_badan_ideal',
+        'skor_badan',
     ];
 
     protected function bmi(): Attribute
@@ -157,6 +158,66 @@ class DataPengukuran extends Model
                 $berat_badan_ideal = $this->tinggi - 100 - (($this->tinggi - 100) / $nilaiJenisKelamin);
 
                 return $berat_badan_ideal;
+            }
+        );
+    }
+
+    protected function skorBadan(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $bmi = $this->bmi;
+                $bfp = $this->lemak_tubuh;
+                $skorBmi = 0;
+                $skorBfp = 0;
+
+                if ($bmi >= 18.5 && $bmi <= 24.9) {
+                    $skorBmi = 100;
+                } elseif ($bmi >= 25.0 && $bmi <= 29.9) {
+                    $skorBmi = 100 - (($bmi - 24.9) / (29.9 - 24.9) * 25);
+                } elseif ($bmi >= 30.0 && $bmi <= 34.9) {
+                    $skorBmi = 75 - (($bmi - 29.9) / (34.9 - 29.9) * 25);
+                } elseif ($bmi >= 35.0 && $bmi <= 39.9) {
+                    $skorBmi = 50 - (($bmi - 34.9) / (39.9 - 34.9) * 25);
+                } elseif ($bmi >= 40.0) {
+                    $skorBmi = 25 - (($bmi - 39.9) / 5 * 24);
+                } elseif ($bmi < 18.5) {
+                    $skorBmi = 75 - ((18.5 - $bmi) / 18.5 * 74);
+                } else {
+                    $skorBmi = 0; // Default case, should not reach here.
+                }
+
+                if ($this->user->jenis_kelamin == 'l') {
+                    if ($bfp < 10) {
+                        $skorBfp = 100;
+                    } elseif ($bfp < 15) {
+                        $skorBfp = 100 - (($bfp - 10) / 5 * 20);
+                    } elseif ($bfp < 20) {
+                        $skorBfp = 80 - (($bfp - 15) / 5 * 20);
+                    } elseif ($bfp < 25) {
+                        $skorBfp = 60 - (($bfp - 20) / 5 * 20);
+                    } elseif ($bfp < 30) {
+                        $skorBfp = 40 - (($bfp - 25) / 5 * 20);
+                    } else {
+                        $skorBfp = 20 - (($bfp - 30) / 10 * 19);
+                    }
+                } else {
+                    if ($bfp < 20) {
+                        $skorBfp = 100;
+                    } elseif ($bfp < 25) {
+                        $skorBfp = 100 - (($bfp - 20) / 5 * 20);
+                    } elseif ($bfp < 30) {
+                        $skorBfp = 80 - (($bfp - 25) / 5 * 20);
+                    } elseif ($bfp < 35) {
+                        $skorBfp = 60 - (($bfp - 30) / 5 * 20);
+                    } elseif ($bfp < 40) {
+                        $skorBfp = 40 - (($bfp - 35) / 5 * 20);
+                    } else {
+                        $skorBfp = 20 - (($bfp - 40) / 10 * 19);
+                    }
+                }
+
+                return ($skorBmi + $skorBfp) / 2;
             }
         );
     }

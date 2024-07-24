@@ -15,7 +15,7 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/perangkat_user/by_user_id/{userId}', [PerangkatUserController::class, 'getByUserId']);
-    Route::get('/measurement/by_user_id/{userId}/latest', [DataPengukuranController::class, 'getLatestByUserId']);
+    Route::get('/measurement/laporan', [DataPengukuranController::class, 'getLaporan']);
 
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);

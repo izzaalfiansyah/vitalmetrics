@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\DataPengukuran;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class DataPengukuranController extends Controller
 {
-    function index(): Response
+    function index(Request $req): Response
     {
-        $data = DataPengukuran::paginate(10);
+        $limit = $req->limit ?: 10;
+
+        $builder = DataPengukuran::orderBy('created_at', 'desc');
+
+        if ($req->has('user_id')) {
+            $builder = $builder->where('user_id', $req->user_id);
+        }
+
+        $data = $builder->paginate($limit);
 
         return Response([
             'success' => true,
@@ -92,14 +101,44 @@ class DataPengukuranController extends Controller
         ]);
     }
 
-    function getLatestByUserId($userId): Response
+    function getLaporan(Request $req): Response
     {
-        $pengukuran = DataPengukuran::where('user_id', $userId)->limit(2)->orderBy('created_at', 'desc')->get();
+        $builder = new DataPengukuran;
+
+        $time_format = "%d/%m/%y";
+
+        if (!!$req->tipe) {
+            if ($req->tipe == 'mingguan') {
+                $time_format = "%u/%y";
+            } else if ($req->tipe == 'bulanan') {
+                $time_format = "%m/%y";
+            } else if ($req->tipe == 'tahunan') {
+                $time_format = "%Y";
+            }
+        }
+
+        $builder = $builder->select(
+            DB::raw('avg(tinggi) as tinggi'),
+            DB::raw('avg(berat) as berat'),
+            DB::raw('cast(avg(user_umur) as float) as user_umur'),
+            DB::raw("date_format(created_at, '$time_format') as time"),
+        );
+
+        if (!!$req->user_id) {
+            $builder = $builder->where('user_id', $req->user_id);
+            $builder = $builder->addSelect(DB::raw("$req->user_id as user_id"));
+        }
+
+        $builder = $builder->groupBy(DB::raw("date_format(created_at, '$time_format')"));
+
+        $builder = $builder->limit(10);
+
+        $data = $builder->get();
 
         return Response([
             'success' => true,
-            'message' => 'data pengukuran terakhir berhasil diambil',
-            'data' => $pengukuran,
+            'message' => 'laporan harian pengukuran berhasil diambil',
+            'data' => $data,
         ]);
     }
 

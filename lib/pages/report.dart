@@ -93,47 +93,52 @@ class _ReportScreenState extends State<ReportScreen> {
                             satuan: 'KG',
                           ),
                           Expanded(
-                            child: SizedBox(
-                              height: 180,
-                              child: SfRadialGauge(
-                                title: GaugeTitle(
-                                  text: 'Skor Badan',
-                                  textStyle: TextStyle(
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Skor Badan',
+                                  style: TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
-                                axes: [
-                                  RadialAxis(
-                                    minimum: 0,
-                                    maximum: 100,
-                                    axisLineStyle: AxisLineStyle(
-                                      color: Colors.white.withOpacity(.5),
-                                      thickness: 5,
-                                    ),
-                                    showLabels: false,
-                                    showTicks: false,
-                                    pointers: [
-                                      RangePointer(
-                                        value: 73,
-                                        color: Colors.white,
-                                        enableAnimation: true,
-                                        width: 5,
-                                      ),
-                                    ],
-                                    annotations: [
-                                      GaugeAnnotation(
-                                        widget: Text(
-                                          '73',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 40,
-                                          ),
+                                SizedBox(height: 5),
+                                SizedBox(
+                                  height: 120,
+                                  child: SfRadialGauge(
+                                    axes: [
+                                      RadialAxis(
+                                        minimum: 0,
+                                        maximum: 100,
+                                        axisLineStyle: AxisLineStyle(
+                                          color: Colors.white.withOpacity(.5),
+                                          thickness: 5,
                                         ),
+                                        showLabels: false,
+                                        showTicks: false,
+                                        pointers: [
+                                          RangePointer(
+                                            value: 75,
+                                            color: Colors.white,
+                                            enableAnimation: true,
+                                            width: 5,
+                                          ),
+                                        ],
+                                        annotations: [
+                                          GaugeAnnotation(
+                                            widget: Text(
+                                              '75',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 36,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       )
                                     ],
-                                  )
-                                ],
-                              ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           topItem(
@@ -355,7 +360,6 @@ class _ReportScreenState extends State<ReportScreen> {
     required String text,
     required String value,
     required String satuan,
-    bool important = false,
   }) {
     return Expanded(
       child: Container(
@@ -377,8 +381,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   TextSpan(
                     text: value,
                     style: TextStyle(
-                      fontSize: important ? 50 : 30,
-                      fontWeight: important ? FontWeight.w500 : null,
+                      fontSize: 24,
                     ),
                   ),
                   TextSpan(

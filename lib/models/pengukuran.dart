@@ -1,7 +1,7 @@
 class Pengukuran {
   dynamic id;
   dynamic userId;
-  int userUmur;
+  double userUmur;
   dynamic perangkatId;
   double tinggi;
   double berat;
@@ -37,9 +37,9 @@ class Pengukuran {
 
   factory Pengukuran.fromJson(Map<String, dynamic> map) {
     return Pengukuran(
-      id: map['id'],
+      id: map['id'] ?? '',
       userId: map['user_id'],
-      userUmur: map['user_umur'],
+      userUmur: map['user_umur'].toDouble(),
       perangkatId: map['perangkat_id'],
       tinggi: map['tinggi'].toDouble(),
       berat: map['berat'].toDouble(),
@@ -52,7 +52,7 @@ class Pengukuran {
       massaProtein: map['massa_protein'].toDouble(),
       massaProteinPersentase: map['massa_protein_persentase'].toDouble(),
       beratBadanIdeal: map['berat_badan_ideal'].toDouble(),
-      createdAt: map['created_at'],
+      createdAt: map['created_at'] ?? map['time'],
     );
   }
 

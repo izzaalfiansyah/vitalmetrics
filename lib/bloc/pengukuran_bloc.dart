@@ -26,6 +26,16 @@ class PengukuranGetLatest extends PengukuranEvent {
   });
 }
 
+class PengukuranGetReport extends PengukuranEvent {
+  dynamic userId;
+  String tipe;
+
+  PengukuranGetReport({
+    required this.userId,
+    this.tipe = 'harian',
+  });
+}
+
 class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
   PengukuranBloc() : super(PengukuranState()) {
     on<PengukuranGetLatest>((event, emit) async {
@@ -35,6 +45,19 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
 
       final pengukuran =
           await PengukuranService.getLatest(userId: event.userId);
+
+      emit(PengukuranState(
+        items: pengukuran,
+      ));
+    });
+
+    on<PengukuranGetReport>((event, emit) async {
+      emit(PengukuranState(
+        isLoading: true,
+      ));
+
+      final pengukuran = await PengukuranService.getReport(
+          userId: event.userId, tipe: event.tipe);
 
       emit(PengukuranState(
         items: pengukuran,

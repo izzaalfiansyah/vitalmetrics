@@ -15,4 +15,22 @@ class PengukuranService {
       return [];
     }
   }
+
+  static Future<List<Pengukuran>> getReport({
+    dynamic userId,
+    String? tipe,
+  }) async {
+    try {
+      final token = await getToken();
+      final res = await http(token)
+          .get('/measurement/laporan?user_id=$userId&tipe=$tipe');
+
+      List<Pengukuran> data =
+          List.from(res.data['data'].map((item) => Pengukuran.fromJson(item)));
+
+      return data;
+    } catch (e) {
+      return [];
+    }
+  }
 }

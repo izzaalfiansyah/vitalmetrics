@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
+import 'package:vitalmetrics/bloc/user_bloc.dart';
+import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/models/chartdata.dart';
@@ -12,8 +16,22 @@ class RiwayatScreen extends StatefulWidget {
 }
 
 class _RiwayatScreenState extends State<RiwayatScreen> {
+  PengukuranBloc pengukuranBloc = PengukuranBloc();
+
   String filterWaktu = 'Hari';
   String filterKategori = "Berat";
+
+  @override
+  void initState() {
+    getReport();
+    super.initState();
+  }
+
+  getReport() {
+    final userId = context.read<UserBloc>().state.id;
+    pengukuranBloc.add(PengukuranGetReport(
+        userId: userId, tipe: '${filterWaktu.toLowerCase()}an'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,81 +60,111 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Row(
-                children: [
-                  phillSelect(label: 'Hari'),
-                  phillSelect(label: 'Minggu'),
-                  phillSelect(label: 'Bulan'),
-                  phillSelect(label: 'Tahun'),
-                ],
+                children: ['Hari', 'Minggu', 'Bulan', 'Tahun']
+                    .map((item) => phillSelect(label: item))
+                    .toList(),
               ),
             ),
           ),
           Expanded(
-            child: SfCartesianChart(
-              tooltipBehavior: TooltipBehavior(
-                enable: true,
-                color: cPrimary,
-                header: '',
-                activationMode: ActivationMode.singleTap,
+            child: BlocProvider(
+              create: (context) => pengukuranBloc,
+              child: BlocBuilder<PengukuranBloc, PengukuranState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return BodyLoading();
+                  }
+
+                  if (state.items != null) {
+                    return SfCartesianChart(
+                      tooltipBehavior: TooltipBehavior(
+                        enable: true,
+                        color: cPrimary,
+                        header: '',
+                        format: 'point.y',
+                        activationMode: ActivationMode.singleTap,
+                      ),
+                      plotAreaBorderColor: Colors.grey.shade50,
+                      primaryXAxis: CategoryAxis(
+                        axisLine: AxisLine(
+                          color: cPrimary,
+                        ),
+                        labelStyle: TextStyle(
+                          fontSize: 10,
+                        ),
+                        majorTickLines: MajorTickLines(
+                          size: 0,
+                          width: 0,
+                        ),
+                      ),
+                      primaryYAxis: NumericAxis(
+                        axisLine: AxisLine(
+                          color: cPrimary,
+                        ),
+                        minimum: 0,
+                        majorTickLines: MajorTickLines(
+                          size: 0,
+                          width: 0,
+                        ),
+                        majorGridLines: MajorGridLines(width: 0),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 10,
+                        ),
+                      ),
+                      series: [
+                        SplineAreaSeries<ChartData, String>(
+                          onPointTap: (pointInteractionDetails) {
+                            // final item = pointInteractionDetails
+                            //     .dataPoints![pointInteractionDetails.pointIndex as int];
+                          },
+                          enableTooltip: true,
+                          dataSource: state.items!.map((item) {
+                            double value = 0;
+                            String filter = filterKategori.toLowerCase();
+
+                            if (filter == 'berat') {
+                              value = item.berat;
+                            } else if (filter == 'tinggi') {
+                              value = item.tinggi;
+                            } else if (filter == 'bmi') {
+                              value = item.bmi;
+                            } else if (filter == 'lemak tubuh') {
+                              value = item.lemakTubuh;
+                            }
+
+                            return ChartData(
+                              item.createdAt,
+                              num.parse(value.toStringAsFixed(1)).toDouble(),
+                            );
+                          }).toList(),
+                          xValueMapper: (data, _) => data.x,
+                          yValueMapper: (data, _) => data.y,
+                          borderWidth: 2,
+                          borderColor: cPrimary,
+                          gradient: LinearGradient(
+                            colors: [
+                              cPrimary.withOpacity(.1),
+                              cPrimary.withOpacity(0),
+                            ],
+                            transform: GradientRotation(90),
+                          ),
+                          markerSettings: MarkerSettings(
+                            isVisible: true,
+                            borderColor: cPrimary,
+                            width: 10,
+                            height: 10,
+                          ),
+                        )
+                      ],
+                    );
+                  }
+
+                  return Center(
+                    child: Text('Terjadi kesalahan'),
+                  );
+                },
               ),
-              plotAreaBorderColor: Colors.grey.shade50,
-              primaryXAxis: CategoryAxis(
-                axisLine: AxisLine(
-                  color: cPrimary,
-                ),
-                labelStyle: TextStyle(
-                  fontSize: 10,
-                ),
-                majorTickLines: MajorTickLines(
-                  size: 0,
-                  width: 0,
-                ),
-              ),
-              primaryYAxis: NumericAxis(
-                axisLine: AxisLine(
-                  color: cPrimary,
-                ),
-                majorTickLines: MajorTickLines(
-                  size: 0,
-                  width: 0,
-                ),
-                majorGridLines: MajorGridLines(width: 0),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 10,
-                ),
-              ),
-              series: [
-                SplineAreaSeries<ChartData, String>(
-                  onPointTap: (pointInteractionDetails) {
-                    // final item = pointInteractionDetails
-                    //     .dataPoints![pointInteractionDetails.pointIndex as int];
-                  },
-                  enableTooltip: true,
-                  dataSource: [
-                    ChartData('MEI', 49),
-                    ChartData('JUN', 51),
-                    ChartData('JUL', 44),
-                  ],
-                  xValueMapper: (data, _) => data.x,
-                  yValueMapper: (data, _) => data.y,
-                  borderWidth: 2,
-                  borderColor: cPrimary,
-                  gradient: LinearGradient(
-                    colors: [
-                      cPrimary.withOpacity(.1),
-                      cPrimary.withOpacity(0),
-                    ],
-                    transform: GradientRotation(90),
-                  ),
-                  markerSettings: MarkerSettings(
-                    isVisible: true,
-                    borderColor: cPrimary,
-                    width: 10,
-                    height: 10,
-                  ),
-                )
-              ],
             ),
           ),
           SingleChildScrollView(
@@ -127,13 +175,28 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
               ),
               child: Row(
                 children: [
-                  boxPhillSelect(label: 'Berat', icon: Icons.monitor_weight),
-                  boxPhillSelect(label: 'Tinggi', icon: Icons.height),
-                  boxPhillSelect(label: 'BMI', icon: Icons.card_membership),
-                  boxPhillSelect(
-                      label: 'Lemak Tubuh',
-                      icon: Icons.pie_chart_outline_rounded),
-                ],
+                  {
+                    'label': 'Berat',
+                    'icon': Icons.monitor_weight,
+                  },
+                  {
+                    'label': 'Tinggi',
+                    'icon': Icons.height,
+                  },
+                  {
+                    'label': 'BMI',
+                    'icon': Icons.card_membership,
+                  },
+                  {
+                    'label': 'Lemak Tubuh',
+                    'icon': Icons.pie_chart_outline_rounded,
+                  },
+                ]
+                    .map((item) => boxPhillSelect(
+                          icon: item['icon'] as IconData,
+                          label: item['label'] as String,
+                        ))
+                    .toList(),
               ),
             ),
           )
@@ -195,6 +258,7 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
           setState(() {
             filterWaktu = label;
           });
+          getReport();
         },
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,

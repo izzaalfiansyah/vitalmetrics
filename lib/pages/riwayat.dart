@@ -77,12 +77,20 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
 
                   if (state.items != null) {
                     return SfCartesianChart(
-                      tooltipBehavior: TooltipBehavior(
+                      trackballBehavior: TrackballBehavior(
                         enable: true,
-                        color: cPrimary,
-                        header: '',
-                        format: 'point.y',
                         activationMode: ActivationMode.singleTap,
+                        tooltipSettings: InteractiveTooltip(
+                          color: cPrimary,
+                        ),
+                        lineColor: cPrimary,
+                        lineWidth: 1.5,
+                        lineDashArray: [5, 5],
+                        markerSettings: TrackballMarkerSettings(
+                          color: cPrimary,
+                          borderColor: Colors.white,
+                        ),
+                        shouldAlwaysShow: true,
                       ),
                       plotAreaBorderColor: Colors.grey.shade50,
                       primaryXAxis: CategoryAxis(

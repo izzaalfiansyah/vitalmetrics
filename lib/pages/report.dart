@@ -4,10 +4,12 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
+import 'package:vitalmetrics/components/category_label.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/dates.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
+import 'package:vitalmetrics/models/user.dart';
 
 class ReportArguments {
   final String id;
@@ -54,6 +56,7 @@ class _ReportScreenState extends State<ReportScreen> {
         bloc: pengukuranBloc,
         builder: (context, state) {
           Pengukuran dataTerakhir = Pengukuran(), dataPembanding = Pengukuran();
+          User user = context.read<UserBloc>().state.item ?? User();
 
           bool pembandingIsEmpty = true;
 
@@ -203,9 +206,8 @@ class _ReportScreenState extends State<ReportScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                  child: Text(
+                ListTile(
+                  title: Text(
                     'Komposisi Badan',
                     style: TextStyle(
                       color: cPrimary,
@@ -213,47 +215,203 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                 ),
-                Hr(),
+                Hr(
+                    // color: cPrimary,
+                    ),
                 Column(
                   children: [
-                    listItem(
+                    ListItem(
                       label: "Berat",
-                      value: '${dataTerakhir.berat.toStringAsFixed(1)}kg',
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.berat.toStringAsFixed(1)}kg',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    listItem(
+                    ListItem(
+                      label: "Tinggi",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.tinggi.toStringAsFixed(1)}cm',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListItem(
+                      label: "Skor Badan",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.skorBadan.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          SizedBox(
+                            width: 100,
+                            child: CategoryLabel(
+                              categories: getSkorBadanCategory(),
+                              value: dataTerakhir.skorBadan,
+                            ),
+                          ),
+                        ],
+                      ),
+                      after: Column(
+                        children: [
+                          CategoryLabel(
+                            categories: getSkorBadanCategory(),
+                            value: dataTerakhir.skorBadan,
+                            graph: true,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListItem(
                       label: "BMI",
-                      value: dataTerakhir.bmi.toStringAsFixed(1),
+                      trailing: Row(
+                        children: [
+                          Text(
+                            dataTerakhir.bmi.toStringAsFixed(1),
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          SizedBox(
+                            width: 100,
+                            child: CategoryLabel(
+                              categories: getBmiCategory(),
+                              value: dataTerakhir.bmi,
+                            ),
+                          ),
+                        ],
+                      ),
+                      after: Column(
+                        children: [
+                          CategoryLabel(
+                            categories: getBmiCategory(),
+                            value: dataTerakhir.bmi,
+                            graph: true,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
                     ),
-                    listItem(
+                    ListItem(
                       label: "Lemak Tubuh",
-                      value: '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          SizedBox(
+                            width: 100,
+                            child: CategoryLabel(
+                              categories: getLemakTubuhCategory(
+                                  gender: user.jenisKelamin),
+                              value: dataTerakhir.lemakTubuh,
+                            ),
+                          ),
+                        ],
+                      ),
+                      after: Column(
+                        children: [
+                          CategoryLabel(
+                            categories: getLemakTubuhCategory(),
+                            value: dataTerakhir.lemakTubuh,
+                            graph: true,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
                     ),
-                    listItem(
+                    ListItem(
                       label: "Air Dalam Tubuh",
-                      value:
-                          "${dataTerakhir.airDalamTubuh.toStringAsFixed(1)}%",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.airDalamTubuh.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    listItem(
-                        label: "Massa Otot Tubuh",
-                        value:
-                            "${dataTerakhir.massaOtotTubuh.toStringAsFixed(1)}kg"),
-                    listItem(
-                        label: "Massa Tulang",
-                        value:
-                            "${dataTerakhir.massaTulangPersentase.toStringAsFixed(1)}%"),
-                    listItem(
-                        label: "Massa Protein",
-                        value:
-                            "${dataTerakhir.massaProtein.toStringAsFixed(1)}%"),
+                    ListItem(
+                      label: "Massa Otot Tubuh",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.massaOtotTubuh.toStringAsFixed(1)}kg',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListItem(
+                      label: "Massa Tulang",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.massaTulangPersentase.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListItem(
+                      label: "Massa Protein",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.massaProteinPersentase.toStringAsFixed(1)}%',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 Container(
                   height: 20,
                   color: Colors.grey.shade200,
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                  child: Text(
+                ListTile(
+                  title: Text(
                     'Manajemen Badan',
                     style: TextStyle(
                       color: cPrimary,
@@ -261,13 +419,24 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                 ),
-                Hr(),
+                Hr(
+                    // color: cPrimary,
+                    ),
                 Column(
                   children: [
-                    listItem(
-                        label: "Berat Badan Ideal",
-                        value:
-                            "${dataTerakhir.beratBadanIdeal.toStringAsFixed(1)}kg"),
+                    ListItem(
+                      label: "Berat Badan Ideal",
+                      trailing: Row(
+                        children: [
+                          Text(
+                            '${dataTerakhir.beratBadanIdeal.toStringAsFixed(1)}kg',
+                            style: TextStyle(
+                              color: cPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -290,29 +459,6 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget listItem({required String label, required String value}) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: borderBase,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label),
-          Text(
-            value,
-            style: TextStyle(
-              color: cPrimary,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -399,6 +545,71 @@ class _ReportScreenState extends State<ReportScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ListItem extends StatefulWidget {
+  const ListItem({super.key, this.after, this.trailing, required this.label});
+
+  final Widget? after;
+  final Widget? trailing;
+  final String label;
+
+  @override
+  State<ListItem> createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  bool show = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: widget.after != null
+              ? () {
+                  setState(() {
+                    show = !show;
+                  });
+                }
+              : null,
+          child: Container(
+            padding: EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(child: Text(widget.label)),
+                widget.trailing ?? SizedBox(),
+                widget.after != null
+                    ? Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+              ],
+            ),
+          ),
+        ),
+        Hr(),
+        widget.after != null && show
+            ? Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    child: widget.after,
+                  ),
+                  Hr(),
+                ],
+              )
+            : SizedBox(),
+      ],
     );
   }
 }

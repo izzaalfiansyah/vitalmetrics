@@ -5,10 +5,12 @@ import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
+import 'package:vitalmetrics/components/category_label.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/dates.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
+import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/pages/report.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -60,6 +62,7 @@ class _IndexScreenState extends State<IndexScreen> {
           builder: (context, state) {
             Pengukuran dataTerakhir = Pengukuran(),
                 dataPembanding = Pengukuran();
+            User user = context.read<UserBloc>().state.item ?? User();
 
             bool isEmpty = true, pembandingIsEmpty = true;
 
@@ -211,28 +214,35 @@ class _IndexScreenState extends State<IndexScreen> {
                                     size,
                                     icon: Icons.card_membership,
                                     title: 'BMI',
-                                    resultValue:
-                                        dataTerakhir.bmi.toStringAsFixed(1),
-                                    resultText: 'Sehat',
-                                    resultColor: Colors.green,
+                                    result: dataTerakhir.bmi.toStringAsFixed(1),
+                                    after: CategoryLabel(
+                                      categories: getBmiCategory(),
+                                      value: dataTerakhir.bmi,
+                                    ),
                                   ),
                                   classificationItem(
                                     size,
                                     icon: Icons.sports_score,
                                     title: 'Skor badan',
-                                    resultValue: dataTerakhir.skorBadan
+                                    result: dataTerakhir.skorBadan
                                         .toStringAsFixed(1),
-                                    resultText: 'Sehat',
-                                    resultColor: Colors.green,
+                                    after: CategoryLabel(
+                                      categories: getSkorBadanCategory(),
+                                      value: dataTerakhir.skorBadan,
+                                    ),
                                   ),
                                   classificationItem(
                                     size,
                                     icon: Icons.pie_chart_outline_sharp,
                                     title: 'Lemak Tubuh',
-                                    resultValue:
+                                    result:
                                         '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
-                                    resultText: 'Berlebihan',
-                                    resultColor: Colors.red,
+                                    after: CategoryLabel(
+                                      categories: getLemakTubuhCategory(
+                                        gender: user.jenisKelamin,
+                                      ),
+                                      value: dataTerakhir.lemakTubuh,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -414,12 +424,13 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
-  Expanded classificationItem(Size size,
-      {required IconData icon,
-      required String resultValue,
-      required String title,
-      required String resultText,
-      required Color resultColor}) {
+  Expanded classificationItem(
+    Size size, {
+    required IconData icon,
+    required String result,
+    required String title,
+    Widget? after,
+  }) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -440,7 +451,7 @@ class _IndexScreenState extends State<IndexScreen> {
             ),
             SizedBox(height: 3),
             Text(
-              resultValue,
+              result,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 23,
@@ -453,24 +464,7 @@ class _IndexScreenState extends State<IndexScreen> {
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(height: 5),
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: resultColor,
-                borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(50),
-                  right: Radius.circular(50),
-                ),
-              ),
-              child: Text(
-                resultText,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            after ?? SizedBox(),
           ],
         ),
       ),

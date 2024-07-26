@@ -4,7 +4,6 @@ use App\Http\Controllers\DataPengukuranController;
 use App\Http\Controllers\DataRealtimeController;
 use App\Http\Controllers\PerangkatUserController;
 use App\Http\Controllers\UsersController;
-use App\Models\DataRealtime;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

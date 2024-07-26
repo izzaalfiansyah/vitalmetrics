@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\DataPengukuranController;
+use App\Http\Controllers\DataRealtimeController;
 use App\Http\Controllers\PerangkatUserController;
 use App\Http\Controllers\UsersController;
+use App\Models\DataRealtime;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +18,9 @@ Route::get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/perangkat_user/by_user_id/{userId}', [PerangkatUserController::class, 'getByUserId']);
     Route::get('/measurement/laporan', [DataPengukuranController::class, 'getLaporan']);
+    Route::get('/realtime/by_perangkat_id/{perangkatId}', [DataRealtimeController::class, 'getByPerangkatId']);
+
+    Route::post('/realtime', [DataRealtimeController::class, 'create']);
 
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);

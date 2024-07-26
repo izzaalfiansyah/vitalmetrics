@@ -20,12 +20,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/measurement/laporan', [DataPengukuranController::class, 'getLaporan']);
     Route::get('/realtime/by_perangkat_id/{perangkatId}', [DataRealtimeController::class, 'getByPerangkatId']);
 
-    Route::post('/realtime', [DataRealtimeController::class, 'create']);
-
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);
     Route::resource('/measurement', DataPengukuranController::class);
 });
+
+Route::post('/realtime', [DataRealtimeController::class, 'create']);
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:collection/collection.dart';
-import 'package:vitalmetrics/constant.dart';
 
 class Category {
   List<double> range;

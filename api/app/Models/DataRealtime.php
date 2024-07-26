@@ -15,6 +15,7 @@ class DataRealtime extends Model
         'perangkat_id',
         'tinggi',
         'berat',
+        'created_at',
     ];
 
     public $timestamps = false;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataRealtime;
+use App\Models\PerangkatUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -29,12 +30,29 @@ class DataRealtimeController extends Controller
     function create(Request $req): Response
     {
         $data = $req->validate([
-            'perangkat_id' => 'required',
+            'nomor_serial' => 'required',
             'berat' => 'required|decimal:1,3',
             'tinggi' => 'required|decimal:1,3',
         ]);
+        date_default_timezone_set('Asia/Jakarta');
+        $data['created_at'] = date('Y-m-d H:i:s');
 
-        DataRealtime::updateOrCreate($req->only(['perangkat_id']), $req->only(['berat', 'tinggi']));
+        $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)->first();
+
+        if (!$perangkat) {
+            return Response([
+                'success' => false,
+                'message' => "perangkat belum terdaftar",
+            ], 400);
+        }
+
+        $dataRealtime = DataRealtime::where('perangkat_id', $perangkat->id)->first();
+
+        if (!!$dataRealtime) {
+            $dataRealtime->update($data);
+        } else {
+            DataRealtime::create($data);
+        }
 
         return Response([
             'success' => true,

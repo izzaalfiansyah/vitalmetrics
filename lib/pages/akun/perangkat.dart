@@ -27,6 +27,12 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   }
 
   @override
+  void dispose() {
+    perangkatUserBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
 

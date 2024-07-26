@@ -34,6 +34,12 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
   }
 
   @override
+  void dispose() {
+    pengukuranBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -35,6 +35,12 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   @override
+  void dispose() {
+    pengukuranBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
 

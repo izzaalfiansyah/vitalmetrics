@@ -12,6 +12,7 @@ import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/data_realtime.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
+import 'package:vitalmetrics/services/data_realtime_service.dart';
 
 class UkurScreen extends StatefulWidget {
   const UkurScreen({super.key});
@@ -29,13 +30,17 @@ class _UkurScreenState extends State<UkurScreen> {
 
   @override
   void initState() {
-    setState(() {
-      countdown = 10;
-    });
+    initMeasurement();
 
     final userId = context.read<UserBloc>().state.id;
     perangkatUserBloc.add(PerangkatUserGetByUserId(userId: userId));
     super.initState();
+  }
+
+  initMeasurement() {
+    setState(() {
+      countdown = 10;
+    });
   }
 
   @override
@@ -66,19 +71,33 @@ class _UkurScreenState extends State<UkurScreen> {
     );
   }
 
-  saveData() {
+  saveData(ctx) async {
     final user = context.read<UserBloc>().state.item!;
     final perangkat = perangkatUserBloc.state.item!;
     final data = dataRealtimeBloc.state.item!;
 
-    pengukuranBloc.add(PengukuranInsert(
+    final dataNow = await DataRealtimeService.first(perangkatId: perangkat.id);
+
+    if (dataNow != null) {
+      if (dataNow.berat > 5) {
+        return notif(
+          ctx,
+          text: 'Silahkan beranjak dari alat terlebih dahulu',
+        );
+      }
+    }
+
+    pengukuranBloc.add(
+      PengukuranInsert(
         item: Pengukuran(
-      userId: user.id,
-      userUmur: user.umur,
-      perangkatId: perangkat.id,
-      berat: data.berat,
-      tinggi: data.tinggi,
-    )));
+          userId: user.id,
+          userUmur: user.umur,
+          perangkatId: perangkat.id,
+          berat: data.berat,
+          tinggi: data.tinggi,
+        ),
+      ),
+    );
   }
 
   @override
@@ -88,6 +107,19 @@ class _UkurScreenState extends State<UkurScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Proses Pengukuran'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: () {
+          initMeasurement();
+          getRealtimeData();
+        },
+        tooltip: 'Ukur ulang',
+        child: Icon(
+          Icons.refresh,
+          color: cPrimary,
+        ),
       ),
       body: MultiBlocListener(
         listeners: [
@@ -239,8 +271,22 @@ class _UkurScreenState extends State<UkurScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
+                      Text(
+                        countdown <= 0
+                            ? 'proses pengukuran telah selesai. silahkan segera beranjak dari alat.'
+                            : 'Sedang melakukan proses pengukuran. silahkan berdiri tegak dan jangan beranjak dari alat.',
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
                       FilledButton(
-                        onPressed: countdown <= 0 ? saveData : null,
+                        onPressed: countdown <= 0
+                            ? () {
+                                saveData(context);
+                              }
+                            : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: cPrimary,
                           fixedSize: Size.fromWidth(size.width),

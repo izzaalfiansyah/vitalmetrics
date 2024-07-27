@@ -163,6 +163,10 @@ class _IndexScreenState extends State<IndexScreen> {
                         await Navigator.of(context).pushNamed('/ukur');
 
                     if (result == 'reload') {
+                      setState(() {
+                        deviceIsOnline = false;
+                        deviceIsLoading = true;
+                      });
                       pengukuranBloc.add(PengukuranGetLatest(userId: userId));
                     }
 
@@ -417,7 +421,7 @@ class _IndexScreenState extends State<IndexScreen> {
   Container deviceOffline() {
     return Container(
       width: double.infinity,
-      color: Colors.orange,
+      color: deviceIsLoading ? Colors.cyan : Colors.orange,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Text(
         (deviceIsLoading ? 'Memuat...' : 'Device offline').toUpperCase(),

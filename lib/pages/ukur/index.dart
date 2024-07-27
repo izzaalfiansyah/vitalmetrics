@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:vitalmetrics/bloc/data_realtime_bloc.dart';
+import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
 import 'package:vitalmetrics/bloc/perangkat_user_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/data_realtime.dart';
+import 'package:vitalmetrics/models/pengukuran.dart';
 
 class UkurScreen extends StatefulWidget {
   const UkurScreen({super.key});
@@ -20,6 +23,7 @@ class UkurScreen extends StatefulWidget {
 class _UkurScreenState extends State<UkurScreen> {
   DataRealtimeBloc dataRealtimeBloc = DataRealtimeBloc();
   PerangkatUserBloc perangkatUserBloc = PerangkatUserBloc();
+  PengukuranBloc pengukuranBloc = PengukuranBloc();
   Timer? timer;
   int countdown = 0;
 
@@ -62,6 +66,21 @@ class _UkurScreenState extends State<UkurScreen> {
     );
   }
 
+  saveData() {
+    final user = context.read<UserBloc>().state.item!;
+    final perangkat = perangkatUserBloc.state.item!;
+    final data = dataRealtimeBloc.state.item!;
+
+    pengukuranBloc.add(PengukuranInsert(
+        item: Pengukuran(
+      userId: user.id,
+      userUmur: user.umur,
+      perangkatId: perangkat.id,
+      berat: data.berat,
+      tinggi: data.tinggi,
+    )));
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -70,13 +89,29 @@ class _UkurScreenState extends State<UkurScreen> {
       appBar: AppBar(
         title: Text('Proses Pengukuran'),
       ),
-      body: BlocListener<PerangkatUserBloc, PerangkatUserState>(
-        bloc: perangkatUserBloc,
-        listener: (context, state) {
-          if (state.item != null) {
-            getRealtimeData();
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<PerangkatUserBloc, PerangkatUserState>(
+            bloc: perangkatUserBloc,
+            listener: (context, state) {
+              if (state.item != null) {
+                getRealtimeData();
+              }
+            },
+          ),
+          BlocListener<PengukuranBloc, PengukuranState>(
+            bloc: pengukuranBloc,
+            listener: (context, state) {
+              if (state.message != null) {
+                notif(context, text: state.message!);
+
+                if (!state.isError) {
+                  Navigator.pop(context, 'reload');
+                }
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<PerangkatUserBloc, PerangkatUserState>(
           bloc: perangkatUserBloc,
           builder: (context, state) {
@@ -205,7 +240,7 @@ class _UkurScreenState extends State<UkurScreen> {
                       ),
                       SizedBox(height: 20),
                       FilledButton(
-                        onPressed: countdown <= 0 ? () {} : null,
+                        onPressed: countdown <= 0 ? saveData : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: cPrimary,
                           fixedSize: Size.fromWidth(size.width),

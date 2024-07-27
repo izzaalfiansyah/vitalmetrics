@@ -1,7 +1,7 @@
 class Pengukuran {
   dynamic id;
   dynamic userId;
-  double userUmur;
+  int userUmur;
   dynamic perangkatId;
   double tinggi;
   double berat;
@@ -41,7 +41,7 @@ class Pengukuran {
     return Pengukuran(
       id: map['id'] ?? '',
       userId: map['user_id'],
-      userUmur: map['user_umur'].toDouble(),
+      userUmur: map['user_umur'],
       perangkatId: map['perangkat_id'],
       tinggi: map['tinggi'].toDouble(),
       berat: map['berat'].toDouble(),
@@ -66,7 +66,6 @@ class Pengukuran {
       'perangkat_id': perangkatId,
       'tinggi': tinggi,
       'berat': berat,
-      'created_at': createdAt,
     };
   }
 }

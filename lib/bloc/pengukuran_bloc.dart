@@ -36,6 +36,12 @@ class PengukuranGetReport extends PengukuranEvent {
   });
 }
 
+class PengukuranInsert extends PengukuranEvent {
+  final Pengukuran item;
+
+  PengukuranInsert({required this.item});
+}
+
 class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
   PengukuranBloc() : super(PengukuranState()) {
     on<PengukuranGetLatest>((event, emit) async {
@@ -61,6 +67,19 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
 
       emit(PengukuranState(
         items: pengukuran,
+      ));
+    });
+
+    on<PengukuranInsert>((event, emit) async {
+      emit(PengukuranState(
+        isLoading: true,
+      ));
+
+      final res = await PengukuranService.insert(pengukuran: event.item);
+
+      emit(PengukuranState(
+        isError: !res.success,
+        message: res.message,
       ));
     });
   }

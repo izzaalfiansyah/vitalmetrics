@@ -32,10 +32,14 @@ class _IndexScreenState extends State<IndexScreen> {
   bool deviceIsOnline = false, deviceIsLoading = true;
   DataRealtime? dataNow, dataLast;
   Timer? timer;
+  dynamic userId;
 
   @override
   void initState() {
-    final userId = context.read<UserBloc>().state.id;
+    setState(() {
+      userId = context.read<UserBloc>().state.id;
+    });
+
     pengukuranBloc.add(PengukuranGetLatest(userId: userId));
     perangkatBloc.add(PerangkatUserGetByUserId(userId: userId));
 
@@ -154,7 +158,14 @@ class _IndexScreenState extends State<IndexScreen> {
                 if (dataNow != null && dataLast != null) {
                   if (dataNow!.berat > 5 && deviceIsOnline) {
                     timer?.cancel();
-                    await Navigator.of(context).pushNamed('/ukur');
+
+                    final result =
+                        await Navigator.of(context).pushNamed('/ukur');
+
+                    if (result == 'reload') {
+                      pengukuranBloc.add(PengukuranGetLatest(userId: userId));
+                    }
+
                     startRealtimeTimer();
                   }
                 }

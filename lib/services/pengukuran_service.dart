@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
+import 'package:vitalmetrics/services/type.dart';
 
 class PengukuranService {
   static Future<List<Pengukuran>> getLatest({required dynamic userId}) async {
@@ -31,6 +33,22 @@ class PengukuranService {
       return data;
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<ServiceResponse> insert({
+    required Pengukuran pengukuran,
+  }) async {
+    try {
+      final token = await getToken();
+      final res =
+          await http(token).post('/measurement', data: pengukuran.toJSON());
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: "Terjadi kesalahan");
     }
   }
 }

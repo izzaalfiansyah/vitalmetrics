@@ -79,7 +79,7 @@ class _IndexScreenState extends State<IndexScreen> {
   }
 
   startRealtimeTimer() {
-    int duration = 3;
+    int duration = 2;
     timer = Timer.periodic(
       Duration(seconds: duration),
       (timer) async {
@@ -162,11 +162,12 @@ class _IndexScreenState extends State<IndexScreen> {
                     final result =
                         await Navigator.of(context).pushNamed('/ukur');
 
+                    setState(() {
+                      deviceIsOnline = false;
+                      deviceIsLoading = true;
+                    });
+
                     if (result == 'reload') {
-                      setState(() {
-                        deviceIsOnline = false;
-                        deviceIsLoading = true;
-                      });
                       pengukuranBloc.add(PengukuranGetLatest(userId: userId));
                     }
 
@@ -389,11 +390,21 @@ class _IndexScreenState extends State<IndexScreen> {
                                                   BorderRadius.circular(5),
                                             ),
                                           ),
-                                          onPressed: () {
-                                            Navigator.of(context).pushNamed(
-                                                '/report',
-                                                arguments:
-                                                    ReportArguments(id: ''));
+                                          onPressed: () async {
+                                            final result =
+                                                await Navigator.of(context)
+                                                    .pushNamed(
+                                              '/report',
+                                              arguments:
+                                                  ReportArguments(id: ''),
+                                            );
+
+                                            if (result == 'reload') {
+                                              pengukuranBloc.add(
+                                                PengukuranGetLatest(
+                                                    userId: userId),
+                                              );
+                                            }
                                           },
                                           child: Text(
                                             'SELENGKAPNYA',

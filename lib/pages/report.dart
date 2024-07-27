@@ -8,6 +8,7 @@ import 'package:vitalmetrics/components/category_label.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/dates.dart';
+import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/pengukuran.dart';
 import 'package:vitalmetrics/models/user.dart';
 
@@ -58,413 +59,452 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ],
       ),
-      body: BlocBuilder<PengukuranBloc, PengukuranState>(
+      body: BlocListener<PengukuranBloc, PengukuranState>(
         bloc: pengukuranBloc,
-        builder: (context, state) {
-          Pengukuran dataTerakhir = Pengukuran(), dataPembanding = Pengukuran();
-          User user = context.read<UserBloc>().state.item ?? User();
+        listener: (context, state) {
+          if (state.message != null) {
+            notif(context, text: state.message!);
+          }
+        },
+        child: BlocBuilder<PengukuranBloc, PengukuranState>(
+          bloc: pengukuranBloc,
+          builder: (context, state) {
+            Pengukuran dataTerakhir = Pengukuran(),
+                dataPembanding = Pengukuran();
+            User user = context.read<UserBloc>().state.item ?? User();
 
-          bool pembandingIsEmpty = true;
+            bool pembandingIsEmpty = true;
 
-          if (state.items != null) {
-            if (state.items!.isNotEmpty) {
-              dataTerakhir = state.items?[0] ?? Pengukuran();
+            if (state.items != null) {
+              if (state.items!.isNotEmpty) {
+                dataTerakhir = state.items?[0] ?? Pengukuran();
 
-              if (state.items!.length > 1) {
-                pembandingIsEmpty = false;
-                dataPembanding = state.items?[1] ?? Pengukuran();
+                if (state.items!.length > 1) {
+                  pembandingIsEmpty = false;
+                  dataPembanding = state.items?[1] ?? Pengukuran();
+                }
               }
             }
-          }
 
-          if (state.isLoading) {
-            return Center(
-              child: BodyLoading(),
-            );
-          }
+            if (state.isLoading) {
+              return Center(
+                child: BodyLoading(),
+              );
+            }
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  color: cPrimary,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          topItem(
-                            size,
-                            text: 'Berat Badan',
-                            value: dataTerakhir.berat.toStringAsFixed(1),
-                            satuan: 'KG',
-                          ),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Skor Badan',
-                                  style: TextStyle(
-                                    color: Colors.white,
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: cPrimary,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            topItem(
+                              size,
+                              text: 'Berat Badan',
+                              value: dataTerakhir.berat.toStringAsFixed(1),
+                              satuan: 'KG',
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Skor Badan',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 5),
-                                SizedBox(
-                                  height: 120,
-                                  child: SfRadialGauge(
-                                    axes: [
-                                      RadialAxis(
-                                        minimum: 0,
-                                        maximum: 100,
-                                        axisLineStyle: AxisLineStyle(
-                                          color: Colors.white.withOpacity(.5),
-                                          thickness: 5,
-                                        ),
-                                        showLabels: false,
-                                        showTicks: false,
-                                        pointers: [
-                                          RangePointer(
-                                            value: dataTerakhir.skorBadan,
-                                            color: Colors.white,
-                                            enableAnimation: true,
-                                            width: 5,
+                                  SizedBox(height: 5),
+                                  SizedBox(
+                                    height: 120,
+                                    child: SfRadialGauge(
+                                      axes: [
+                                        RadialAxis(
+                                          minimum: 0,
+                                          maximum: 100,
+                                          axisLineStyle: AxisLineStyle(
+                                            color: Colors.white.withOpacity(.5),
+                                            thickness: 5,
                                           ),
-                                        ],
-                                        annotations: [
-                                          GaugeAnnotation(
-                                            widget: Text(
-                                              dataTerakhir.skorBadan
-                                                  .toStringAsFixed(0),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 36,
-                                              ),
+                                          showLabels: false,
+                                          showTicks: false,
+                                          pointers: [
+                                            RangePointer(
+                                              value: dataTerakhir.skorBadan,
+                                              color: Colors.white,
+                                              enableAnimation: true,
+                                              width: 5,
                                             ),
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                          ],
+                                          annotations: [
+                                            GaugeAnnotation(
+                                              widget: Text(
+                                                dataTerakhir.skorBadan
+                                                    .toStringAsFixed(0),
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 36,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            topItem(
+                              size,
+                              text: 'Tinggi Badan',
+                              value: dataTerakhir.tinggi.toStringAsFixed(1),
+                              satuan: 'CM',
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Center(
+                          child: Text(
+                            formatDateTime(dataTerakhir.createdAt),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Hr(
+                            color: Colors.white.withOpacity(.5),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            pembandingIsEmpty
+                                ? SizedBox()
+                                : Text(
+                                    'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 13),
+                                  ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                topSubItem(
+                                  size,
+                                  label: 'BMI',
+                                  value: dataTerakhir.bmi - dataPembanding.bmi,
                                 ),
+                                topSubItem(
+                                  size,
+                                  label: 'Skor Badan',
+                                  value: dataTerakhir.skorBadan -
+                                      dataPembanding.skorBadan,
+                                ),
+                                topSubItem(
+                                  size,
+                                  label: 'Lemak (%)',
+                                  value: dataTerakhir.lemakTubuh -
+                                      dataPembanding.lemakTubuh,
+                                )
                               ],
-                            ),
-                          ),
-                          topItem(
-                            size,
-                            text: 'Tinggi Badan',
-                            value: dataTerakhir.tinggi.toStringAsFixed(1),
-                            satuan: 'CM',
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Center(
-                        child: Text(
-                          formatDateTime(dataTerakhir.createdAt),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Hr(
-                          color: Colors.white.withOpacity(.5),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          pembandingIsEmpty
-                              ? SizedBox()
-                              : Text(
-                                  'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              topSubItem(
-                                size,
-                                label: 'BMI',
-                                value: dataTerakhir.bmi - dataPembanding.bmi,
-                              ),
-                              topSubItem(
-                                size,
-                                label: 'Skor Badan',
-                                value: dataTerakhir.skorBadan -
-                                    dataPembanding.skorBadan,
-                              ),
-                              topSubItem(
-                                size,
-                                label: 'Lemak (%)',
-                                value: dataTerakhir.lemakTubuh -
-                                    dataPembanding.lemakTubuh,
-                              )
-                            ],
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    'Komposisi Badan',
-                    style: TextStyle(
-                      color: cPrimary,
-                      fontWeight: FontWeight.bold,
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                ),
-                Hr(
-                    // color: cPrimary,
-                    ),
-                Column(
-                  children: [
-                    ListItem(
-                      label: "Berat",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.berat.toStringAsFixed(1)}kg',
-                            style: TextStyle(
-                              color: cPrimary,
-                            ),
-                          ),
-                        ],
+                  ListTile(
+                    title: Text(
+                      'Komposisi Badan',
+                      style: TextStyle(
+                        color: cPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    ListItem(
-                      label: "Tinggi",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.tinggi.toStringAsFixed(1)}cm',
-                            style: TextStyle(
-                              color: cPrimary,
-                            ),
-                          ),
-                        ],
+                  ),
+                  Hr(
+                      // color: cPrimary,
                       ),
-                    ),
-                    ListItem(
-                      label: "Skor Badan",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.skorBadan.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: cPrimary,
+                  Column(
+                    children: [
+                      ListItem(
+                        label: "Berat",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.berat.toStringAsFixed(1)}kg',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          SizedBox(
-                            width: 100,
-                            child: CategoryLabel(
+                          ],
+                        ),
+                      ),
+                      ListItem(
+                        label: "Tinggi",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.tinggi.toStringAsFixed(1)}cm',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListItem(
+                        label: "Skor Badan",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.skorBadan.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            SizedBox(
+                              width: 100,
+                              child: CategoryLabel(
+                                categories: getSkorBadanCategory(),
+                                value: dataTerakhir.skorBadan,
+                              ),
+                            ),
+                          ],
+                        ),
+                        after: Column(
+                          children: [
+                            CategoryLabel(
                               categories: getSkorBadanCategory(),
                               value: dataTerakhir.skorBadan,
+                              graph: true,
                             ),
-                          ),
-                        ],
-                      ),
-                      after: Column(
-                        children: [
-                          CategoryLabel(
-                            categories: getSkorBadanCategory(),
-                            value: dataTerakhir.skorBadan,
-                            graph: true,
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListItem(
-                      label: "BMI",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            dataTerakhir.bmi.toStringAsFixed(1),
-                            style: TextStyle(
-                              color: cPrimary,
+                            SizedBox(height: 20),
+                            Text(
+                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              textAlign: TextAlign.justify,
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          SizedBox(
-                            width: 100,
-                            child: CategoryLabel(
+                          ],
+                        ),
+                      ),
+                      ListItem(
+                        label: "BMI",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              dataTerakhir.bmi.toStringAsFixed(1),
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            SizedBox(
+                              width: 100,
+                              child: CategoryLabel(
+                                categories: getBmiCategory(),
+                                value: dataTerakhir.bmi,
+                              ),
+                            ),
+                          ],
+                        ),
+                        after: Column(
+                          children: [
+                            CategoryLabel(
                               categories: getBmiCategory(),
                               value: dataTerakhir.bmi,
+                              graph: true,
                             ),
-                          ),
-                        ],
-                      ),
-                      after: Column(
-                        children: [
-                          CategoryLabel(
-                            categories: getBmiCategory(),
-                            value: dataTerakhir.bmi,
-                            graph: true,
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListItem(
-                      label: "Lemak Tubuh",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: cPrimary,
+                            SizedBox(height: 20),
+                            Text(
+                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              textAlign: TextAlign.justify,
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          SizedBox(
-                            width: 100,
-                            child: CategoryLabel(
-                              categories: getLemakTubuhCategory(
-                                  gender: user.jenisKelamin),
+                          ],
+                        ),
+                      ),
+                      ListItem(
+                        label: "Lemak Tubuh",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.lemakTubuh.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            SizedBox(
+                              width: 100,
+                              child: CategoryLabel(
+                                categories: getLemakTubuhCategory(
+                                    gender: user.jenisKelamin),
+                                value: dataTerakhir.lemakTubuh,
+                              ),
+                            ),
+                          ],
+                        ),
+                        after: Column(
+                          children: [
+                            CategoryLabel(
+                              categories: getLemakTubuhCategory(),
                               value: dataTerakhir.lemakTubuh,
+                              graph: true,
                             ),
-                          ),
-                        ],
-                      ),
-                      after: Column(
-                        children: [
-                          CategoryLabel(
-                            categories: getLemakTubuhCategory(),
-                            value: dataTerakhir.lemakTubuh,
-                            graph: true,
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListItem(
-                      label: "Air Dalam Tubuh",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.airDalamTubuh.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: cPrimary,
+                            SizedBox(height: 20),
+                            Text(
+                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              textAlign: TextAlign.justify,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    ListItem(
-                      label: "Massa Otot Tubuh",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.massaOtotTubuh.toStringAsFixed(1)}kg',
-                            style: TextStyle(
-                              color: cPrimary,
+                      ListItem(
+                        label: "Air Dalam Tubuh",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.airDalamTubuh.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    ListItem(
-                      label: "Massa Tulang",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.massaTulangPersentase.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: cPrimary,
+                      ListItem(
+                        label: "Massa Otot Tubuh",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.massaOtotTubuh.toStringAsFixed(1)}kg',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    ListItem(
-                      label: "Massa Protein",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.massaProteinPersentase.toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              color: cPrimary,
+                      ListItem(
+                        label: "Massa Tulang",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.massaTulangPersentase.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  height: 20,
-                  color: Colors.grey.shade200,
-                ),
-                ListTile(
-                  title: Text(
-                    'Manajemen Badan',
-                    style: TextStyle(
-                      color: cPrimary,
-                      fontWeight: FontWeight.bold,
+                      ListItem(
+                        label: "Massa Protein",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.massaProteinPersentase.toStringAsFixed(1)}%',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 20,
+                    color: Colors.grey.shade200,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Manajemen Badan',
+                      style: TextStyle(
+                        color: cPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                Hr(
-                    // color: cPrimary,
-                    ),
-                Column(
-                  children: [
-                    ListItem(
-                      label: "Berat Badan Ideal",
-                      trailing: Row(
-                        children: [
-                          Text(
-                            '${dataTerakhir.beratBadanIdeal.toStringAsFixed(1)}kg',
-                            style: TextStyle(
-                              color: cPrimary,
+                  Hr(
+                      // color: cPrimary,
+                      ),
+                  Column(
+                    children: [
+                      ListItem(
+                        label: "Berat Badan Ideal",
+                        trailing: Row(
+                          children: [
+                            Text(
+                              '${dataTerakhir.beratBadanIdeal.toStringAsFixed(1)}kg',
+                              style: TextStyle(
+                                color: cPrimary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: FilledButton(
-                    onPressed: () {},
-                    style: FilledButton.styleFrom(
-                      backgroundColor: cPrimary,
-                      fixedSize: Size.fromWidth(size.width),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text('HAPUS'),
+                    ],
                   ),
-                ),
-                SizedBox(height: 20),
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: FilledButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(
+                                  'Anda yakin menghapus data pengukuran terkini?'),
+                              actionsPadding:
+                                  EdgeInsets.symmetric(horizontal: 20),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    pengukuranBloc.add(PengukuranRemove(
+                                      id: dataTerakhir.id,
+                                    ));
+                                    Navigator.pop(context);
+                                    Navigator.pop(context, 'reload');
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: cPrimary,
+                        fixedSize: Size.fromWidth(size.width),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: Text('HAPUS'),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

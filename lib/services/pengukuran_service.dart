@@ -51,4 +51,20 @@ class PengukuranService {
       return ServiceResponse(success: false, message: "Terjadi kesalahan");
     }
   }
+
+  static Future<ServiceResponse> remove({
+    required dynamic id,
+  }) async {
+    try {
+      final token = await getToken();
+      final res = await http(token).delete('/measurement/$id');
+      print(res.realUri.toString());
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: "Terjadi kesalahan");
+    }
+  }
 }

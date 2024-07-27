@@ -42,6 +42,12 @@ class PengukuranInsert extends PengukuranEvent {
   PengukuranInsert({required this.item});
 }
 
+class PengukuranRemove extends PengukuranEvent {
+  final dynamic id;
+
+  PengukuranRemove({required this.id});
+}
+
 class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
   PengukuranBloc() : super(PengukuranState()) {
     on<PengukuranGetLatest>((event, emit) async {
@@ -70,12 +76,12 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
       ));
     });
 
-    on<PengukuranInsert>((event, emit) async {
+    on<PengukuranRemove>((event, emit) async {
       emit(PengukuranState(
         isLoading: true,
       ));
 
-      final res = await PengukuranService.insert(pengukuran: event.item);
+      final res = await PengukuranService.remove(id: event.id);
 
       emit(PengukuranState(
         isError: !res.success,

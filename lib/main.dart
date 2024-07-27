@@ -11,6 +11,7 @@ import 'package:vitalmetrics/pages/login.dart';
 import 'package:vitalmetrics/pages/riwayat.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
+import 'package:vitalmetrics/pages/ukur/index.dart';
 import 'package:vitalmetrics/splash.dart';
 
 void main() {
@@ -78,6 +79,7 @@ class _MyAppState extends State<MyApp> {
               '/splash': (context) => SplashScreen(),
               '/login': (context) => LoginScreen(),
               '/': (context) => IndexScreen(),
+              '/ukur': (context) => UkurScreen(),
               '/report': (context) => ReportScreen(),
               '/riwayat': (context) => RiwayatScreen(),
               '/akun': (context) => AkunScreen(),

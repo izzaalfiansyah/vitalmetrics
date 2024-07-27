@@ -16,16 +16,21 @@ sealed class DataRealtimeEvent {}
 
 class DataRealtimeGetFirst extends DataRealtimeEvent {
   dynamic perangkatId;
+  bool withLoading;
 
   DataRealtimeGetFirst({
     required this.perangkatId,
+    this.withLoading = true,
   });
 }
 
 class DataRealtimeBloc extends Bloc<DataRealtimeEvent, DataRealtimeState> {
   DataRealtimeBloc() : super(DataRealtimeState()) {
     on<DataRealtimeGetFirst>((event, emit) async {
-      emit(DataRealtimeState(isLoading: true));
+      if (event.withLoading) {
+        emit(DataRealtimeState(isLoading: true));
+      }
+
       final res =
           await DataRealtimeService.first(perangkatId: event.perangkatId);
 

@@ -29,7 +29,7 @@ class _IndexScreenState extends State<IndexScreen> {
   PengukuranBloc pengukuranBloc = PengukuranBloc();
   PerangkatUserBloc perangkatBloc = PerangkatUserBloc();
   DataRealtimeBloc dataRealtimeBloc = DataRealtimeBloc();
-  bool deviceIsOnline = true;
+  bool deviceIsOnline = false, deviceIsLoading = true;
   DataRealtime? dataNow, dataLast;
   Timer? timer;
 
@@ -42,19 +42,15 @@ class _IndexScreenState extends State<IndexScreen> {
     super.initState();
   }
 
-  checkStatusDevice(dynamic perangkatId) async {
+  checkStatusDevice(dynamic perangkatId, {required int duration}) async {
     try {
       dataLast = dataNow;
       dataRealtimeBloc.add(DataRealtimeGetFirst(perangkatId: perangkatId));
 
-      if (dataRealtimeBloc.state.item == null) {
-        await Future.delayed(Duration(seconds: 1));
-      }
-
       final res = dataRealtimeBloc.state.item;
       dataNow = res;
 
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: duration));
 
       if (dataNow != null) {
         bool isOnline = DateTime.parse(dataNow!.createdAt).isAfter(
@@ -63,6 +59,7 @@ class _IndexScreenState extends State<IndexScreen> {
                 : DateTime.now());
 
         setState(() {
+          deviceIsLoading = false;
           deviceIsOnline = isOnline;
         });
       } else {
@@ -75,6 +72,20 @@ class _IndexScreenState extends State<IndexScreen> {
         deviceIsOnline = false;
       });
     }
+  }
+
+  startRealtimeTimer() {
+    int duration = 3;
+    timer = Timer.periodic(
+      Duration(seconds: duration),
+      (timer) async {
+        await checkStatusDevice(
+          perangkatBloc.state.item!.id,
+          duration: duration,
+        );
+        return;
+      },
+    );
   }
 
   @override
@@ -128,17 +139,28 @@ class _IndexScreenState extends State<IndexScreen> {
             create: (context) => perangkatBloc,
           ),
         ],
-        child: BlocListener<PerangkatUserBloc, PerangkatUserState>(
-          listener: (context, state) async {
-            if (state.item != null) {
-              timer = Timer.periodic(
-                Duration(seconds: 5),
-                (timer) async {
-                  await checkStatusDevice(state.item!.id);
-                },
-              );
-            }
-          },
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<PerangkatUserBloc, PerangkatUserState>(
+              listener: (context, state) async {
+                if (state.item != null) {
+                  startRealtimeTimer();
+                }
+              },
+            ),
+            BlocListener<DataRealtimeBloc, DataRealtimeState>(
+              bloc: dataRealtimeBloc,
+              listener: (context, state) async {
+                if (dataNow != null && dataLast != null) {
+                  if (dataNow!.berat > 5 && deviceIsOnline) {
+                    timer?.cancel();
+                    await Navigator.of(context).pushNamed('/ukur');
+                    startRealtimeTimer();
+                  }
+                }
+              },
+            ),
+          ],
           child: BlocBuilder<PengukuranBloc, PengukuranState>(
             builder: (context, state) {
               Pengukuran dataTerakhir = Pengukuran(),
@@ -271,7 +293,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                 ),
                                 if (!pembandingIsEmpty)
                                   Text(
-                                    'Bandingkan dengan //${formatDateTime(dataPembanding.createdAt)}',
+                                    'Bandingkan dengan ${formatDateTime(dataPembanding.createdAt)}',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
@@ -387,7 +409,7 @@ class _IndexScreenState extends State<IndexScreen> {
       color: Colors.orange,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Text(
-        'Device offline'.toUpperCase(),
+        (deviceIsLoading ? 'Memuat...' : 'Device offline').toUpperCase(),
         style: TextStyle(
           color: Colors.white,
         ),

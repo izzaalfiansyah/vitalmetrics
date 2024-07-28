@@ -79,7 +79,7 @@ class _IndexScreenState extends State<IndexScreen> {
   }
 
   startRealtimeTimer() {
-    int duration = 2;
+    int duration = 3;
     timer = Timer.periodic(
       Duration(seconds: duration),
       (timer) async {
@@ -159,19 +159,24 @@ class _IndexScreenState extends State<IndexScreen> {
                   if (dataNow!.berat > 5 && deviceIsOnline) {
                     timer?.cancel();
 
-                    final result =
-                        await Navigator.of(context).pushNamed('/ukur');
+                    String path =
+                        ModalRoute.of(context)!.settings.name.toString();
 
-                    setState(() {
-                      deviceIsOnline = false;
-                      deviceIsLoading = true;
-                    });
+                    if (path != '/ukur') {
+                      final result =
+                          await Navigator.of(context).pushNamed('/ukur');
 
-                    if (result == 'reload') {
-                      pengukuranBloc.add(PengukuranGetLatest(userId: userId));
+                      setState(() {
+                        deviceIsOnline = false;
+                        deviceIsLoading = true;
+                      });
+
+                      if (result == 'reload') {
+                        pengukuranBloc.add(PengukuranGetLatest(userId: userId));
+                      }
+
+                      startRealtimeTimer();
                     }
-
-                    startRealtimeTimer();
                   }
                 }
               },

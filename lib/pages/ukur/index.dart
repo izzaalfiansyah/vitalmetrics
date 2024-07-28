@@ -105,9 +105,9 @@ class _UkurScreenState extends State<UkurScreen> {
     final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Proses Pengukuran'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Proses Pengukuran'),
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,

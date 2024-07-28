@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/constant.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +21,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void handleTimer() async {
     const duration = Duration(seconds: 2);
-    Timer(duration, () => Navigator.of(context).pushReplacementNamed('/'));
+    Timer(duration, () {
+      bool isLogin = context.read<UserBloc>().state.isLogin;
+      Navigator.of(context).pushReplacementNamed(isLogin ? '/' : '/login');
+    });
   }
 
   @override

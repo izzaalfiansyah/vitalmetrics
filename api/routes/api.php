@@ -47,5 +47,9 @@ Route::post('/sanctum/token', function (Request $request) {
         ]);
     }
 
-    return $user->createToken($request->device_name)->plainTextToken;
+    return [
+        'success' => true,
+        'message' => 'berhasil login',
+        'token' => $user->createToken($request->device_name)->plainTextToken
+    ];
 });

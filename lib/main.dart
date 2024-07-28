@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/constant.dart';
-import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/pages/akun.dart';
 import 'package:vitalmetrics/pages/akun/manajemen.dart';
 import 'package:vitalmetrics/pages/akun/perangkat.dart';
@@ -35,7 +34,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   getUser() async {
-    setToken('1|JRS0KIFWxGi7iR97CafXsxjx51lIiM42wdmnrcKn0725e8d9');
     userBloc.add(UserGet());
   }
 

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
@@ -37,7 +40,45 @@ class UserService {
     } on DioException catch (e) {
       return ServiceResponse.fromJson(e.response?.data);
     } catch (e) {
-      return ServiceResponse(success: false, message: 'terjadi kesalahan');
+      return ServiceResponse(success: false, message: 'Yerjadi kesalahan');
+    }
+  }
+
+  static Future<ServiceResponse> login({
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final deviceInfoPlugin = DeviceInfoPlugin();
+      String deviceName = '';
+
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        deviceName = androidInfo.model;
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        deviceName = iosInfo.utsname.machine;
+      } else {
+        deviceName = 'Other';
+      }
+
+      final res = await http(null).post('/sanctum/token', data: {
+        'username': username,
+        'password': password,
+        'device_name': deviceName,
+      });
+
+      String? token = res.data['token'];
+
+      if (token != null && token != '') {
+        setToken(token);
+      }
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response!.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
     }
   }
 }

@@ -76,6 +76,19 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
       ));
     });
 
+    on<PengukuranInsert>((event, emit) async {
+      emit(PengukuranState(
+        isLoading: true,
+      ));
+
+      final res = await PengukuranService.insert(pengukuran: event.item);
+
+      emit(PengukuranState(
+        isError: !res.success,
+        message: res.message,
+      ));
+    });
+
     on<PengukuranRemove>((event, emit) async {
       emit(PengukuranState(
         isLoading: true,

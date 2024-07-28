@@ -58,7 +58,6 @@ class PengukuranService {
     try {
       final token = await getToken();
       final res = await http(token).delete('/measurement/$id');
-      print(res.realUri.toString());
 
       return ServiceResponse.fromJson(res.data);
     } on DioException catch (e) {

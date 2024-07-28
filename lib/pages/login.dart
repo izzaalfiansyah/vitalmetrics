@@ -16,32 +16,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  handleLogin(ctx) async {
+    final res = await UserService.login(
+        username: username.text, password: password.text);
+
+    notif(
+      ctx,
+      text: res.success ? 'Berhasil login. Mengalihkan...' : res.message,
+      color: res.success ? null : Colors.red,
+    );
+
+    if (res.success) {
+      // ignore: use_build_context_synchronously
+      context.read<UserBloc>().add(UserGet());
+
+      Timer(Duration(seconds: 2), () {
+        Navigator.of(context).pushReplacementNamed('/');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-
-    TextEditingController username = TextEditingController();
-    TextEditingController password = TextEditingController();
-
-    handleLogin(ctx) async {
-      final res = await UserService.login(
-          username: username.text, password: password.text);
-
-      notif(
-        ctx,
-        text: res.success ? 'Berhasil login. Mengalihkan...' : res.message,
-        color: res.success ? null : Colors.red,
-      );
-
-      if (res.success) {
-        // ignore: use_build_context_synchronously
-        context.read<UserBloc>().add(UserGet());
-
-        Timer(Duration(seconds: 2), () {
-          Navigator.of(context).pushReplacementNamed('/');
-        });
-      }
-    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,8 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 40),
                     AuthTextField(
-                      label: 'Username',
-                      hint: 'Masukkan Username',
+                      label: 'Email/Username',
+                      hint: 'Masukkan Email atau Username',
                       controller: username,
                     ),
                     SizedBox(height: 20),
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            print('go to register page');
+                            Navigator.of(context).pushNamed('/register');
                           },
                       ),
                     ],

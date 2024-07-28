@@ -7,6 +7,7 @@ import 'package:vitalmetrics/pages/akun.dart';
 import 'package:vitalmetrics/pages/akun/manajemen.dart';
 import 'package:vitalmetrics/pages/akun/perangkat.dart';
 import 'package:vitalmetrics/pages/login.dart';
+import 'package:vitalmetrics/pages/register.dart';
 import 'package:vitalmetrics/pages/riwayat.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/report.dart';
@@ -76,6 +77,7 @@ class _MyAppState extends State<MyApp> {
             routes: {
               '/splash': (context) => SplashScreen(),
               '/login': (context) => LoginScreen(),
+              '/register': (context) => RegisterScreen(),
               '/': (context) => IndexScreen(),
               '/ukur': (context) => UkurScreen(),
               '/report': (context) => ReportScreen(),

@@ -55,6 +55,11 @@ Route::post('/sanctum/token', function (Request $request) {
     ];
 });
 
+Route::post('/sanctum/register', function (Request $req) {
+    $userController = new UsersController;
+    return $userController->store($req);
+});
+
 Route::post('/sanctum/destroy', function (Request $req) {
     $req->user()->currentAccessToken()->delete();
 

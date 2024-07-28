@@ -82,6 +82,19 @@ class UserService {
     }
   }
 
+  static Future<ServiceResponse> register(User user) async {
+    try {
+      final res =
+          await http(null).post('/sanctum/register', data: user.toJson());
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response!.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
+    }
+  }
+
   static Future<ServiceResponse> logout() async {
     try {
       final token = await getToken();

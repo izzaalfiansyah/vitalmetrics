@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/libs/notif.dart';
+import 'package:vitalmetrics/services/user_service.dart';
 
 class AkunScreen extends StatefulWidget {
   const AkunScreen({super.key});
@@ -159,7 +163,53 @@ class _AkunScreenState extends State<AkunScreen> {
               ),
               child: Column(
                 children: [
-                  tileItem(icon: Icons.settings, label: 'Pengaturan'),
+                  // tileItem(icon: Icons.settings, label: 'Pengaturan'),
+                  tileItem(
+                    icon: Icons.logout,
+                    label: 'Logout',
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(
+                                'Anda yakin untuk keluar? Sesi anda akan diakhiri.'),
+                            actionsPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  final res = await UserService.logout();
+
+                                  notif(
+                                    context,
+                                    text: res.success
+                                        ? "Berhasil logout. mengalihkan..."
+                                        : res.message,
+                                  );
+
+                                  if (res.success) {
+                                    await Future.delayed(Duration(seconds: 2));
+                                    Navigator.popUntil(
+                                        context, ModalRoute.withName('/'));
+                                    Navigator.pushReplacementNamed(
+                                        context, '/login');
+                                  }
+                                },
+                                child: Text('Ok'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             )

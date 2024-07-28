@@ -81,4 +81,17 @@ class UserService {
       return ServiceResponse(success: false, message: 'Terjadi kesalahan');
     }
   }
+
+  static Future<ServiceResponse> logout() async {
+    try {
+      final token = await getToken();
+      final res = await http(token).post('/sanctum/destroy');
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response!.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
+    }
+  }
 }

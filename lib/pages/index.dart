@@ -68,11 +68,13 @@ class _IndexScreenState extends State<IndexScreen> {
         });
       } else {
         setState(() {
+          deviceIsLoading = false;
           deviceIsOnline = false;
         });
       }
     } catch (e) {
       setState(() {
+        deviceIsLoading = false;
         deviceIsOnline = false;
       });
     }

@@ -53,7 +53,7 @@ class _CategoryLabelState extends State<CategoryLabel> {
 
   @override
   Widget build(BuildContext context) {
-    if (selected() != null) {
+    if (selected() != null && widget.value != 0) {
       final category = selected() as Category;
 
       if (widget.graph) {

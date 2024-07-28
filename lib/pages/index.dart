@@ -29,7 +29,7 @@ class _IndexScreenState extends State<IndexScreen> {
   PengukuranBloc pengukuranBloc = PengukuranBloc();
   PerangkatUserBloc perangkatBloc = PerangkatUserBloc();
   DataRealtimeBloc dataRealtimeBloc = DataRealtimeBloc();
-  bool deviceIsOnline = false, deviceIsLoading = true;
+  bool deviceIsOnline = false;
   DataRealtime? dataNow, dataLast;
   Timer? timer;
   dynamic userId;
@@ -63,25 +63,22 @@ class _IndexScreenState extends State<IndexScreen> {
                 : DateTime.now());
 
         setState(() {
-          deviceIsLoading = false;
           deviceIsOnline = isOnline;
         });
       } else {
         setState(() {
-          deviceIsLoading = false;
           deviceIsOnline = false;
         });
       }
     } catch (e) {
       setState(() {
-        deviceIsLoading = false;
         deviceIsOnline = false;
       });
     }
   }
 
   startRealtimeTimer() {
-    int duration = 3;
+    int duration = 2;
     timer = Timer.periodic(
       Duration(seconds: duration),
       (timer) async {
@@ -159,18 +156,13 @@ class _IndexScreenState extends State<IndexScreen> {
               listener: (context, state) async {
                 if (dataNow != null && dataLast != null) {
                   if (dataNow!.berat > 5 && deviceIsOnline) {
-                    timer?.cancel();
-
-                    String path =
-                        ModalRoute.of(context)!.settings.name.toString();
-
-                    if (path != '/ukur') {
+                    if (timer!.isActive) {
+                      timer?.cancel();
                       final result =
                           await Navigator.of(context).pushNamed('/ukur');
 
                       setState(() {
                         deviceIsOnline = false;
-                        deviceIsLoading = true;
                       });
 
                       if (result == 'reload') {
@@ -439,13 +431,27 @@ class _IndexScreenState extends State<IndexScreen> {
   Container deviceOffline() {
     return Container(
       width: double.infinity,
-      color: deviceIsLoading ? Colors.cyan : Colors.orange,
+      color: Colors.orange,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Text(
-        (deviceIsLoading ? 'Memuat...' : 'Device offline').toUpperCase(),
-        style: TextStyle(
-          color: Colors.white,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            ('Device tidak terhubung').toUpperCase(),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed('/akun/perangkat');
+            },
+            child: Icon(
+              Icons.no_cell_outlined,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/libs/dates.dart';
 import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/user.dart';
+import 'package:vitalmetrics/pages/login.dart';
 import 'package:vitalmetrics/services/user_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -73,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 40),
+                  SizedBox(height: 80),
                   Text(
                     "Buat Akun Baru",
                     style: TextStyle(
@@ -105,33 +106,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Text('Tanggal Lahir'),
                       SizedBox(height: 10),
-                      TextFormField(
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          hintText: tanggalLahir != null
-                              ? formatDate(tanggalLahir!.toIso8601String())
-                              : 'Pilih Tanggal Lahir',
-                          border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: cPrimary,
-                            ),
-                          ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
-                        onTap: () async {
-                          final date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1970),
-                            initialDate: tanggalLahir,
-                            lastDate: DateTime.now(),
-                          );
+                        child: TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            hintText: tanggalLahir != null
+                                ? formatDate(tanggalLahir!.toIso8601String())
+                                : 'Pilih Tanggal Lahir',
+                            border: InputBorder.none,
+                          ),
+                          onTap: () async {
+                            final date = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1970),
+                              initialDate: tanggalLahir,
+                              lastDate: DateTime.now(),
+                            );
 
-                          if (date != null) {
-                            setState(() {
-                              tanggalLahir = date;
-                            });
-                          }
-                        },
+                            if (date != null) {
+                              setState(() {
+                                tanggalLahir = date;
+                              });
+                            }
+                          },
+                        ),
                       )
                     ],
                   ),
@@ -141,42 +144,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Text('Jenis Kelamin'),
                       SizedBox(height: 10),
-                      DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: cPrimary,
-                            ),
-                          ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
-                        value: jenisKelamin,
-                        items: [
-                          {
-                            'value': '',
-                            'label': 'Pilih Gender',
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          value: jenisKelamin,
+                          items: [
+                            {
+                              'value': '',
+                              'label': 'Pilih Gender',
+                            },
+                            {
+                              'value': 'l',
+                              'label': 'Laki-laki',
+                            },
+                            {
+                              'value': 'p',
+                              'label': 'Perempuan',
+                            },
+                          ]
+                              .map(
+                                (item) => DropdownMenuItem(
+                                  value: item['value'],
+                                  child: Text(item['label']!),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              jenisKelamin = value!;
+                            });
                           },
-                          {
-                            'value': 'l',
-                            'label': 'Laki-laki',
-                          },
-                          {
-                            'value': 'p',
-                            'label': 'Perempuan',
-                          },
-                        ]
-                            .map(
-                              (item) => DropdownMenuItem(
-                                value: item['value'],
-                                child: Text(item['label']!),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            jenisKelamin = value!;
-                          });
-                        },
+                        ),
                       ),
                     ],
                   ),
@@ -211,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 80),
               Center(
                 child: RichText(
                   text: TextSpan(
@@ -238,64 +243,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class AuthTextField extends StatefulWidget {
-  const AuthTextField({
-    super.key,
-    required this.label,
-    this.hint,
-    this.controller,
-    this.isPassword = false,
-  });
-
-  final String label;
-  final String? hint;
-  final TextEditingController? controller;
-  final bool isPassword;
-
-  @override
-  State<AuthTextField> createState() => _AuthTextFieldState();
-}
-
-class _AuthTextFieldState extends State<AuthTextField> {
-  bool showPassword = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.label),
-        SizedBox(height: 10),
-        TextFormField(
-          controller: widget.controller,
-          obscureText: widget.isPassword ? !showPassword : false,
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: cPrimary),
-            ),
-            border: OutlineInputBorder(),
-            hintText: widget.hint,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      showPassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
-                  )
-                : null,
-          ),
-        ),
-      ],
     );
   }
 }

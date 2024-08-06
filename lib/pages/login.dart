@@ -151,29 +151,59 @@ class _AuthTextFieldState extends State<AuthTextField> {
       children: [
         Text(widget.label),
         SizedBox(height: 10),
-        TextFormField(
-          controller: widget.controller,
-          obscureText: widget.isPassword ? !showPassword : false,
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: cPrimary),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 1,
+              color: Colors.grey.shade300,
             ),
-            border: OutlineInputBorder(),
-            hintText: widget.hint,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      showPassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
-                  )
-                : null,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: widget.controller,
+                  obscureText: widget.isPassword ? !showPassword : false,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: widget.hint,
+                    // suffixIcon: Icon(Icons.visibility_outlined),
+                    // suffix: widget.isPassword
+                    //     ? IconButton(
+                    //         onPressed: () {
+                    //           setState(() {
+                    //             showPassword = !showPassword;
+                    //           });
+                    //         },
+                    //         icon: Icon(
+                    //           showPassword
+                    //               ? Icons.visibility_outlined
+                    //               : Icons.visibility_off_outlined,
+                    //           size: 20,
+                    //         ),
+                    //       )
+                    //     : null,
+                  ),
+                ),
+              ),
+              widget.isPassword
+                  ? InkWell(
+                      onTap: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      child: Icon(
+                        showPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 20,
+                      ),
+                    )
+                  : SizedBox(),
+            ],
           ),
         ),
       ],

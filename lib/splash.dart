@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void handleTimer() async {
-    const duration = Duration(seconds: 2);
+    const duration = Duration(seconds: 5);
     Timer(duration, () {
       bool isLogin = context.read<UserBloc>().state.isLogin;
       Navigator.of(context).pushReplacementNamed(isLogin ? '/' : '/login');

@@ -31,8 +31,8 @@ class DataRealtimeController extends Controller
     {
         $data = $req->validate([
             'nomor_serial' => 'required',
-            'berat' => 'required|decimal:1,3',
-            'tinggi' => 'required|decimal:1,3',
+            'berat' => 'required|number',
+            'tinggi' => 'required|number',
         ]);
         date_default_timezone_set('Asia/Jakarta');
         $data['created_at'] = date('Y-m-d H:i:s');

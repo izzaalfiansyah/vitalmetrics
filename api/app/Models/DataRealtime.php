@@ -18,5 +18,13 @@ class DataRealtime extends Model
         'created_at',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'tinggi' => 'float',
+            'berat' => 'float',
+        ];
+    }
+
     public $timestamps = false;
 }

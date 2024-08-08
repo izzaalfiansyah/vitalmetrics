@@ -148,8 +148,8 @@ class DataPengukuranController extends Controller
             'user_id' => 'required',
             'user_umur' => 'required|integer',
             'perangkat_id' => 'required',
-            'berat' => 'required|number',
-            'tinggi' => 'required|number',
+            'berat' => 'required',
+            'tinggi' => 'required',
         ]);
     }
 }

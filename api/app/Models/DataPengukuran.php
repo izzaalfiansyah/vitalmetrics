@@ -20,6 +20,14 @@ class DataPengukuran extends Model
         'berat',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'tinggi' => 'float',
+            'berat' => 'float',
+        ];
+    }
+
     protected $with = ['user', 'perangkat'];
 
     function user()
@@ -43,6 +51,7 @@ class DataPengukuran extends Model
         'massa_protein_persentase',
         'berat_badan_ideal',
         'skor_badan',
+        'status_gizi',
     ];
 
     protected function bmi(): Attribute
@@ -218,6 +227,21 @@ class DataPengukuran extends Model
                 }
 
                 return ($skorBmi + $skorBfp) / 2;
+            }
+        );
+    }
+
+    protected function statusGizi(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                if ($this->bmi < 18.5) {
+                    return "kurus";
+                } elseif ($this->bmi >= 18.5 && $this->bmi <= 24.9) {
+                    return "normal";
+                } else {
+                    return "lebih";
+                }
             }
         );
     }

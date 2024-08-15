@@ -22,9 +22,18 @@ class UserService {
     }
   }
 
-  static Future<User?> find() async {
+  static Future<User?> find({id}) async {
     try {
       final token = await getToken();
+
+      if (id != null) {
+        final res = await http(token).get('/users/$id');
+
+        User item = User.fromJson(res.data['data']);
+
+        return item;
+      }
+
       final res = await http(token).get('/user');
 
       User item = User.fromJson(res.data);

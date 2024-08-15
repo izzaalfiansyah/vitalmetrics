@@ -36,7 +36,7 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
             onPressed: () {
               context
                   .read<UserBloc>()
-                  .add(UserUpdate(state.id, state.item as User));
+                  .add(UserUpdate(state.item!.id, state.item as User));
             },
             child: Icon(
               Icons.save,

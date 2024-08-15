@@ -26,6 +26,12 @@ class UserAll extends UserEvent {}
 
 class UserGet extends UserEvent {}
 
+class UserFind extends UserEvent {
+  dynamic id;
+
+  UserFind(this.id);
+}
+
 class UserUpdate extends UserEvent {
   dynamic id;
   User user;
@@ -67,26 +73,33 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
     });
 
+    on<UserFind>((event, emit) async {
+      emit(UserState(
+        isLoading: true,
+      ));
+
+      User? user = await UserService.find(id: event.id);
+
+      emit(UserState(
+        id: user?.id,
+        item: user,
+      ));
+    });
+
     on<UserUpdate>((event, emit) async {
       emit(UserState(
         isLoading: true,
       ));
 
       final res = await UserService.update(event.id, event.user);
-      final user = await UserService.find();
+      final user = await UserService.find(id: event.id);
 
-      if (res.success) {
-        emit(UserState(
-          message: res.message,
-          item: user,
-        ));
-      } else {
-        emit(UserState(
-          isError: true,
-          message: res.message,
-          item: user,
-        ));
-      }
+      emit(UserState(
+        id: event.id,
+        isError: !res.success,
+        message: res.message,
+        item: user,
+      ));
     });
   }
 }

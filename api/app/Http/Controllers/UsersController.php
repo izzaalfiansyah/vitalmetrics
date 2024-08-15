@@ -21,6 +21,17 @@ class UsersController extends Controller
         ]);
     }
 
+    function show($id)
+    {
+        $user = User::find($id);
+
+        return Response([
+            'success' => true,
+            'message' => 'data user berhasil diambil',
+            'data' => $user,
+        ]);
+    }
+
     function store(Request $req): Response
     {
         $data = $this->validate($req);

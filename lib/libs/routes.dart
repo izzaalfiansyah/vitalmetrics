@@ -11,6 +11,7 @@ import 'package:vitalmetrics/pages/register.dart';
 import 'package:vitalmetrics/pages/report.dart';
 import 'package:vitalmetrics/pages/riwayat.dart';
 import 'package:vitalmetrics/pages/ukur/index.dart';
+import 'package:vitalmetrics/pages/user/detail.dart';
 import 'package:vitalmetrics/pages/user/index.dart';
 import 'package:vitalmetrics/splash.dart';
 
@@ -18,11 +19,12 @@ Map<String, WidgetBuilder> routes = {
   '/splash': (context) => SplashScreen(),
   '/login': (context) => LoginScreen(),
   '/register': (context) => RegisterScreen(),
-  '/': (context) => context.read<UserBloc>().state.item!.role == '1'
+  '/': (context) => context.read<UserBloc>().state.item?.role == '1'
       ? AdminScreen()
       : IndexScreen(),
   '/ukur': (context) => UkurScreen(),
   '/user': (context) => UserListScreen(),
+  '/user/detail': (context) => UserDetailScreen(),
   '/report': (context) => ReportScreen(),
   '/riwayat': (context) => RiwayatScreen(),
   '/akun': (context) => AkunScreen(),

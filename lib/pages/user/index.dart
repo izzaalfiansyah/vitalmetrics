@@ -5,6 +5,7 @@ import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/bottomnavbar.dart';
 import 'package:vitalmetrics/constant.dart';
 import 'package:vitalmetrics/models/user.dart';
+import 'package:vitalmetrics/pages/user/detail.dart';
 
 class UserListScreen extends StatefulWidget {
   const UserListScreen({super.key});
@@ -45,7 +46,12 @@ class _UserListScreenState extends State<UserListScreen> {
                 children: [
                   SizedBox(height: 10),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        '/user/detail',
+                        arguments: UserDetailArgument(id: user.id),
+                      );
+                    },
                     child: Container(
                       padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(

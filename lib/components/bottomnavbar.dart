@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/constant.dart';
 
 class Menu {
@@ -23,21 +25,44 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  final List<Menu> userMenus = [
+    Menu(icon: Icons.home, label: 'Beranda', path: '/'),
+    Menu(icon: Icons.history, label: 'Riwayat', path: '/riwayat'),
+    Menu(icon: Icons.account_circle, label: 'Saya', path: '/akun'),
+  ];
+  final List<Menu> adminMenus = [
+    Menu(icon: Icons.home, label: 'Beranda', path: '/'),
+    Menu(icon: Icons.supervisor_account, label: 'User', path: '/user'),
+    Menu(icon: Icons.fastfood, label: 'Menu', path: '/menu'),
+    Menu(icon: Icons.account_circle, label: 'Saya', path: '/akun'),
+  ];
+  List<Menu> menus = [];
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    String role = context.read<UserBloc>().state.item!.role;
+    setState(() {
+      isAdmin = role == '1';
+      menus = isAdmin ? adminMenus : userMenus;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final String routeLocation =
         ModalRoute.of(context)!.settings.name.toString();
-    final List<Menu> menus = [
-      Menu(icon: Icons.home, label: 'Beranda', path: '/'),
-      Menu(icon: Icons.history, label: 'Riwayat', path: '/riwayat'),
-      Menu(icon: Icons.account_circle, label: 'Saya', path: '/akun'),
-    ];
 
     return BottomNavigationBar(
       backgroundColor: Colors.white,
-      selectedLabelStyle: TextStyle(
-        color: cPrimary,
-      ),
+      unselectedItemColor: Colors.grey.withOpacity(.85),
+      selectedFontSize: 12,
+      unselectedFontSize: 12,
+      selectedItemColor: cPrimary,
+      type: BottomNavigationBarType.fixed,
+      showUnselectedLabels: true,
+      showSelectedLabels: true,
       currentIndex: menus.indexWhere((menu) => menu.path == routeLocation),
       onTap: (index) {
         final menu = menus[index];
@@ -54,7 +79,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           .map((menu) => BottomNavigationBarItem(
                 icon: Icon(
                   menu.icon,
-                  color: routeLocation == menu.path ? cPrimary : null,
                 ),
                 label: menu.label,
               ))

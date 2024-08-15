@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'tanggal_lahir',
         'jenis_kelamin',
+        'role',
     ];
 
     /**

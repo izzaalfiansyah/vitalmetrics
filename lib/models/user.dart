@@ -7,6 +7,7 @@ class User {
   String nama;
   String tanggalLahir;
   String jenisKelamin;
+  String role;
   int umur;
 
   User({
@@ -19,6 +20,7 @@ class User {
     this.tanggalLahir = '',
     this.jenisKelamin = '',
     this.umur = 0,
+    this.role = '',
   });
 
   factory User.fromJson(Map<String, dynamic> map) {
@@ -30,6 +32,7 @@ class User {
       tanggalLahir: map['tanggal_lahir'],
       jenisKelamin: map['jenis_kelamin'],
       umur: map['umur'],
+      role: map['role'],
     );
   }
 
@@ -42,6 +45,7 @@ class User {
       'nama': nama,
       'tanggal_lahir': tanggalLahir,
       'jenis_kelamin': jenisKelamin,
+      'role': role,
     };
   }
 }

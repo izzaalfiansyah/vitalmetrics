@@ -3,16 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/constant.dart';
-import 'package:vitalmetrics/pages/akun.dart';
-import 'package:vitalmetrics/pages/akun/manajemen.dart';
-import 'package:vitalmetrics/pages/akun/perangkat.dart';
-import 'package:vitalmetrics/pages/login.dart';
-import 'package:vitalmetrics/pages/register.dart';
-import 'package:vitalmetrics/pages/riwayat.dart';
-import 'package:vitalmetrics/pages/index.dart';
-import 'package:vitalmetrics/pages/report.dart';
-import 'package:vitalmetrics/pages/ukur/index.dart';
-import 'package:vitalmetrics/splash.dart';
+import 'package:vitalmetrics/libs/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,18 +65,7 @@ class _MyAppState extends State<MyApp> {
             ),
             debugShowCheckedModeBanner: false,
             // home: const SplashScreen(),
-            routes: {
-              '/splash': (context) => SplashScreen(),
-              '/login': (context) => LoginScreen(),
-              '/register': (context) => RegisterScreen(),
-              '/': (context) => IndexScreen(),
-              '/ukur': (context) => UkurScreen(),
-              '/report': (context) => ReportScreen(),
-              '/riwayat': (context) => RiwayatScreen(),
-              '/akun': (context) => AkunScreen(),
-              '/akun/manajemen': (context) => AkunManajemenScreen(),
-              '/akun/perangkat': (context) => AkunPerangkatScreen(),
-            },
+            routes: routes,
             initialRoute: '/splash',
           );
         },

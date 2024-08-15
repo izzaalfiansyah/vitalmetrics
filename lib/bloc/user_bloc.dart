@@ -22,6 +22,8 @@ class UserState extends AppState {
 
 sealed class UserEvent {}
 
+class UserAll extends UserEvent {}
+
 class UserGet extends UserEvent {}
 
 class UserUpdate extends UserEvent {
@@ -33,6 +35,18 @@ class UserUpdate extends UserEvent {
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc() : super(UserState()) {
+    on<UserAll>((event, emit) async {
+      emit(UserState(
+        isLoading: true,
+      ));
+
+      List<User> users = await UserService.get();
+
+      emit(UserState(
+        items: users,
+      ));
+    });
+
     on<UserGet>((event, emit) async {
       emit(UserState(
         isLoading: true,

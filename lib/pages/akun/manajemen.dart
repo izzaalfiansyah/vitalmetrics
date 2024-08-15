@@ -24,6 +24,8 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Manajemen Pengguna'),
@@ -61,6 +63,43 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
+                    SizedBox(height: 20),
+                    Container(
+                      width: size.width,
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: shadowBase,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: cPrimary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              user.nama[0],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 48,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(user.nama),
+                          Text(
+                            user.email,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(

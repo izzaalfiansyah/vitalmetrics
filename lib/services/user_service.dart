@@ -9,13 +9,17 @@ import 'package:vitalmetrics/services/type.dart';
 
 class UserService {
   static Future<List<User>> get() async {
-    final token = await getToken();
-    final res = await http(token).get('/users');
-    final data = res.data['data'];
+    try {
+      final token = await getToken();
+      final res = await http(token).get('/users');
+      final data = res.data['data']['data'];
 
-    List<User> items = data.map((item) => User.fromJson(item));
+      List<User> items = List.from(data.map((item) => User.fromJson(item)));
 
-    return items;
+      return items;
+    } catch (e) {
+      return [];
+    }
   }
 
   static Future<User?> find() async {

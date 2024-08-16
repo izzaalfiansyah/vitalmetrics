@@ -7,6 +7,7 @@ import 'package:vitalmetrics/pages/akun/manajemen.dart';
 import 'package:vitalmetrics/pages/akun/perangkat.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/login.dart';
+import 'package:vitalmetrics/pages/menu/index.dart';
 import 'package:vitalmetrics/pages/register.dart';
 import 'package:vitalmetrics/pages/report.dart';
 import 'package:vitalmetrics/pages/riwayat.dart';
@@ -30,4 +31,5 @@ Map<String, WidgetBuilder> routes = {
   '/akun': (context) => AkunScreen(),
   '/akun/manajemen': (context) => AkunManajemenScreen(),
   '/akun/perangkat': (context) => AkunPerangkatScreen(),
+  '/menu': (context) => MenuCategoryByAgeScreen(),
 };

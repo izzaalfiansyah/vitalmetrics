@@ -48,17 +48,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           appBar: AppBar(
             title: Text('Detail User'),
           ),
-          floatingActionButton: state.item?.role == '1'
-              ? null
-              : FloatingActionButton(
-                  onPressed: () {
-                    userBloc.add(UserUpdate(state.id, state.item as User));
-                  },
-                  child: Icon(
-                    Icons.save,
-                    color: Colors.white,
-                  ),
-                ),
           body: BlocListener<UserBloc, UserState>(
             bloc: userBloc,
             listener: (context, state) {
@@ -292,24 +281,43 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        // Container(
-                        //   padding: EdgeInsets.all(20),
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white,
-                        //     boxShadow: shadowBase,
-                        //   ),
-                        //   child: FilledButton(
-                        //     onPressed: () {},
-                        //     style: FilledButton.styleFrom(
-                        //       backgroundColor: cPrimary,
-                        //       fixedSize: Size.fromWidth(
-                        //         size.width,
-                        //       ),
-                        //     ),
-                        //     child: Text('HAPUS AKUN'),
-                        //   ),
-                        // ),
-                        // SizedBox(height: 20),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: shadowBase,
+                          ),
+                          child: Column(
+                            children: [
+                              state.item?.role == '1'
+                                  ? SizedBox()
+                                  : FilledButton(
+                                      onPressed: () {
+                                        userBloc.add(UserUpdate(
+                                            state.id, state.item as User));
+                                      },
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: cPrimary,
+                                        fixedSize: Size.fromWidth(
+                                          size.width,
+                                        ),
+                                      ),
+                                      child: Text('SIMPAN'),
+                                    ),
+                              // FilledButton(
+                              //   onPressed: () {},
+                              //   style: FilledButton.styleFrom(
+                              //     backgroundColor: Colors.black.withOpacity(.7),
+                              //     fixedSize: Size.fromWidth(
+                              //       size.width,
+                              //     ),
+                              //   ),
+                              //   child: Text('HAPUS AKUN'),
+                              // ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   );

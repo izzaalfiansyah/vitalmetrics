@@ -30,21 +30,6 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
       appBar: AppBar(
         title: Text('Manajemen Pengguna'),
       ),
-      floatingActionButton: BlocBuilder<UserBloc, UserState>(
-        builder: (context, state) {
-          return FloatingActionButton(
-            onPressed: () {
-              context
-                  .read<UserBloc>()
-                  .add(UserUpdate(state.item!.id, state.item as User));
-            },
-            child: Icon(
-              Icons.save,
-              color: Colors.white,
-            ),
-          );
-        },
-      ),
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state.message != null) {
@@ -266,7 +251,43 @@ class _AkunManajemenScreenState extends State<AkunManajemenScreen> {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: shadowBase,
+                      ),
+                      child: Column(
+                        children: [
+                          FilledButton(
+                            onPressed: () {
+                              context.read<UserBloc>().add(UserUpdate(
+                                  state.item!.id, state.item as User));
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: cPrimary,
+                              fixedSize: Size.fromWidth(
+                                size.width,
+                              ),
+                            ),
+                            child: Text('SIMPAN'),
+                          ),
+                          // FilledButton(
+                          //   onPressed: () {},
+                          //   style: FilledButton.styleFrom(
+                          //     backgroundColor: Colors.black.withOpacity(.7),
+                          //     fixedSize: Size.fromWidth(
+                          //       size.width,
+                          //     ),
+                          //   ),
+                          //   child: Text('HAPUS AKUN'),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
               );

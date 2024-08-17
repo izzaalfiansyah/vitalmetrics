@@ -191,7 +191,8 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                             .toUpperCase(),
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(height: 20),
                 ],
               );
             },

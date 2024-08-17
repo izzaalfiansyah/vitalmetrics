@@ -4,7 +4,6 @@ import 'package:vitalmetrics/bloc/menu_makanan_bloc.dart';
 import 'package:vitalmetrics/components/form_group.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
-import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/menu_makanan.dart';
 import 'package:vitalmetrics/pages/menu/index.dart';
 
@@ -65,8 +64,6 @@ class _MenuAddScreenState extends State<MenuAddScreen> {
         bloc: widget.menuMakananBloc,
         listener: (context, state) {
           if (state.message != null) {
-            notif(context, text: state.message.toString());
-
             if (state.isError == false) {
               Navigator.pop(context, 1);
             }

@@ -46,9 +46,31 @@ class MenuMakananBloc extends Cubit<MenuMakananState> {
     emit(MenuMakananState(isLoading: true));
     try {
       final token = await getToken();
-      print(menuMakanan.toJson());
       final res =
           await http(token).post('/menu_makanan', data: menuMakanan.toJson());
+
+      emit(MenuMakananState(
+        isError: !res.data['success'],
+        message: res.data['message'],
+      ));
+    } on DioException catch (e) {
+      emit(MenuMakananState(
+        isError: true,
+        message: e.response!.data['message'],
+      ));
+    } catch (e) {
+      emit(MenuMakananState(
+        isError: true,
+        message: 'Terjadi kesalahan',
+      ));
+    }
+  }
+
+  Future<void> destroy(dynamic id) async {
+    emit(MenuMakananState(isLoading: true));
+    try {
+      final token = await getToken();
+      final res = await http(token).delete('/menu_makanan/$id');
 
       emit(MenuMakananState(
         isError: !res.data['success'],

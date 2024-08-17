@@ -19,12 +19,12 @@ class MenuMakananController extends Controller
         ]);
     }
 
-    public function getByPengukuranId(Request $req, $pengukuranId): Response
-    {
-        $pengukuran = DataPengukuran::find($pengukuranId);
+    // public function getByPengukuranId(Request $req, $pengukuranId): Response
+    // {
+    //     $pengukuran = DataPengukuran::find($pengukuranId);
 
-        return Response();
-    }
+    //     return Response();
+    // }
 
     public function store(Request $req): Response
     {
@@ -42,6 +42,16 @@ class MenuMakananController extends Controller
         return Response([
             'success' => true,
             'message' => 'data menu makanan berhasil ditambah',
+        ]);
+    }
+
+    public function destroy($id): Response
+    {
+        MenuMakanan::destroy($id);
+
+        return Response([
+            'success' => true,
+            'message' => 'data berhasil dihapus',
         ]);
     }
 

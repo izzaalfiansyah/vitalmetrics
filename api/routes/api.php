@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/measurement/laporan', [DataPengukuranController::class, 'getLaporan']);
     Route::get('/realtime/by_perangkat_id/{perangkatId}', [DataRealtimeController::class, 'getByPerangkatId']);
     Route::get('/menu_makanan/by_pengukuran_id/{pengukuranId}', [MenuMakananController::class, 'getByPengukuranId']);
+    Route::get('/users/count', [UsersController::class, 'count']);
 
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);

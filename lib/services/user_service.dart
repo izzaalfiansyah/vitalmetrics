@@ -7,6 +7,18 @@ import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/services/type.dart';
 
+class UserCount {
+  final int total;
+  final int male;
+  final int female;
+
+  UserCount({
+    this.total = 0,
+    this.male = 0,
+    this.female = 0,
+  });
+}
+
 class UserService {
   static Future<List<User>> get() async {
     try {
@@ -19,6 +31,22 @@ class UserService {
       return items;
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<UserCount> count() async {
+    try {
+      final token = await getToken();
+      final res = await http(token).get('/users/count');
+      final data = res.data['data'];
+
+      return UserCount(
+        total: data['total'],
+        male: data['male'],
+        female: data['female'],
+      );
+    } catch (e) {
+      return UserCount();
     }
   }
 

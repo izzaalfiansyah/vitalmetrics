@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -18,6 +19,22 @@ class UsersController extends Controller
             'success' => true,
             'data' => $user,
             'message' => 'data user berhasil diambil',
+        ]);
+    }
+
+    function count(): Response
+    {
+        $total = DB::table('users')->select(DB::raw("count(id) as total"))->first()?->total ?: 0;
+        $male_total = DB::table('users')->select(DB::raw("count(id) as total"))->where('jenis_kelamin', 'l')->first()?->total ?: 0;
+        $female_total = DB::table('users')->select(DB::raw("count(id) as total"))->where('jenis_kelamin', 'p')->first()?->total ?: 0;
+
+        return Response([
+            'success' => true,
+            'data' => [
+                'total' => $total,
+                'male' => $male_total,
+                'female' => $female_total,
+            ]
         ]);
     }
 

@@ -4,17 +4,8 @@ import 'package:vitalmetrics/bloc/menu_makanan_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/pages/menu/add.dart';
 import 'package:vitalmetrics/pages/menu/index.dart';
-
-class WaktuMenu {
-  final String title;
-  final dynamic id;
-
-  WaktuMenu({
-    required this.title,
-    required this.id,
-  });
-}
 
 class MenuListScreen extends StatefulWidget {
   const MenuListScreen({
@@ -31,14 +22,6 @@ class _MenuListScreenState extends State<MenuListScreen> {
   MenuMakananBloc menuMakananBloc = MenuMakananBloc();
   String kategoriGizi = 'normal';
 
-  final waktuMenu = [
-    WaktuMenu(title: 'Makan Pagi', id: '1'),
-    WaktuMenu(title: 'Selingan Pagi', id: '2'),
-    WaktuMenu(title: 'Makan Siang', id: '3'),
-    WaktuMenu(title: 'Selingan Sore', id: '4'),
-    WaktuMenu(title: 'Makan Malam', id: '5'),
-  ];
-
   @override
   void initState() {
     menuMakananBloc.get();
@@ -47,23 +30,41 @@ class _MenuListScreenState extends State<MenuListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Daftar Menu ${widget.category.label}'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+    return BlocProvider(
+      create: (context) => menuMakananBloc,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Daftar Menu ${widget.category.label}'),
         ),
-      ),
-      body: BlocProvider(
-        create: (context) => menuMakananBloc,
-        child: BlocBuilder<MenuMakananBloc, MenuMakananState>(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final res = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => MenuAddScreen(
+                  kategoriUmur: widget.category,
+                  kategoriGizi: kategoriGizi,
+                  menuMakananBloc: menuMakananBloc,
+                ),
+              ),
+            );
+
+            if (res == 1) {
+              await menuMakananBloc.get();
+            }
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+        body: BlocBuilder<MenuMakananBloc, MenuMakananState>(
           builder: (context, state) {
             if (state.isLoading) {
               return BodyLoading();
+            }
+
+            if (state.items == null) {
+              return SizedBox();
             }
 
             return SingleChildScrollView(
@@ -100,13 +101,12 @@ class _MenuListScreenState extends State<MenuListScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 10),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: waktuMenu.length,
                     itemBuilder: (context, index) {
-                      final item = waktuMenu[index];
+                      final waktu = waktuMenu[index];
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item.title.toUpperCase(),
+                                  waktu.title.toUpperCase(),
                                   style: TextStyle(
                                     color: cPrimary,
                                     fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
                                             widget.category.umurMax &&
                                         item.umurMin ==
                                             widget.category.umurMin &&
-                                        item.waktu == (index + 1).toString() &&
+                                        item.waktu == waktu.id &&
                                         item.kategoriGizi == kategoriGizi) {
                                       return Container(
                                         decoration: BoxDecoration(
@@ -152,11 +152,25 @@ class _MenuListScreenState extends State<MenuListScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              item.nama,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  item.nama,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             SizedBox(height: 15),
                                             SingleChildScrollView(

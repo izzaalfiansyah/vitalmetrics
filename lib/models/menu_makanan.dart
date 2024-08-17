@@ -1,11 +1,11 @@
 class Bahan {
-  final String nama;
-  final String jumlahUrt;
-  final num berat;
-  final num energi;
-  final num protein;
-  final num lemak;
-  final num kh;
+  String nama;
+  String jumlahUrt;
+  num berat;
+  num energi;
+  num protein;
+  num lemak;
+  num kh;
 
   Bahan({
     this.nama = '',
@@ -43,13 +43,13 @@ class Bahan {
 }
 
 class MenuMakanan {
-  final dynamic id;
-  final String waktu;
-  final num umurMin;
-  final num umurMax;
-  final String kategoriGizi;
-  final String nama;
-  final List<Bahan>? bahan;
+  dynamic id;
+  String waktu;
+  num umurMin;
+  num umurMax;
+  String kategoriGizi;
+  String nama;
+  List<Bahan>? bahan;
 
   MenuMakanan({
     this.id,
@@ -79,9 +79,9 @@ class MenuMakanan {
       'waktu': waktu,
       'umur_min': umurMin,
       'umur_max': umurMax,
-      'kategori_mizi': kategoriGizi,
+      'kategori_gizi': kategoriGizi,
       'nama': nama,
-      'bahan': bahan?.map((item) => item.toJson()),
+      'bahan': List.from((bahan ?? []).map((item) => item.toJson()).toList()),
     };
   }
 }

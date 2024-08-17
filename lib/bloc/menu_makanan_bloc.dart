@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vitalmetrics/bloc/state.dart';
 import 'package:vitalmetrics/libs/http.dart';
@@ -32,13 +33,36 @@ class MenuMakananBloc extends Cubit<MenuMakananState> {
           List.from(res.data['data'].map((item) => MenuMakanan.fromJson(item)));
 
       emit(MenuMakananState(
-        isLoading: false,
         items: data,
       ));
     } catch (e) {
       emit(MenuMakananState(
-        isLoading: false,
         items: [],
+      ));
+    }
+  }
+
+  Future<void> store(MenuMakanan menuMakanan) async {
+    emit(MenuMakananState(isLoading: true));
+    try {
+      final token = await getToken();
+      print(menuMakanan.toJson());
+      final res =
+          await http(token).post('/menu_makanan', data: menuMakanan.toJson());
+
+      emit(MenuMakananState(
+        isError: !res.data['success'],
+        message: res.data['message'],
+      ));
+    } on DioException catch (e) {
+      emit(MenuMakananState(
+        isError: true,
+        message: e.response!.data['message'],
+      ));
+    } catch (e) {
+      emit(MenuMakananState(
+        isError: true,
+        message: 'Terjadi kesalahan',
       ));
     }
   }

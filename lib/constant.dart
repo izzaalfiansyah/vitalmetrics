@@ -81,3 +81,21 @@ List<Category> getBmiCategory() {
     ),
   ];
 }
+
+class WaktuMenu {
+  final String title;
+  final dynamic id;
+
+  WaktuMenu({
+    required this.title,
+    required this.id,
+  });
+}
+
+final waktuMenu = [
+  WaktuMenu(title: 'Makan Pagi', id: '1'),
+  WaktuMenu(title: 'Selingan Pagi', id: '2'),
+  WaktuMenu(title: 'Makan Siang', id: '3'),
+  WaktuMenu(title: 'Selingan Sore', id: '4'),
+  WaktuMenu(title: 'Makan Malam', id: '5'),
+];

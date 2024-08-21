@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:vitalmetrics/bloc/menu_makanan_bloc.dart';
 import 'package:vitalmetrics/bloc/pengukuran_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
@@ -27,11 +28,13 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   PengukuranBloc pengukuranBloc = PengukuranBloc();
+  MenuMakananBloc menuMakananBloc = MenuMakananBloc();
 
   @override
   void initState() {
     final userId = context.read<UserBloc>().state.id;
     pengukuranBloc.add(PengukuranGetLatest(userId: userId));
+    menuMakananBloc.get(user: context.read<UserBloc>().state.item);
     super.initState();
   }
 
@@ -290,7 +293,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              'Skor badan adalah komponen penilaian kesehatan secara keseluruhan dengan mempertimbangkan faktor-faktor tubuh seperti BMI dan lemak tubuh. Kombinasi dari faktor-faktor tubuh ini untuk memberikan gambaran yang lebih lengkap tentang status kesehatan seseorang.',
                               textAlign: TextAlign.justify,
                             ),
                           ],
@@ -325,7 +328,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              'Body Mass Index (BMI) atau Indeks Massa Tubuh (IMT) adalah sebuah metode untuk menghitung berat badan ideal seseorang berdasarkan tinggi badannya. BMI memberikan indikasi apakah seseorang memiliki berat badan yang sehat, kurang, berlebih, atau obesitas.',
                               textAlign: TextAlign.justify,
                             ),
                           ],
@@ -361,7 +364,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc metus ipsum, mattis non ante dictum, finibus maximus magna. Sed feugiat nibh sem, eget hendrerit ante gravida quis. Donec est justo, faucibus sed odio ac, facilisis semper nibh. Vestibulum non fringilla lorem, eu vestibulum leo. Praesent venenatis enim egestas sapien tincidunt, eget tincidunt justo facilisis.',
+                              'Lemak tubuh adalah komponen dari tubuh manusia yang terdiri dari jaringan adiposa, tempat tubuh menyimpan energi dalam bentuk lemak. Lemak tubuh berfungsi sebagai cadangan energi, pelindung organ-organ internal, pengatur suhu tubuh, dan bagian penting dari struktur sel.',
                               textAlign: TextAlign.justify,
                             ),
                           ],
@@ -455,8 +458,178 @@ class _ReportScreenState extends State<ReportScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
+                  Container(
+                    height: 20,
+                    color: Colors.grey.shade200,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Jadwal Menu yang Disarankan',
+                      style: TextStyle(
+                        color: cPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Hr(),
+                  BlocBuilder<MenuMakananBloc, MenuMakananState>(
+                    bloc: menuMakananBloc,
+                    builder: (context, state) {
+                      return Column(
+                        children: waktuMenu.map((waktu) {
+                          return ListItem(
+                            label: waktu.title,
+                            after: Column(
+                              children: (state.items ?? []).map((menu) {
+                                final bmiCategorys = getBmiCategory();
+                                final bmiCategory = bmiCategorys
+                                    .where((category) =>
+                                        category.range[0] <= dataTerakhir.bmi &&
+                                        category.range[1] >= dataTerakhir.bmi)
+                                    .toList()[0];
+
+                                String kategoriGizi = 'normal';
+
+                                if (bmiCategory.result.toLowerCase() ==
+                                    'kurus') {
+                                  kategoriGizi = 'kurang';
+                                } else if (bmiCategory.result.toLowerCase() ==
+                                        'gemuk' ||
+                                    bmiCategory.result.toLowerCase() ==
+                                        'obesitas') {
+                                  kategoriGizi = 'lebih';
+                                }
+
+                                if (menu.waktu != waktu.id ||
+                                    menu.kategoriGizi != kategoriGizi) {
+                                  return SizedBox();
+                                }
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.circle_outlined,
+                                          color: cPrimary,
+                                          size: 12,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          menu.nama.toUpperCase(),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        border: TableBorder(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200),
+                                          top: BorderSide(
+                                              color: Colors.grey.shade200),
+                                        ),
+                                        dividerThickness: 0,
+                                        headingRowHeight: 42,
+                                        columns: [
+                                          DataColumn(
+                                              label: Text(
+                                            'Bahan'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Jumlah URT'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Berat (gram)'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Energi (kkal)'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Protein (gram)'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Lemak (gram)'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'KH (gram)'.toUpperCase(),
+                                            style: TextStyle(
+                                              color: cPrimary,
+                                            ),
+                                          )),
+                                        ],
+                                        rows: (menu.bahan ?? []).map((bahan) {
+                                          return DataRow(cells: [
+                                            DataCell(Text(bahan.nama)),
+                                            DataCell(Text(bahan.jumlahUrt)),
+                                            DataCell(
+                                              Text(bahan.berat
+                                                  .toStringAsFixed(1)),
+                                            ),
+                                            DataCell(
+                                              Text(bahan.energi
+                                                  .toStringAsFixed(1)),
+                                            ),
+                                            DataCell(
+                                              Text(bahan.protein
+                                                  .toStringAsFixed(1)),
+                                            ),
+                                            DataCell(
+                                              Text(bahan.lemak
+                                                  .toStringAsFixed(1)),
+                                            ),
+                                            DataCell(
+                                              Text(bahan.kh.toStringAsFixed(1)),
+                                            ),
+                                          ]);
+                                        }).toList(),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                  Container(
+                    height: 20,
+                    color: Colors.grey.shade200,
+                  ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.all(20),
                     child: FilledButton(
                       onPressed: () {
                         showDialog(

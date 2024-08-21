@@ -4,6 +4,7 @@ import 'package:vitalmetrics/bloc/state.dart';
 import 'package:vitalmetrics/libs/http.dart';
 import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/menu_makanan.dart';
+import 'package:vitalmetrics/models/user.dart';
 import 'package:vitalmetrics/pages/menu/index.dart';
 
 class MenuMakananState extends AppState {
@@ -24,19 +25,18 @@ class MenuMakananBloc extends Cubit<MenuMakananState> {
 
   Future<void> get({
     MenuCategoryByAge? categoryByAge,
+    User? user,
   }) async {
     emit(MenuMakananState(
       isLoading: true,
     ));
     try {
       final token = await getToken();
-      final res = await http(token).get('/menu_makanan',
-          queryParameters: categoryByAge != null
-              ? {
-                  'umur_min': categoryByAge.umurMin,
-                  'umur_max': categoryByAge.umurMax,
-                }
-              : null);
+      final res = await http(token).get('/menu_makanan', queryParameters: {
+        'umur_min': categoryByAge?.umurMin ?? '',
+        'umur_max': categoryByAge?.umurMax ?? '',
+        'umur': user?.umur ?? '',
+      });
 
       List<MenuMakanan> data =
           List.from(res.data['data'].map((item) => MenuMakanan.fromJson(item)));

@@ -38,7 +38,7 @@ class _MenuAddScreenState extends State<MenuAddScreen> {
       kategoriGizi: kategoriGizi.toString(),
       umurMin: widget.kategoriUmur.umurMin,
       umurMax: widget.kategoriUmur.umurMax,
-      bahan: bahan,
+      bahan: bahan.where((b) => b.nama != '').toList(),
     );
 
     widget.menuMakananBloc.store(menuMakanan);

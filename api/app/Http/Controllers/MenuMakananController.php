@@ -2,29 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataPengukuran;
 use App\Models\MenuMakanan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MenuMakananController extends Controller
 {
-    public function index(): Response
+    public function index(Request $req): Response
     {
-        $data = MenuMakanan::all();
+        $builder = new MenuMakanan();
+
+        if ($req->umur) {
+            $builder = $builder->where('umur_min', '<=', $req->umur)->where('umur_max', '>=', $req->umur);
+        } else {
+            if ($req->umur_min) {
+                $builder = $builder->where('umur_min', $req->umur_min);
+            }
+            if ($req->umur_max) {
+                $builder = $builder->where('umur_max', $req->umur_max);
+            }
+        }
+
+        $data = $builder->get();
+
         return Response([
             'success' => true,
             'message' => 'data menu makanan berhasil di ambil',
             'data' => $data,
         ]);
     }
-
-    // public function getByPengukuranId(Request $req, $pengukuranId): Response
-    // {
-    //     $pengukuran = DataPengukuran::find($pengukuranId);
-
-    //     return Response();
-    // }
 
     public function store(Request $req): Response
     {

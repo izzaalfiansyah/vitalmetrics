@@ -54,7 +54,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
 
   @override
   void initState() {
-    menuMakananBloc.get();
+    menuMakananBloc.get(categoryByAge: widget.category);
     super.initState();
   }
 

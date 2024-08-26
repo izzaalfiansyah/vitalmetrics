@@ -51,6 +51,7 @@ class DataRealtimeController extends Controller
         if (!!$dataRealtime) {
             $dataRealtime->update($data);
         } else {
+            $data['perangkat_id'] = $perangkat->id;
             DataRealtime::create($data);
         }
 

@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('data_realtime', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('perangkat_id');
-            $table->float('tinggi');
-            $table->float('berat');
+            $table->float('tinggi')->default(0);
+            $table->float('berat')->default(0);
             $table->timestamp('created_at')->useCurrent()->useCurrentOnUpdate();
         });
     }

@@ -34,13 +34,18 @@ class DataRealtimeController extends Controller
             'tipe' => 'required|in:tinggi|berat',
         ]);
 
-        $data = $req->validate([
-            $req->tipe => 'required',
-        ]);
+        if ($req->tipe == 'tinggi') {
+            $data = $req->validate([
+                'tinggi' => 'required',
+            ]);
+        } else if ($req->tipe == 'berat') {
+            $data = $req->validate([
+                'berat' => 'required',
+            ]);
+        }
 
         date_default_timezone_set('Asia/Jakarta');
         $data['created_at'] = date('Y-m-d H:i:s');
-        $data['nomor_serial'] = $req->nomor_serial;
 
         $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)
             ->orWhere('nomor_serial_tinggi', $req->nomor_serial)

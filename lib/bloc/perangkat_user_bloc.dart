@@ -28,6 +28,12 @@ class PerangkatUserAdd extends PerangkatUserEvent {
   PerangkatUserAdd(this.perangkat);
 }
 
+class PerangkatUserUpdate extends PerangkatUserEvent {
+  PerangkatUser perangkat;
+
+  PerangkatUserUpdate(this.perangkat);
+}
+
 class PerangkatUserRemove extends PerangkatUserEvent {
   dynamic id;
 
@@ -60,18 +66,28 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
       final perangkat = await PerangkatUserService.getByUserId(
           userId: event.perangkat.userId);
 
-      if (res.success) {
-        emit(PerangkatUserState(
-          item: perangkat,
-          message: res.message,
-        ));
-      } else {
-        emit(PerangkatUserState(
-          isError: true,
-          message: res.message,
-          item: perangkat,
-        ));
-      }
+      emit(PerangkatUserState(
+        item: perangkat,
+        message: res.message,
+        isError: !res.success,
+      ));
+    });
+
+    on<PerangkatUserUpdate>((event, emit) async {
+      emit(PerangkatUserState(
+        isLoading: true,
+      ));
+
+      final res = await PerangkatUserService.update(
+          event.perangkat.id, event.perangkat);
+      final perangkat = await PerangkatUserService.getByUserId(
+          userId: event.perangkat.userId);
+
+      emit(PerangkatUserState(
+        item: perangkat,
+        message: res.message,
+        isError: !res.success,
+      ));
     });
 
     on<PerangkatUserRemove>((event, emit) async {
@@ -81,16 +97,10 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
 
       final res = await PerangkatUserService.delete(event.id);
 
-      if (res.success) {
-        emit(PerangkatUserState(
-          message: res.message,
-        ));
-      } else {
-        emit(PerangkatUserState(
-          isError: true,
-          message: res.message,
-        ));
-      }
+      emit(PerangkatUserState(
+        message: res.message,
+        isError: !res.success,
+      ));
     });
   }
 }

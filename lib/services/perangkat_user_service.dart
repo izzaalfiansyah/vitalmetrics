@@ -32,6 +32,21 @@ class PerangkatUserService {
     }
   }
 
+  static Future<ServiceResponse> update(
+      dynamic id, PerangkatUser perangkat) async {
+    try {
+      final token = await getToken();
+      final res = await http(token)
+          .put('/perangkat_user/$id', data: perangkat.toJson());
+
+      return ServiceResponse.fromJson(res.data);
+    } on DioException catch (e) {
+      return ServiceResponse.fromJson(e.response?.data);
+    } catch (e) {
+      return ServiceResponse(success: false, message: 'Terjadi kesalahan');
+    }
+  }
+
   static Future<ServiceResponse> delete(dynamic id) async {
     try {
       final token = await getToken();

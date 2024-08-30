@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::post('/realtime', [DataRealtimeController::class, 'create']);
 
-Route::post('/sanctum/token', function (Request $request) {
+Route::post('/login', function (Request $request) {
     $request->validate([
         'username' => 'required',
         'password' => 'required',
@@ -59,12 +59,12 @@ Route::post('/sanctum/token', function (Request $request) {
     ];
 });
 
-Route::post('/sanctum/register', function (Request $req) {
+Route::post('/register', function (Request $req) {
     $userController = new UsersController;
     return $userController->store($req);
 });
 
-Route::post('/sanctum/destroy', function (Request $req) {
+Route::post('/logout', function (Request $req) {
     $req->user()->currentAccessToken()->delete();
 
     return [

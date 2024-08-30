@@ -29,15 +29,22 @@ class DataRealtimeController extends Controller
 
     function create(Request $req): Response
     {
-        $data = $req->validate([
+        $req->validate([
             'nomor_serial' => 'required',
-            'berat' => 'required',
-            'tinggi' => 'required',
+            'tipe' => 'required|in:tinggi|berat',
         ]);
+
+        $data = $req->validate([
+            $req->tipe => 'required',
+        ]);
+
         date_default_timezone_set('Asia/Jakarta');
         $data['created_at'] = date('Y-m-d H:i:s');
+        $data['nomor_serial'] = $req->nomor_serial;
 
-        $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)->first();
+        $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)
+            ->orWhere('nomor_serial_tinggi', $req->nomor_serial)
+            ->first();
 
         if (!$perangkat) {
             return Response([

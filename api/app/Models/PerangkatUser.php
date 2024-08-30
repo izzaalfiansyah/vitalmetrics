@@ -14,5 +14,6 @@ class PerangkatUser extends Model
     protected $fillable = [
         'nomor_serial',
         'user_id',
+        'nomor_serial_tinggi',
     ];
 }

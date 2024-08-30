@@ -111,6 +111,7 @@ class PerangkatUserController extends Controller
         return $req->validate([
             'nomor_serial' => 'required',
             'user_id' => 'required',
+            'nomor_serial_tinggi' => 'nullable',
         ]);
     }
 }

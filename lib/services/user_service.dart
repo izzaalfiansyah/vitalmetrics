@@ -103,7 +103,7 @@ class UserService {
         deviceName = 'Other';
       }
 
-      final res = await http(null).post('/sanctum/token', data: {
+      final res = await http(null).post('/login', data: {
         'username': username,
         'password': password,
         'device_name': deviceName,
@@ -125,8 +125,7 @@ class UserService {
 
   static Future<ServiceResponse> register(User user) async {
     try {
-      final res =
-          await http(null).post('/sanctum/register', data: user.toJson());
+      final res = await http(null).post('/register', data: user.toJson());
 
       return ServiceResponse.fromJson(res.data);
     } on DioException catch (e) {
@@ -139,7 +138,7 @@ class UserService {
   static Future<ServiceResponse> logout() async {
     try {
       final token = await getToken();
-      final res = await http(token).post('/sanctum/destroy');
+      final res = await http(token).post('/logout');
 
       return ServiceResponse.fromJson(res.data);
     } on DioException catch (e) {

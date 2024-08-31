@@ -31,7 +31,7 @@ class DataRealtimeController extends Controller
     {
         $req->validate([
             'nomor_serial' => 'required',
-            'tipe' => 'required|in:tinggi|berat',
+            'tipe' => 'required|in:tinggi,berat',
         ]);
 
         if ($req->tipe == 'tinggi') {

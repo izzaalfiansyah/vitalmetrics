@@ -21,6 +21,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/realtime/by_perangkat_id/{perangkatId}', [DataRealtimeController::class, 'getByPerangkatId']);
     Route::get('/menu_makanan/by_pengukuran_id/{pengukuranId}', [MenuMakananController::class, 'getByPengukuranId']);
     Route::get('/users/count', [UsersController::class, 'count']);
+    Route::post('/perangkat_user/{id}/kalibrasi_tinggi_on', [PerangkatUserController::class, 'kalibrasiTinggiOn']);
+    Route::put('/perangkat_user/kalibrasi', [PerangkatUserController::class, 'updateKalibrasi']);
 
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);

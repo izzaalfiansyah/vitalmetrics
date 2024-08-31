@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataRealtime;
 use App\Models\PerangkatUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -79,8 +80,52 @@ class PerangkatUserController extends Controller
         ]);
     }
 
+    function kalibrasiTinggiOn($id): Response
+    {
+        $perangkat = PerangkatUser::find($id);
+
+        $perangkat->update(['kalibrasi_tinggi_on' => true]);
+
+        return Response([
+            'success' => true,
+            'message' => 'kalibrasi untuk tinggi dihidupkan',
+        ]);
+    }
+
+    function updateKalibrasi(Request $req): Response
+    {
+        $req->validate([
+            'tipe' => 'required|in:tinggi',
+            'nomor_serial' => 'required',
+        ]);
+
+        if ($req->tipe == 'tinggi') {
+            $data = $req->validate([
+                'kalibrasi_tinggi' => 'required',
+            ]);
+            $data['kalibrasi_tinggi_on'] = false;
+        }
+
+        $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)->orWhere('nomor_serial_tinggi', $req->nomor_serial)->first();
+
+        if (!$perangkat) {
+            return Response([
+                'success' => false,
+                'message' => "perangkat belum terdaftar"
+            ], 400);
+        }
+
+        $perangkat->update($data);
+
+        return Response([
+            'success' => true,
+            'message' => "nilai kalibrasi sensor berhasil diedit",
+        ]);
+    }
+
     function destroy($id): Response
     {
+        DataRealtime::where('perangkat_id', $id)->delete();
         PerangkatUser::destroy($id);
 
         return Response([

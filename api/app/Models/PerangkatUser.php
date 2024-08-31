@@ -15,5 +15,7 @@ class PerangkatUser extends Model
         'nomor_serial',
         'user_id',
         'nomor_serial_tinggi',
+        'kalibrasi_tinggi',
+        'kalibrasi_tinggi_on',
     ];
 }

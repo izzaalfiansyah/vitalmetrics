@@ -19,4 +19,13 @@ class DataRealtime {
       perangkatId: map['perangkat_id'],
     );
   }
+
+  toJson() {
+    return {
+      'tinggi': tinggi,
+      'berat': berat,
+      'created_at': createdAt,
+      'perangkat_id': perangkatId,
+    };
+  }
 }

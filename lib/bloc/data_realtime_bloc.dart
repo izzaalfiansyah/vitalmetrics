@@ -24,12 +24,38 @@ class DataRealtimeGetFirst extends DataRealtimeEvent {
   });
 }
 
+class DataRealtimeUpdateTinggi extends DataRealtimeEvent {
+  dynamic perangkatId;
+  String nomorSerial;
+  double tinggi;
+
+  DataRealtimeUpdateTinggi({
+    required this.nomorSerial,
+    required this.tinggi,
+    required this.perangkatId,
+  });
+}
+
 class DataRealtimeBloc extends Bloc<DataRealtimeEvent, DataRealtimeState> {
   DataRealtimeBloc() : super(DataRealtimeState()) {
     on<DataRealtimeGetFirst>((event, emit) async {
       if (event.withLoading) {
         emit(DataRealtimeState(isLoading: true));
       }
+
+      final res =
+          await DataRealtimeService.first(perangkatId: event.perangkatId);
+
+      emit(DataRealtimeState(item: res));
+    });
+
+    on<DataRealtimeUpdateTinggi>((event, emit) async {
+      emit(DataRealtimeState(isLoading: true));
+
+      await DataRealtimeService.updateTinggi(
+        nomorSerial: event.nomorSerial,
+        tinggi: event.tinggi,
+      );
 
       final res =
           await DataRealtimeService.first(perangkatId: event.perangkatId);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vitalmetrics/bloc/data_realtime_bloc.dart';
 import 'package:vitalmetrics/bloc/perangkat_user_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
@@ -16,8 +17,131 @@ class AkunPerangkatScreen extends StatefulWidget {
 
 class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   PerangkatUserBloc perangkatUserBloc = PerangkatUserBloc();
+  DataRealtimeBloc dataRealtimeBloc = DataRealtimeBloc();
   dynamic userId;
-  bool isUsingHeightScale = false;
+
+  tambahPerangkat(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController controller = TextEditingController();
+
+        return AlertDialog(
+          actionsPadding: EdgeInsets.only(bottom: 0),
+          content: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Nomor Serial',
+              helperText: 'Perangkat pengukur berat badan',
+            ),
+            validator: (value) {
+              if (value == null) {
+                return 'Nomor Serial wajib diisi';
+              }
+              return null;
+            },
+            controller: controller,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                perangkatUserBloc.add(
+                  PerangkatUserAdd(
+                    PerangkatUser(
+                      nomorSerial: controller.text,
+                      userId: userId,
+                    ),
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  editNomorSerialTinggiBadan(BuildContext context, PerangkatUser perangkat) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController controller = TextEditingController(
+          text: perangkat.nomorSerialTinggi,
+        );
+
+        return AlertDialog(
+          actionsPadding: EdgeInsets.only(bottom: 0),
+          content: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Nomor Serial',
+              helperText: 'Perangkat pengukur tinggi badan',
+            ),
+            validator: (value) {
+              if (value == null) {
+                return 'Nomor Serial wajib diisi';
+              }
+              return null;
+            },
+            controller: controller,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                perangkat.nomorSerialTinggi = controller.text;
+                perangkatUserBloc.add(
+                  PerangkatUserUpdate(
+                    perangkat,
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  putuskanSemuaPerangkat(BuildContext context, PerangkatUser perangkat) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actionsPadding: EdgeInsets.only(bottom: 0),
+          content: Text('Anda yakin memutuskan semua perangkat terhubung?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                perangkatUserBloc.add(PerangkatUserRemove(perangkat.id));
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -31,6 +155,7 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
   @override
   void dispose() {
     perangkatUserBloc.close();
+    dataRealtimeBloc.close();
     super.dispose();
   }
 
@@ -55,9 +180,8 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
             }
 
             if (state.item != null) {
-              setState(() {
-                isUsingHeightScale = state.item?.nomorSerialTinggi != null;
-              });
+              dataRealtimeBloc
+                  .add(DataRealtimeGetFirst(perangkatId: state.item!.id));
             }
           },
           child: BlocBuilder<PerangkatUserBloc, PerangkatUserState>(
@@ -96,53 +220,7 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                       ),
                       child: FilledButton(
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              TextEditingController controller =
-                                  TextEditingController();
-
-                              return AlertDialog(
-                                actionsPadding: EdgeInsets.only(bottom: 0),
-                                content: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Nomor Serial',
-                                    helperText:
-                                        'Perangkat pengukur berat badan',
-                                  ),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Nomor Serial wajib diisi';
-                                    }
-                                    return null;
-                                  },
-                                  controller: controller,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      perangkatUserBloc.add(
-                                        PerangkatUserAdd(
-                                          PerangkatUser(
-                                            nomorSerial: controller.text,
-                                            userId: userId,
-                                          ),
-                                        ),
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          tambahPerangkat(context);
                         },
                         style: FilledButton.styleFrom(
                           backgroundColor: cPrimary,
@@ -264,29 +342,36 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                     color: cPrimary,
                                   ),
                                 ),
-                                trailing: Switch.adaptive(
-                                  applyCupertinoTheme: false,
-                                  value: isUsingHeightScale,
-                                  activeColor: cPrimary,
-                                  trackOutlineWidth: WidgetStatePropertyAll(1),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      isUsingHeightScale = !isUsingHeightScale;
-                                    });
-                                  },
-                                ),
+                                trailing: perangkat.nomorSerialTinggi != null
+                                    ? IconButton(
+                                        onPressed: () {
+                                          perangkat.nomorSerialTinggi = null;
+                                          perangkatUserBloc.add(
+                                            PerangkatUserUpdate(
+                                              perangkat,
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.grey.shade400,
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          editNomorSerialTinggiBadan(
+                                              context, perangkat);
+                                        },
+                                        icon: Icon(Icons.add),
+                                        color: cPrimary,
+                                      ),
                               ),
-                              isUsingHeightScale
+                              perangkat.nomorSerialTinggi != null
                                   ? Column(
                                       children: [
                                         Hr(),
                                         ListTile(
                                           title: Text('Nomor Serial'),
                                           subtitle: Text(
-                                            perangkat.nomorSerialTinggi != null
-                                                ? perangkat.nomorSerialTinggi!
-                                                    .toUpperCase()
-                                                : "Masukkan nomor perangkat",
+                                            perangkat.nomorSerialTinggi!,
                                             style: TextStyle(
                                               color:
                                                   perangkat.nomorSerialTinggi ==
@@ -295,86 +380,126 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                                       : null,
                                             ),
                                           ),
-                                          trailing: perangkat
-                                                      .nomorSerialTinggi !=
-                                                  null
-                                              ? IconButton(
-                                                  icon: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.grey.shade400,
-                                                  ),
-                                                  onPressed: () {
-                                                    perangkat
-                                                            .nomorSerialTinggi =
-                                                        null;
-                                                    perangkatUserBloc.add(
-                                                      PerangkatUserUpdate(
-                                                        perangkat,
-                                                      ),
-                                                    );
-                                                  })
-                                              : null,
                                           onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                TextEditingController
-                                                    controller =
-                                                    TextEditingController(
-                                                  text: perangkat
-                                                      .nomorSerialTinggi,
-                                                );
+                                            editNomorSerialTinggiBadan(
+                                                context, perangkat);
+                                          },
+                                        ),
+                                        Hr(),
+                                        ListTile(
+                                          title: Text('Nilai Kalibrasi'),
+                                          subtitle: Text(
+                                              '${300.toStringAsFixed(2)} cm'),
+                                          trailing: TextButton(
+                                            onPressed: () {},
+                                            child: Text('SET'),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        Hr(),
+                                        BlocBuilder<DataRealtimeBloc,
+                                            DataRealtimeState>(
+                                          bloc: dataRealtimeBloc,
+                                          builder: (context, stateRealtime) {
+                                            return ListTile(
+                                              title: Text('Tinggi Badan'),
+                                              subtitle: stateRealtime.isLoading
+                                                  ? Text(
+                                                      'Memuat...',
+                                                      style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade400,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      stateRealtime.item
+                                                                  ?.tinggi !=
+                                                              null
+                                                          ? '${stateRealtime.item!.tinggi.toStringAsFixed(2)} cm'
+                                                          : "Masukkan tinggi badan manual",
+                                                      style: TextStyle(
+                                                        color: stateRealtime
+                                                                    .item ==
+                                                                null
+                                                            ? Colors
+                                                                .grey.shade400
+                                                            : null,
+                                                      ),
+                                                    ),
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    TextEditingController
+                                                        controller =
+                                                        TextEditingController(
+                                                            text: stateRealtime
+                                                                .item?.tinggi
+                                                                .toStringAsFixed(
+                                                                    2));
 
-                                                return AlertDialog(
-                                                  actionsPadding:
-                                                      EdgeInsets.only(
-                                                          bottom: 0),
-                                                  content: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      labelText: 'Nomor Serial',
-                                                      helperText:
-                                                          'Perangkat pengukur tinggi badan',
-                                                    ),
-                                                    validator: (value) {
-                                                      if (value == null) {
-                                                        return 'Nomor Serial wajib diisi';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    controller: controller,
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('Cancel'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        perangkat
-                                                                .nomorSerialTinggi =
-                                                            controller.text;
-                                                        perangkatUserBloc.add(
-                                                          PerangkatUserUpdate(
-                                                            perangkat,
-                                                          ),
-                                                        );
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
+                                                    return AlertDialog(
+                                                      actionsPadding:
+                                                          EdgeInsets.only(
+                                                              bottom: 0),
+                                                      content: TextFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              'Tinggi Badan',
+                                                          helperText:
+                                                              'Masukkan tinggi badan anda.',
+                                                          suffixText: 'cm',
+                                                        ),
+                                                        validator: (value) {
+                                                          if (value == null) {
+                                                            return 'Tinggi Badan wajib diisi';
+                                                          }
+                                                          return null;
+                                                        },
+                                                        controller: controller,
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('Cancel'),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            dataRealtimeBloc.add(DataRealtimeUpdateTinggi(
+                                                                nomorSerial:
+                                                                    perangkat
+                                                                        .nomorSerial,
+                                                                tinggi: num.parse(
+                                                                        controller
+                                                                            .text)
+                                                                    .toDouble(),
+                                                                perangkatId:
+                                                                    perangkat
+                                                                        .id));
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('OK'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
                                                 );
                                               },
                                             );
                                           },
                                         )
                                       ],
-                                    )
-                                  : SizedBox(),
+                                    ),
                             ],
                           ),
                         )
@@ -388,32 +513,7 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                     ),
                     child: FilledButton(
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              actionsPadding: EdgeInsets.only(bottom: 0),
-                              content: Text(
-                                  'Anda yakin memutuskan semua perangkat terhubung?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    perangkatUserBloc
-                                        .add(PerangkatUserRemove(perangkat.id));
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        putuskanSemuaPerangkat(context, perangkat);
                       },
                       style: FilledButton.styleFrom(
                         backgroundColor: cPrimary,

@@ -391,7 +391,13 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                           subtitle: Text(
                                               '${300.toStringAsFixed(2)} cm'),
                                           trailing: TextButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              final res = await Navigator.of(
+                                                      context)
+                                                  .pushNamed(
+                                                      '/akun/perangkat/kalibrasi-tinggi');
+                                              print(res);
+                                            },
                                             child: Text('SET'),
                                           ),
                                         )

@@ -18,4 +18,11 @@ class PerangkatUser extends Model
         'kalibrasi_tinggi',
         'kalibrasi_tinggi_on',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'kalibrasi_tinggi_on' => 'boolean',
+        ];
+    }
 }

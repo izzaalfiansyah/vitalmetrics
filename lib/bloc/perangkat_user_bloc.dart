@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vitalmetrics/bloc/state.dart';
+import 'package:vitalmetrics/libs/http.dart';
+import 'package:vitalmetrics/libs/session.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
 import 'package:vitalmetrics/services/perangkat_user_service.dart';
 
@@ -102,5 +104,17 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
         isError: !res.success,
       ));
     });
+  }
+
+  kalibrasiTinggiOn(dynamic id) async {
+    String? token = await getToken();
+    http(token).post("/perangkat_user/$id/kalibrasi_tinggi_on");
+    return true;
+  }
+
+  kalibrasiTinggiOff(dynamic id) async {
+    String? token = await getToken();
+    http(token).post("/perangkat_user/$id/kalibrasi_tinggi_off");
+    return true;
   }
 }

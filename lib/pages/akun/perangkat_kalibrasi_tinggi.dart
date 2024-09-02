@@ -42,8 +42,9 @@ class _PerangkatKalibrasiTinggiScreenState
       ),
       body: BlocListener<PerangkatUserBloc, PerangkatUserState>(
         bloc: perangkatUserBloc,
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.item != null) {
+            await perangkatUserBloc.kalibrasiTinggiOn(state.item!.id);
             setState(() {
               step = 2;
             });
@@ -52,7 +53,6 @@ class _PerangkatKalibrasiTinggiScreenState
         child: BlocBuilder<PerangkatUserBloc, PerangkatUserState>(
           bloc: perangkatUserBloc,
           builder: (context, state) {
-            print(state.item);
             return Container(
               padding: EdgeInsets.all(20),
               alignment: Alignment.center,

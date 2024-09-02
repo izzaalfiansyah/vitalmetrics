@@ -22,6 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/menu_makanan/by_pengukuran_id/{pengukuranId}', [MenuMakananController::class, 'getByPengukuranId']);
     Route::get('/users/count', [UsersController::class, 'count']);
     Route::post('/perangkat_user/{id}/kalibrasi_tinggi_on', [PerangkatUserController::class, 'kalibrasiTinggiOn']);
+    Route::post('/perangkat_user/{id}/kalibrasi_tinggi_off', [PerangkatUserController::class, 'kalibrasiTinggiOff']);
     Route::put('/perangkat_user/kalibrasi', [PerangkatUserController::class, 'updateKalibrasi']);
 
     Route::resource('/users', UsersController::class);

@@ -92,6 +92,18 @@ class PerangkatUserController extends Controller
         ]);
     }
 
+    function kalibrasiTinggiOff($id): Response
+    {
+        $perangkat = PerangkatUser::find($id);
+
+        $perangkat->update(['kalibrasi_tinggi_on' => false]);
+
+        return Response([
+            'success' => true,
+            'message' => 'kalibrasi untuk tinggi dimatikan',
+        ]);
+    }
+
     function updateKalibrasi(Request $req): Response
     {
         $req->validate([

@@ -6,6 +6,7 @@ import 'package:vitalmetrics/bloc/user_bloc.dart';
 import 'package:vitalmetrics/components/body_loading.dart';
 import 'package:vitalmetrics/components/hr.dart';
 import 'package:vitalmetrics/constant.dart';
+import 'package:vitalmetrics/libs/notif.dart';
 import 'package:vitalmetrics/models/perangkat_user.dart';
 
 class AkunPerangkatScreen extends StatefulWidget {
@@ -389,14 +390,26 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                         ListTile(
                                           title: Text('Nilai Kalibrasi'),
                                           subtitle: Text(
-                                              '${300.toStringAsFixed(2)} cm'),
+                                              '${perangkat.kalibrasiTinggi.toStringAsFixed(2)} cm'),
                                           trailing: TextButton(
                                             onPressed: () async {
                                               final res = await Navigator.of(
                                                       context)
                                                   .pushNamed(
                                                       '/akun/perangkat/kalibrasi-tinggi');
-                                              print(res);
+
+                                              if (res != 'no-save') {
+                                                await perangkatUserBloc
+                                                    .kalibrasiTinggiOff(
+                                                        perangkat.id);
+                                                perangkatUserBloc.add(
+                                                    PerangkatUserGetByUserId(
+                                                        userId: userId));
+
+                                                notif(context,
+                                                    text:
+                                                        "kalibrasi perangkat pengukur tinggi berhasil");
+                                              }
                                             },
                                             child: Text('SET'),
                                           ),

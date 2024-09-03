@@ -15,6 +15,8 @@ const int ledUnActivePin = 4;
 
 String apiUrl = "http://192.168.67.111:8000";
 JSONVar perangkat;
+float height;
+String chipID;
 
 String getChipID() {
   uint64_t chipid = ESP.getEfuseMac();
@@ -68,9 +70,11 @@ JSONVar getPerangkat(String nomor_serial) {
   return data;
 }
 
-void sendData(String nomor_serial, float tinggi) {
+void sendData() {
   HTTPClient http;
   JSONVar json;
+  String nomor_serial = chipID;
+  float tinggi = height;
 
   if ((bool)perangkat["kalibrasi_tinggi_on"]) {
     http.begin(apiUrl + "/api/perangkat_user/kalibrasi?tipe=tinggi");
@@ -82,9 +86,18 @@ void sendData(String nomor_serial, float tinggi) {
 
     tinggi = ((double)perangkat["kalibrasi_tinggi"]) - tinggi;
 
+    if (tinggi < 0) {
+      tinggi = 0;
+    }
+
     json["nomor_serial"] = nomor_serial;
     json["tinggi"] = tinggi;
   }
+
+  Serial.print("Nomor Serial: ");
+  Serial.println(nomor_serial);
+  Serial.print("Tinggi (cm): ");
+  Serial.println(tinggi);
 
   http.addHeader("Content-Type", "application/json");
 
@@ -146,17 +159,12 @@ void setup() {
 }
 
 void loop() {
-  float height = getHeight();
-  String chipID = getChipID();
+  height = getHeight();
+  chipID = getChipID();
   perangkat = getPerangkat(chipID);
 
   if (JSON.stringify(perangkat) != NULL) {
-    Serial.print("Chip ID: ");
-    Serial.println(chipID);
-    Serial.print("Distance (cm): ");
-    Serial.println(height);
-
-    sendData(chipID, height);
+    sendData();
   }
 
   delay(1000);

@@ -10,6 +10,11 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 const int trigPin = 18;
 const int echoPin = 19;
+const int ledActivePin = 2;
+const int ledUnActivePin = 4;
+
+String apiUrl = "http://192.168.67.111:8000";
+JSONVar perangkat;
 
 String getChipID() {
   uint64_t chipid = ESP.getEfuseMac();
@@ -35,40 +40,76 @@ float getHeight() {
   return distanceCm;
 }
 
-void sendData(String nomor_serial, float tinggi) {
+JSONVar getPerangkat(String nomor_serial) {
   HTTPClient http;
 
-  http.begin("http://192.168.67.111:8000/api/realtime?tipe=tinggi");
+  http.begin(apiUrl + "/api/perangkat_user/by_serial_number/" + nomor_serial);
   http.addHeader("Content-Type", "application/json");
+  JSONVar data;
 
-  JSONVar json;
-  json["nomor_serial"] = nomor_serial;
-  json["tinggi"] = tinggi;
+  int httpResponseCode = http.GET();
 
-  int httpResponseCode = http.POST(JSON.stringify(json));
-
-  if (httpResponseCode > 0) {
+  if (httpResponseCode == 200) {
     String response = http.getString();
     Serial.println("HTTP Response code: " + String(httpResponseCode));
     Serial.println("Response: " + response);
 
-    if (httpResponseCode == 400) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print(nomor_serial);
-      lcd.setCursor(0, 1);
-      lcd.print("belum terdaftar!");
-    } else {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Tinggi badan:");
-      lcd.setCursor(0, 1);
-      lcd.print(tinggi, 2);
-      lcd.print(" cm");
-    }
+    data = JSON.parse(response);
   } else {
-    Serial.println("Error on sending POST: " + String(httpResponseCode));
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(nomor_serial);
+    lcd.setCursor(0, 1);
+    lcd.print("belum terdaftar!");
   }
+
+  http.end();
+
+  return data;
+}
+
+void sendData(String nomor_serial, float tinggi) {
+  HTTPClient http;
+  JSONVar json;
+
+  if ((bool)perangkat["kalibrasi_tinggi_on"]) {
+    http.begin(apiUrl + "/api/perangkat_user/kalibrasi?tipe=tinggi");
+
+    json["nomor_serial"] = nomor_serial;
+    json["kalibrasi_tinggi"] = tinggi;
+  } else {
+    http.begin(apiUrl + "/api/realtime?tipe=tinggi");
+
+    tinggi = ((double)perangkat["kalibrasi_tinggi"]) - tinggi;
+
+    json["nomor_serial"] = nomor_serial;
+    json["tinggi"] = tinggi;
+  }
+
+  http.addHeader("Content-Type", "application/json");
+
+  int httpResponseCode = http.POST(JSON.stringify(json));
+
+  if (httpResponseCode != 200) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Terjadi");
+    lcd.setCursor(0, 1);
+    lcd.print("kesalahan!");
+  } else {
+    String response = http.getString();
+    Serial.println("Response: " + response);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(((bool)perangkat["kalibrasi_tinggi_on"]) ? "Kalibrasi:" : "Tinggi badan:");
+    lcd.setCursor(0, 1);
+    lcd.print(tinggi, 2);
+    lcd.print(" cm");
+  }
+
+  digitalWrite(ledActivePin, HIGH);
+  digitalWrite(ledUnActivePin, LOW);
 
   http.end();
 }
@@ -86,6 +127,11 @@ void setup() {
 
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(ledActivePin, OUTPUT);
+  pinMode(ledUnActivePin, OUTPUT);
+
+  digitalWrite(ledActivePin, LOW);
+  digitalWrite(ledUnActivePin, HIGH);
 
   lcd.init();
   lcd.backlight();
@@ -102,13 +148,16 @@ void setup() {
 void loop() {
   float height = getHeight();
   String chipID = getChipID();
+  perangkat = getPerangkat(chipID);
 
-  Serial.print("Chip ID: ");
-  Serial.println(chipID);
-  Serial.print("Distance (cm): ");
-  Serial.println(height);
+  if (JSON.stringify(perangkat) != NULL) {
+    Serial.print("Chip ID: ");
+    Serial.println(chipID);
+    Serial.print("Distance (cm): ");
+    Serial.println(height);
 
-  sendData(chipID, height);
+    sendData(chipID, height);
+  }
 
   delay(1000);
 }

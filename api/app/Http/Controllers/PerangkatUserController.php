@@ -115,7 +115,6 @@ class PerangkatUserController extends Controller
             $data = $req->validate([
                 'kalibrasi_tinggi' => 'required',
             ]);
-            $data['kalibrasi_tinggi_on'] = false;
         }
 
         $perangkat = PerangkatUser::where('nomor_serial', $req->nomor_serial)->orWhere('nomor_serial_tinggi', $req->nomor_serial)->first();
@@ -161,6 +160,20 @@ class PerangkatUserController extends Controller
             'success' => true,
             'data' => $perangkat,
         ]);
+    }
+
+    function getBySerialNumber($nomorSerial): Response
+    {
+        $perangkat = PerangkatUser::where('nomor_serial', $nomorSerial)->orWhere('nomor_serial_tinggi', $nomorSerial)->first();
+
+        if (!$perangkat) {
+            return Response([
+                'success' => false,
+                'message' => 'data perangkat tidak ditemukan'
+            ], 400);
+        }
+
+        return Response($perangkat);
     }
 
     private function validate(Request $req): array

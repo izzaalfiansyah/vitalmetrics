@@ -104,6 +104,30 @@ class PerangkatUserController extends Controller
         ]);
     }
 
+    function kalibrasiBeratOn($id): Response
+    {
+        $perangkat = PerangkatUser::find($id);
+
+        $perangkat->update(['kalibrasi_berat_on' => true]);
+
+        return Response([
+            'success' => true,
+            'message' => 'kalibrasi untuk berat dihidupkan',
+        ]);
+    }
+
+    function kalibrasiBeratOff($id): Response
+    {
+        $perangkat = PerangkatUser::find($id);
+
+        $perangkat->update(['kalibrasi_berat_on' => false]);
+
+        return Response([
+            'success' => true,
+            'message' => 'kalibrasi untuk berat dimatikan',
+        ]);
+    }
+
     function updateKalibrasi(Request $req): Response
     {
         $req->validate([
@@ -114,6 +138,10 @@ class PerangkatUserController extends Controller
         if ($req->tipe == 'tinggi') {
             $data = $req->validate([
                 'kalibrasi_tinggi' => 'required',
+            ]);
+        } else if ($req->tipe == 'berat') {
+            $data = $req->validate([
+                'kalibrasi_berat' => 'required',
             ]);
         }
 

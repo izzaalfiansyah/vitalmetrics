@@ -23,6 +23,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/count', [UsersController::class, 'count']);
     Route::post('/perangkat_user/{id}/kalibrasi_tinggi_on', [PerangkatUserController::class, 'kalibrasiTinggiOn']);
     Route::post('/perangkat_user/{id}/kalibrasi_tinggi_off', [PerangkatUserController::class, 'kalibrasiTinggiOff']);
+    Route::post('/perangkat_user/{id}/kalibrasi_berat_on', [PerangkatUserController::class, 'kalibrasiBeratOn']);
+    Route::post('/perangkat_user/{id}/kalibrasi_berat_off', [PerangkatUserController::class, 'kalibrasiBeratOff']);
 
     Route::resource('/users', UsersController::class);
     Route::resource('/perangkat_user', PerangkatUserController::class);

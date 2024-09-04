@@ -84,7 +84,7 @@ class PerangkatUserController extends Controller
     {
         $perangkat = PerangkatUser::find($id);
 
-        $perangkat->update(['kalibrasi_tinggi_on' => true]);
+        $perangkat->update(['kalibrasi_tinggi_on' => true, 'kalibrasi_tinggi' => 0]);
 
         return Response([
             'success' => true,
@@ -108,7 +108,7 @@ class PerangkatUserController extends Controller
     {
         $perangkat = PerangkatUser::find($id);
 
-        $perangkat->update(['kalibrasi_berat_on' => true]);
+        $perangkat->update(['kalibrasi_berat_on' => true, 'kalibrasi_berat' => 0]);
 
         return Response([
             'success' => true,
@@ -131,7 +131,7 @@ class PerangkatUserController extends Controller
     function updateKalibrasi(Request $req): Response
     {
         $req->validate([
-            'tipe' => 'required|in:tinggi',
+            'tipe' => 'required|in:tinggi,berat',
             'nomor_serial' => 'required',
         ]);
 

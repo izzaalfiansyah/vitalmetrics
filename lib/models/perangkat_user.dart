@@ -5,6 +5,8 @@ class PerangkatUser {
   dynamic userId;
   num kalibrasiTinggi = 0;
   bool kalibrasiTinggiOn = false;
+  num kalibrasiBerat = 0;
+  bool kalibrasiBeratOn = false;
 
   PerangkatUser({
     this.id = '',
@@ -13,6 +15,8 @@ class PerangkatUser {
     this.nomorSerialTinggi,
     this.kalibrasiTinggi = 0,
     this.kalibrasiTinggiOn = false,
+    this.kalibrasiBerat = 0,
+    this.kalibrasiBeratOn = false,
   });
 
   factory PerangkatUser.fromJson(Map<String, dynamic> map) {
@@ -23,6 +27,8 @@ class PerangkatUser {
       userId: map['user_id'],
       kalibrasiTinggi: map['kalibrasi_tinggi'],
       kalibrasiTinggiOn: map['kalibrasi_tinggi_on'],
+      kalibrasiBerat: map['kalibrasi_berat'],
+      kalibrasiBeratOn: map['kalibrasi_berat_on'],
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:vitalmetrics/pages/admin.dart';
 import 'package:vitalmetrics/pages/akun.dart';
 import 'package:vitalmetrics/pages/akun/manajemen.dart';
 import 'package:vitalmetrics/pages/akun/perangkat.dart';
+import 'package:vitalmetrics/pages/akun/perangkat_kalibrasi_berat.dart';
 import 'package:vitalmetrics/pages/akun/perangkat_kalibrasi_tinggi.dart';
 import 'package:vitalmetrics/pages/index.dart';
 import 'package:vitalmetrics/pages/login.dart';
@@ -34,5 +35,7 @@ Map<String, WidgetBuilder> routes = {
   '/akun/perangkat': (context) => AkunPerangkatScreen(),
   '/akun/perangkat/kalibrasi-tinggi': (context) =>
       PerangkatKalibrasiTinggiScreen(),
+  '/akun/perangkat/kalibrasi-berat': (context) =>
+      PerangkatKalibrasiBeratScreen(),
   '/menu': (context) => MenuCategoryByAgeScreen(),
 };

@@ -323,7 +323,33 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                     },
                                   );
                                 },
-                              )
+                              ),
+                              Hr(),
+                              ListTile(
+                                title: Text('Nilai Kalibrasi'),
+                                subtitle: Text(
+                                    '${perangkat.kalibrasiBerat.toStringAsFixed(2)} fac'),
+                                trailing: TextButton(
+                                  onPressed: () async {
+                                    final res = await Navigator.of(context)
+                                        .pushNamed(
+                                            '/akun/perangkat/kalibrasi-berat');
+
+                                    if (res != 'no-save') {
+                                      await perangkatUserBloc
+                                          .kalibrasiBeratOff(perangkat.id);
+                                      perangkatUserBloc.add(
+                                          PerangkatUserGetByUserId(
+                                              userId: userId));
+
+                                      notif(context,
+                                          text:
+                                              "kalibrasi perangkat pengukur berat berhasil");
+                                    }
+                                  },
+                                  child: Text('SET'),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -413,7 +439,7 @@ class _AkunPerangkatScreenState extends State<AkunPerangkatScreen> {
                                             },
                                             child: Text('SET'),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     )
                                   : Column(

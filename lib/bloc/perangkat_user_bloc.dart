@@ -117,4 +117,28 @@ class PerangkatUserBloc extends Bloc<PerangkatUserEvent, PerangkatUserState> {
     http(token).post("/perangkat_user/$id/kalibrasi_tinggi_off");
     return true;
   }
+
+  kalibrasiBeratOn(dynamic id) async {
+    String? token = await getToken();
+    http(token).post("/perangkat_user/$id/kalibrasi_berat_on");
+    return true;
+  }
+
+  kalibrasiBeratOff(dynamic id) async {
+    String? token = await getToken();
+    http(token).post("/perangkat_user/$id/kalibrasi_berat_off");
+    return true;
+  }
+
+  updateKalibrasiBerat({
+    required String nomorSerial,
+    required num kalibrasiBerat,
+  }) async {
+    await http(null).post("/perangkat_user/kalibrasi?tipe=berat", data: {
+      'nomor_serial': nomorSerial,
+      'kalibrasi_berat': kalibrasiBerat,
+    });
+
+    return true;
+  }
 }

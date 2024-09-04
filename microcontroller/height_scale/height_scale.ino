@@ -47,6 +47,7 @@ JSONVar getPerangkat(String nomor_serial) {
 
   http.begin(apiUrl + "/api/perangkat_user/by_serial_number/" + nomor_serial);
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("Accept", "application/json");
   JSONVar data;
 
   int httpResponseCode = http.GET();
@@ -100,6 +101,7 @@ void sendData() {
   Serial.println(tinggi);
 
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("Accept", "application/json");
 
   int httpResponseCode = http.POST(JSON.stringify(json));
 

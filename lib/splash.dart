@@ -43,31 +43,23 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Image.asset(
+                          'assets/images/polijefull.png',
+                          height: 60,
+                        ),
+                        SizedBox(height: 10),
                         Text(
-                          "powered by".toUpperCase(),
+                          "powered by PNBP Politeknik Negeri Jember"
+                              .toUpperCase(),
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 11,
                             color: Colors.white,
                           ),
                         ),
-                        Text(
-                          "Politeknik Negeri Jember".toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
+                        SizedBox(height: 10),
                       ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Image.asset(
-                      'assets/images/polije.png',
-                      height: 60,
-                      width: 60,
                     )
                   ],
                 ),

@@ -16,7 +16,7 @@ const int ledUnActivePin = 4;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 HX711_ADC LoadCell(dtPin, sckPin);
 
-String apiUrl = "http://192.168.67.111:8000";
+String apiUrl = "http://192.168.202.111:8000";
 JSONVar perangkat;
 float weight;
 String chipID;

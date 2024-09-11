@@ -13,7 +13,7 @@ const int echoPin = 19;
 const int ledActivePin = 2;
 const int ledUnActivePin = 4;
 
-String apiUrl = "http://192.168.67.111:8000";
+String apiUrl = "http://192.168.202.111:8000";
 JSONVar perangkat;
 float height;
 String chipID;

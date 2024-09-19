@@ -518,7 +518,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      " (${dataTerakhir.sd!.bbPerU} SD)"
+                                                      " (${dataTerakhir.zScore!.bbPerU!.toStringAsFixed(1)} SD)"
                                                           .toString(),
                                                       style: TextStyle(
                                                         color: cPrimary,
@@ -540,7 +540,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      " (${dataTerakhir.sd!.tbPerU} SD)"
+                                                      " (${dataTerakhir.zScore!.tbPerU!.toStringAsFixed(1)} SD)"
                                                           .toString(),
                                                       style: TextStyle(
                                                         color: cPrimary,
@@ -562,7 +562,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      " (${dataTerakhir.sd!.bbPerTB} SD)"
+                                                      " (${dataTerakhir.zScore!.bbPerTB!.toStringAsFixed(1)} SD)"
                                                           .toString(),
                                                       style: TextStyle(
                                                         color: cPrimary,
@@ -586,7 +586,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                             ),
                                           ),
                                           Text(
-                                            " (${dataTerakhir.sd!.imtPerU} SD)"
+                                            " (${dataTerakhir.zScore!.imtPerU!.toStringAsFixed(1)} SD)"
                                                 .toString(),
                                             style: TextStyle(
                                               color: cPrimary,

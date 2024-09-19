@@ -20,6 +20,7 @@ class Pengukuran {
   double beratBadanIdeal;
   double skorBadan;
   SD? sd;
+  SD? zScore;
   SG? statusGizi;
   String createdAt;
 
@@ -44,6 +45,7 @@ class Pengukuran {
     this.skorBadan = 0,
     this.createdAt = '',
     this.sd,
+    this.zScore,
     this.statusGizi,
   });
 
@@ -72,6 +74,12 @@ class Pengukuran {
         tbPerU: map['sd']['tb_per_u'],
         bbPerTB: map['sd']['bb_per_tb'],
         imtPerU: map['sd']['imt_per_u'],
+      ),
+      zScore: SD(
+        bbPerU: map['z_score']['bb_per_u'],
+        tbPerU: map['z_score']['tb_per_u'],
+        bbPerTB: map['z_score']['bb_per_tb'],
+        imtPerU: map['z_score']['imt_per_u'],
       ),
       statusGizi: SG(
         bbPerU: map['status_gizi']?['bb_per_u'],

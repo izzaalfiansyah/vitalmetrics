@@ -58,6 +58,7 @@ class DataPengukuran extends Model
         'berat_badan_ideal',
         'skor_badan',
         'sd',
+        'z_score',
         'status_gizi',
     ];
 
@@ -291,6 +292,7 @@ class DataPengukuran extends Model
                         }
                     }
 
+                    // Get BB/TB
                     $bbpertbs = $greaterThan24 ? BBPerTB::sd24Until60Month($isMale) : BBPerTB::sd0Until24Month($isMale);
 
                     $tinggi = round($this->tinggi * 2) / 2;
@@ -316,6 +318,7 @@ class DataPengukuran extends Model
                         }
                     }
 
+                    // get IMT/U
                     $imtperus = $greaterThan24 ? IMTPerU::sd24Until60Month($isMale) : IMTPerU::sd0Until24Month($isMale);
 
                     foreach ($imtperus as $imtperu) {
@@ -357,6 +360,122 @@ class DataPengukuran extends Model
         );
     }
 
+    protected function zScore(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $isMale = $this->user->jenis_kelamin == 'l';
+
+                $zBBPerU = null;
+                $zTBPerU = null;
+                $zBBPerTB = null;
+                $zIMTPerU = null;
+
+                if ($this->user_umur_bulan <= 60) {
+                    $greaterThan24 = $this->user_umur_bulan >= 24;
+
+                    // get BB/U
+                    $bbperus = BBPerU::sd0Until60Month($isMale);
+                    foreach ($bbperus as $bbperu) {
+                        if ($this->user_umur_bulan >= $bbperu['min']) {
+                            $midValue = $bbperu['data'][4];
+
+                            if ($this->berat < $midValue) {
+                                $sdRef = $midValue - $bbperu['data'][3];
+                            } else {
+                                $sdRef = $bbperu['data'][5] - $midValue;
+                            }
+                        }
+                    }
+                    $zBBPerU = ($this->berat - $midValue) / $sdRef;
+
+                    // get TB/U
+                    $tbperus = $greaterThan24 ? TBPerU::sd24Until60Month($isMale) : TBPerU::sd0Until24Month($isMale);
+                    foreach ($tbperus as $tbperu) {
+                        if ($this->user_umur_bulan >= $tbperu['min']) {
+                            $midValue = $tbperu['data'][4];
+
+                            if ($this->tinggi < $midValue) {
+                                $sdRef = $midValue - $tbperu['data'][3];
+                            } else {
+                                $sdRef = $tbperu['data'][5] - $midValue;
+                            }
+                        }
+                    }
+                    $zTBPerU = ($this->tinggi - $midValue) / $sdRef;
+
+                    // get BB/TB
+                    $bbpertbs = $greaterThan24 ? BBPerTB::sd24Until60Month($isMale) : BBPerTB::sd0Until24Month($isMale);
+
+                    $bbpertb = $bbpertbs[0];
+                    $midValue = $bbpertb['data'][4];
+
+                    if ($this->tinggi < $midValue) {
+                        $sdRef = $midValue - $bbpertb['data'][3];
+                    } else {
+                        $sdRef = $bbpertb['data'][5] - $midValue;
+                    }
+
+                    foreach ($bbpertbs as $bbpertb) {
+                        if ($this->tinggi >= $bbpertb['min']) {
+                            $midValue = $bbpertb['data'][4];
+
+                            if ($this->berat < $midValue) {
+                                $sdRef = $midValue - $bbpertb['data'][3];
+                            } else {
+                                $sdRef = $bbpertb['data'][5] - $midValue;
+                            }
+                        }
+                    }
+
+                    $zBBPerTB = ($this->berat - $midValue) / $sdRef;
+
+                    // get IMT/U
+                    $imtperus = $greaterThan24 ? IMTPerU::sd24Until60Month($isMale) : IMTPerU::sd0Until24Month($isMale);
+
+                    foreach ($imtperus as $imtperu) {
+                        if ($this->user_umur_bulan >= $imtperu['min']) {
+                            $midValue = $imtperu['data'][4];
+
+                            if ($this->bmi < $midValue) {
+                                $sdRef = $midValue - $imtperu['data'][3];
+                            } else {
+                                $sdRef = $imtperu['data'][5] - $midValue;
+                            }
+                        }
+                    }
+
+                    $zIMTPerU = ($this->bmi - $midValue) / $sdRef;
+                } else if ($this->user_umur_bulan <= (19 * 12)) {
+                    $imtperus = IMTPerU::sd5Until18Year($isMale);
+
+                    foreach ($imtperus as $imtperu) {
+                        if ($this->user_umur_bulan >= $imtperu['min']) {
+                            $midValue = $imtperu['data'][4];
+
+                            if ($this->bmi < $midValue) {
+                                $sdRef = $midValue - $imtperu['data'][3];
+                            } else {
+                                $sdRef = $imtperu['data'][5] - $midValue;
+                            }
+                        }
+                    }
+
+                    $zIMTPerU = ($this->bmi - $midValue) / $sdRef;
+                }
+
+                $data = [
+                    'bb_per_u' => $zBBPerU,
+                    'tb_per_u' => $zTBPerU,
+                    'bb_per_tb' => $zBBPerTB,
+                    'imt_per_u' => $zIMTPerU,
+                ];
+
+                return $data;
+            }
+        );
+    }
+
     protected function statusGizi(): Attribute
     {
         return new Attribute(
@@ -371,7 +490,7 @@ class DataPengukuran extends Model
                         $giziCategoriesBySDBBPerU = BBPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDBBPerU as $category) {
-                            if ($this->sd['bb_per_u'] >= $category['min']) {
+                            if ($this->z_score['bb_per_u'] >= $category['min']) {
                                 $data['bb_per_u'] = $category['status'];
                             }
                         }
@@ -380,7 +499,7 @@ class DataPengukuran extends Model
                         $giziCategoriesBySDPBPerU = TBPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDPBPerU as $category) {
-                            if ($this->sd['tb_per_u'] >= $category['min']) {
+                            if ($this->z_score['tb_per_u'] >= $category['min']) {
                                 $data['tb_per_u'] = $category['status'];
                             }
                         }
@@ -389,7 +508,7 @@ class DataPengukuran extends Model
                         $giziCategoriesBySDBBPerTB = BBPerTB::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDBBPerTB as $category) {
-                            if ($this->sd['bb_per_tb'] >= $category['min']) {
+                            if ($this->z_score['bb_per_tb'] >= $category['min']) {
                                 $data['bb_per_tb'] = $category['status'];
                             }
                         }
@@ -398,7 +517,7 @@ class DataPengukuran extends Model
                         $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDIMTPerU as $category) {
-                            if ($this->sd['imt_per_u'] >= $category['min']) {
+                            if ($this->z_score['imt_per_u'] >= $category['min']) {
                                 $data['imt_per_u'] = $category['status'];
                             }
                         }
@@ -406,7 +525,7 @@ class DataPengukuran extends Model
                         $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD5Until18Year()['data'];
 
                         foreach ($giziCategoriesBySDIMTPerU as $category) {
-                            if ($this->sd['imt_per_u'] >= $category['min']) {
+                            if ($this->z_score['imt_per_u'] >= $category['min']) {
                                 $data['imt_per_u'] = $category['status'];
                             }
                         }

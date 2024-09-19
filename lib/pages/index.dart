@@ -47,6 +47,105 @@ class _IndexScreenState extends State<IndexScreen> {
     super.initState();
   }
 
+  handleSaveManualData({
+    required double tinggi,
+    required double berat,
+  }) async {
+    final user = context.read<UserBloc>().state.item!;
+    final perangkat = perangkatBloc.state.item!;
+
+    pengukuranBloc.add(
+      PengukuranInsert(
+        item: Pengukuran(
+          userId: user.id,
+          perangkatId: perangkat.id,
+          berat: berat,
+          tinggi: tinggi,
+        ),
+      ),
+    );
+
+    pengukuranBloc.add(PengukuranGetLatest(userId: userId));
+
+    Navigator.of(context).pop();
+  }
+
+  handleAddManualData() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final beratController = TextEditingController();
+        final tinggiController = TextEditingController();
+
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+          child: Theme(
+            data: ThemeData(
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: cPrimary),
+                ),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Berat Badan'),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 10, bottom: 30),
+                  child: TextFormField(
+                    controller: beratController,
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan Berat Badan',
+                      suffixText: 'kg',
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Text('Tinggi Badan'),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 10, bottom: 30),
+                  child: TextFormField(
+                    controller: tinggiController,
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan Tinggi Badan',
+                      suffixText: 'cm',
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(height: 10),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
+                    backgroundColor: cPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () => handleSaveManualData(
+                    berat: num.parse(beratController.text).toDouble(),
+                    tinggi: num.parse(tinggiController.text).toDouble(),
+                  ),
+                  child: Text('Simpan Data'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   checkStatusDevice(dynamic perangkatId, {required int duration}) async {
     try {
       dataLast = dataNow;
@@ -449,6 +548,13 @@ class _IndexScreenState extends State<IndexScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: handleAddManualData,
+        child: Icon(
+          Icons.medical_services,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 

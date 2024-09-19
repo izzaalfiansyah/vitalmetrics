@@ -265,78 +265,81 @@ class DataPengukuran extends Model
 
                     // get BB/U
                     $bbperus = BBPerU::sd0Until60Month($isMale);
-                    $bbperu = @$bbperus[$this->user_umur_bulan];
+                    foreach ($bbperus as $bbperu) {
+                        if ($this->user_umur_bulan >= $bbperu['min']) {
+                            $sdBBPerU = -4;
 
-                    if (!$bbperu) {
-                        $sdBBPerU = null;
-                    } else {
-                        $sdBBPerU = -4;
-
-                        foreach ($bbperu as $min) {
-                            if ($this->berat >= $min) {
-                                $sdBBPerU += 1;
+                            foreach ($bbperu['data'] as $min) {
+                                if ($this->berat >= $min) {
+                                    $sdBBPerU += 1;
+                                }
                             }
                         }
                     }
 
                     // get TB/U
                     $tbperus = $greaterThan24 ? TBPerU::sd24Until60Month($isMale) : TBPerU::sd0Until24Month($isMale);
-                    $tbperu = @$tbperus[$this->user_umur_bulan];
+                    foreach ($tbperus as $tbperu) {
+                        if ($this->user_umur_bulan >= $tbperu['min']) {
+                            $sdTBPerU = -4;
 
-                    if (!$tbperu) {
-                        $sdTBPerU = null;
-                    } else {
-                        $sdTBPerU = -4;
-
-                        foreach ($tbperu as $min) {
-                            if ($this->tinggi >= $min) {
-                                $sdTBPerU += 1;
+                            foreach ($tbperu['data'] as $min) {
+                                if ($this->tinggi >= $min) {
+                                    $sdTBPerU += 1;
+                                }
                             }
                         }
                     }
 
                     $bbpertbs = $greaterThan24 ? BBPerTB::sd24Until60Month($isMale) : BBPerTB::sd0Until24Month($isMale);
-                    $pembulatanTinggi = round($this->tinggi * 2) / 2;
-                    $bbpertb = @$bbpertbs[(string) $pembulatanTinggi];
 
-                    if (!$bbpertb) {
-                        $sdBBPerTB = null;
-                    } else {
-                        $sdBBPerTB = -4;
+                    $tinggi = round($this->tinggi * 2) / 2;
 
-                        foreach ($bbpertb as $min) {
-                            if ($this->berat >= $min) {
-                                $sdBBPerTB += 1;
+                    $bbpertb = $bbpertbs[0];
+                    $sdBBPerTB = -4;
+
+                    foreach ($bbpertb['data'] as $min) {
+                        if ($this->berat >= $min) {
+                            $sdBBPerTB += 1;
+                        }
+                    }
+
+                    foreach ($bbpertbs as $bbpertb) {
+                        if ($tinggi >= $bbpertb['min']) {
+                            $sdBBPerTB = -4;
+
+                            foreach ($bbpertb['data'] as $min) {
+                                if ($this->berat >= $min) {
+                                    $sdBBPerTB += 1;
+                                }
                             }
                         }
                     }
 
                     $imtperus = $greaterThan24 ? IMTPerU::sd24Until60Month($isMale) : IMTPerU::sd0Until24Month($isMale);
-                    $imtperu = @$imtperus[$this->user_umur_bulan];
 
-                    if (!$imtperu) {
-                        $sdIMTPerU = null;
-                    } else {
-                        $sdIMTPerU = -4;
+                    foreach ($imtperus as $imtperu) {
+                        if ($this->user_umur_bulan >= $imtperu['min']) {
+                            $sdIMTPerU = -4;
 
-                        foreach ($imtperu as $min) {
-                            if ($this->bmi >= $min) {
-                                $sdIMTPerU += 1;
+                            foreach ($imtperu['data'] as $min) {
+                                if ($this->bmi >= $min) {
+                                    $sdIMTPerU += 1;
+                                }
                             }
                         }
                     }
                 } else if ($this->user_umur_bulan <= (19 * 12)) {
                     $imtperus = IMTPerU::sd5Until18Year($isMale);
-                    $imtperu = @$imtperus[$this->user_umur_bulan];
 
-                    if (!$imtperu) {
-                        $sdIMTPerU = null;
-                    } else {
-                        $sdIMTPerU = -4;
+                    foreach ($imtperus as $imtperu) {
+                        if ($this->user_umur_bulan >= $imtperu['min']) {
+                            $sdIMTPerU = -4;
 
-                        foreach ($imtperu as $min) {
-                            if ($this->bmi >= $min) {
-                                $sdIMTPerU += 1;
+                            foreach ($imtperu['data'] as $min) {
+                                if ($this->bmi >= $min) {
+                                    $sdIMTPerU += 1;
+                                }
                             }
                         }
                     }

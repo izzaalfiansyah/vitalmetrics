@@ -91,7 +91,6 @@ class _UkurScreenState extends State<UkurScreen> {
       PengukuranInsert(
         item: Pengukuran(
           userId: user.id,
-          userUmur: user.umur,
           perangkatId: perangkat.id,
           berat: data.berat,
           tinggi: data.tinggi,

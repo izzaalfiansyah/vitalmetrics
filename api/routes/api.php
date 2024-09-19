@@ -1,15 +1,18 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DataPengukuranController;
 use App\Http\Controllers\DataRealtimeController;
 use App\Http\Controllers\MenuMakananController;
 use App\Http\Controllers\PerangkatUserController;
 use App\Http\Controllers\UsersController;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,45 +38,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/perangkat_user/by_serial_number/{nomorSerial}', [PerangkatUserController::class, 'getBySerialNumber']);
 Route::post('/perangkat_user/kalibrasi', [PerangkatUserController::class, 'updateKalibrasi']);
 Route::post('/realtime', [DataRealtimeController::class, 'create']);
-
-Route::post('/login', function (Request $request) {
-    $request->validate([
-        'username' => 'required',
-        'password' => 'required',
-        'device_name' => 'required',
-    ]);
-
-    $user = User::where('username', $request->username)->orWhere('email', $request->username)->first();
-
-    if (!$user) {
-        throw ValidationException::withMessages([
-            'username' => 'username tidak ditemukan',
-        ]);
-    }
-
-    if (!Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'password' => 'password salah',
-        ]);
-    }
-
-    return [
-        'success' => true,
-        'message' => 'berhasil login',
-        'token' => $user->createToken($request->device_name)->plainTextToken
-    ];
-});
-
-Route::post('/register', function (Request $req) {
-    $userController = new UsersController;
-    return $userController->store($req);
-});
-
-Route::post('/logout', function (Request $req) {
-    $req->user()->currentAccessToken()->delete();
-
-    return [
-        'success' => true,
-        'message' => 'berhasil logout',
-    ];
-})->middleware('auth:sanctum');
+Route::get('/categories', [CategoryController::class, 'index']);

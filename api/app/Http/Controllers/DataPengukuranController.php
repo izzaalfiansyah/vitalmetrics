@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataPengukuran;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,11 @@ class DataPengukuranController extends Controller
     function store(Request $req): Response
     {
         $data = $this->validate($req);
+
+        $user = User::find($req->user_id);
+
+        $data['user_umur'] = $user->umur;
+        $data['user_bulan'] = $user->umur_bulan;
 
         if (!DataPengukuran::create($data)) {
             return Response([
@@ -146,7 +152,6 @@ class DataPengukuranController extends Controller
     {
         return $req->validate([
             'user_id' => 'required',
-            'user_umur' => 'required|integer',
             'perangkat_id' => 'required',
             'berat' => 'required',
             'tinggi' => 'required',

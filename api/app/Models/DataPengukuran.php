@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Helpers\BBPerTB;
+use App\Helpers\BBPerU;
+use App\Helpers\IMTPerU;
+use App\Helpers\TBPerU;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +19,7 @@ class DataPengukuran extends Model
     protected $fillable = [
         'user_id',
         'user_umur',
+        'user_bulan',
         'perangkat_id',
         'tinggi',
         'berat',
@@ -41,6 +46,7 @@ class DataPengukuran extends Model
     }
 
     protected $appends = [
+        'user_umur_bulan',
         'bmi',
         'lemak_tubuh',
         'air_dalam_tubuh',
@@ -51,8 +57,18 @@ class DataPengukuran extends Model
         'massa_protein_persentase',
         'berat_badan_ideal',
         'skor_badan',
+        'sd',
         'status_gizi',
     ];
+
+    protected function userUmurBulan(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                return ($this->user_umur * 12) + $this->user_bulan;
+            }
+        );
+    }
 
     protected function bmi(): Attribute
     {
@@ -60,10 +76,11 @@ class DataPengukuran extends Model
             get: function () {
                 $bmi = $this->berat / ($this->tinggi / 100) ** 2;
 
+
                 if ($this->user_umur < 18) {
-                    $bmi = $bmi / 4;
-                } else if ($this->user_umur < 5) {
-                    $bmi = $bmi / 4;
+                    if ($this->user_umur_bulan > 60) {
+                        $bmi = $bmi / 4;
+                    }
                 }
 
                 return $bmi;
@@ -118,7 +135,7 @@ class DataPengukuran extends Model
     {
         return new Attribute(
             get: function () {
-                $massa_tulang = 0.24571 * ($this->berat ** 0.731) *  ($this->tinggi ** 0.42);
+                $massa_tulang = 0.24571 * ($this->berat ** 0.731) * ($this->tinggi ** 0.42);
 
                 return $massa_tulang;
             }
@@ -231,17 +248,183 @@ class DataPengukuran extends Model
         );
     }
 
+    protected function sd(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $data = [];
+                $isMale = $this->user->jenis_kelamin == 'l';
+
+                $sdBBPerU = null;
+                $sdTBPerU = null;
+                $sdBBPerTB = null;
+                $sdIMTPerU = null;
+
+                if ($this->user_umur_bulan <= 60) {
+                    $greaterThan24 = $this->user_umur_bulan >= 24;
+
+                    // get BB/U
+                    $bbperus = BBPerU::sd0Until60Month($isMale);
+                    $bbperu = @$bbperus[$this->user_umur_bulan];
+
+                    if (!$bbperu) {
+                        $sdBBPerU = null;
+                    } else {
+                        $sdBBPerU = -4;
+
+                        foreach ($bbperu as $min) {
+                            if ($this->berat >= $min) {
+                                $sdBBPerU += 1;
+                            }
+                        }
+                    }
+
+                    // get TB/U
+                    $tbperus = $greaterThan24 ? TBPerU::sd24Until60Month($isMale) : TBPerU::sd0Until24Month($isMale);
+                    $tbperu = @$tbperus[$this->user_umur_bulan];
+
+                    if (!$tbperu) {
+                        $sdTBPerU = null;
+                    } else {
+                        $sdTBPerU = -4;
+
+                        foreach ($tbperu as $min) {
+                            if ($this->tinggi >= $min) {
+                                $sdTBPerU += 1;
+                            }
+                        }
+                    }
+
+                    $bbpertbs = $greaterThan24 ? BBPerTB::sd24Until60Month($isMale) : BBPerTB::sd0Until24Month($isMale);
+                    $pembulatanTinggi = round($this->tinggi * 2) / 2;
+                    $bbpertb = @$bbpertbs[(string) $pembulatanTinggi];
+
+                    if (!$bbpertb) {
+                        $sdBBPerTB = null;
+                    } else {
+                        $sdBBPerTB = -4;
+
+                        foreach ($bbpertb as $min) {
+                            if ($this->berat >= $min) {
+                                $sdBBPerTB += 1;
+                            }
+                        }
+                    }
+
+                    $imtperus = $greaterThan24 ? IMTPerU::sd24Until60Month($isMale) : IMTPerU::sd0Until24Month($isMale);
+                    $imtperu = @$imtperus[$this->user_umur_bulan];
+
+                    if (!$imtperu) {
+                        $sdIMTPerU = null;
+                    } else {
+                        $sdIMTPerU = -4;
+
+                        foreach ($imtperu as $min) {
+                            if ($this->bmi >= $min) {
+                                $sdIMTPerU += 1;
+                            }
+                        }
+                    }
+                } else if ($this->user_umur_bulan <= (19 * 12)) {
+                    $imtperus = IMTPerU::sd5Until18Year($isMale);
+                    $imtperu = @$imtperus[$this->user_umur_bulan];
+
+                    if (!$imtperu) {
+                        $sdIMTPerU = null;
+                    } else {
+                        $sdIMTPerU = -4;
+
+                        foreach ($imtperu as $min) {
+                            if ($this->bmi >= $min) {
+                                $sdIMTPerU += 1;
+                            }
+                        }
+                    }
+                }
+
+                $data = [
+                    'bb_per_u' => $sdBBPerU,
+                    'tb_per_u' => $sdTBPerU,
+                    'bb_per_tb' => $sdBBPerTB,
+                    'imt_per_u' => $sdIMTPerU,
+                ];
+
+                return $data;
+            }
+        );
+    }
+
     protected function statusGizi(): Attribute
     {
         return new Attribute(
             get: function () {
-                if ($this->bmi < 18.5) {
-                    return "kurus";
-                } elseif ($this->bmi >= 18.5 && $this->bmi <= 24.9) {
-                    return "normal";
+                $data = [];
+
+                // Jika umur dibawah dibawah 19 tahun
+                if ($this->user_umur_bulan <= (19 * 12)) {
+                    // Jika umur dibawah 60 bulan
+                    if ($this->user_umur_bulan <= 60) {
+                        // menentukan kategori gizi dari SD BB/U
+                        $data['bb_per_u'] = BBPerU::categoriesBySD0Until60Month()['status_awal'];
+                        $giziCategoriesBySDBBPerU = BBPerU::categoriesBySD0Until60Month()['data'];
+
+                        foreach ($giziCategoriesBySDBBPerU as $category) {
+                            if ($this->sd['bb_per_u'] >= $category['min']) {
+                                $data['bb_per_u'] = $category['status'];
+                            }
+                        }
+
+                        // menentukan kategori gizi dari SD PB/U
+                        $data['tb_per_u'] = TBPerU::categoriesBySD0Until60Month()['status_awal'];
+                        $giziCategoriesBySDPBPerU = TBPerU::categoriesBySD0Until60Month()['data'];
+
+                        foreach ($giziCategoriesBySDPBPerU as $category) {
+                            if ($this->sd['tb_per_u'] >= $category['min']) {
+                                $data['tb_per_u'] = $category['status'];
+                            }
+                        }
+
+                        // menentukan kategori gizi dari SD BB/TB
+                        $data['bb_per_tb'] = BBPerTB::categoriesBySD0Until60Month()['status_awal'];
+                        $giziCategoriesBySDBBPerTB = BBPerTB::categoriesBySD0Until60Month()['data'];
+
+                        foreach ($giziCategoriesBySDBBPerTB as $category) {
+                            if ($this->sd['bb_per_tb'] >= $category['min']) {
+                                $data['bb_per_tb'] = $category['status'];
+                            }
+                        }
+
+                        // menentukan kategori gizi dari SD IMT/U
+                        $data['imt_per_u'] = IMTPerU::categoriesBySD0Until60Month()['status_awal'];
+                        $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD0Until60Month()['data'];
+
+                        foreach ($giziCategoriesBySDIMTPerU as $category) {
+                            if ($this->sd['imt_per_u'] >= $category['min']) {
+                                $data['imt_per_u'] = $category['status'];
+                            }
+                        }
+                    } else {
+                        $data['imt_per_u'] = IMTPerU::categoriesBySD5Until18Year()['status_awal'];
+                        $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD5Until18Year()['data'];
+
+                        foreach ($giziCategoriesBySDIMTPerU as $category) {
+                            if ($this->sd['imt_per_u'] >= $category['min']) {
+                                $data['imt_per_u'] = $category['status'];
+                            }
+                        }
+                    }
                 } else {
-                    return "lebih";
+                    $data['imt'] = IMTPerU::categoriesByIMT()['status_awal'];
+                    $giziCategoriesByIMT = IMTPerU::categoriesByIMT()['data'];
+
+                    foreach ($giziCategoriesByIMT as $category) {
+                        if ($this->bmi >= $category['min']) {
+                            $data['imt'] = $category['status'];
+                        }
+                    }
                 }
+
+                return $data;
             }
         );
     }

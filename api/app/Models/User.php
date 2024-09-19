@@ -40,7 +40,8 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'umur'
+        'umur',
+        'umur_bulan',
     ];
 
     protected function umur(): Attribute
@@ -53,6 +54,19 @@ class User extends Authenticatable
                 $age = $dateBirth->diff($dateNow)->y;
 
                 return $age;
+            }
+        );
+    }
+    protected function umurBulan(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $dateNow = new \DateTime();
+                $dateBirth = new \DateTime($this->tanggal_lahir);
+
+                $month = $dateBirth->diff($dateNow)->m;
+
+                return $month;
             }
         );
     }

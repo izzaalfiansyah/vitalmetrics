@@ -512,8 +512,12 @@ class BBPerTB
     public static function categoriesBySD0Until60Month()
     {
         return [
-            'status_awal' => 'Gizi Buruk',
+            'max' => '5',
             'data' => [
+                [
+                    'min' => -5,
+                    'status' => 'Gizi Buruk',
+                ],
                 [
                     'min' => -3,
                     'status' => 'Gizi Kurang',

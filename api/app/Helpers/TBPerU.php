@@ -152,8 +152,12 @@ class TBPerU
     public static function categoriesBySD0Until60Month()
     {
         return [
-            'status_awal' => "Sangat Pendek",
+            'max' => 5,
             'data' => [
+                [
+                    'min' => -5,
+                    'status' => "Sangat Pendek",
+                ],
                 [
                     'min' => -3,
                     'status' => 'Pendek',

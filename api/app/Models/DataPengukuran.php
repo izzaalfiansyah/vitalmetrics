@@ -365,7 +365,6 @@ class DataPengukuran extends Model
                     // Jika umur dibawah 60 bulan
                     if ($this->user_umur_bulan <= 60) {
                         // menentukan kategori gizi dari SD BB/U
-                        $data['bb_per_u'] = BBPerU::categoriesBySD0Until60Month()['status_awal'];
                         $giziCategoriesBySDBBPerU = BBPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDBBPerU as $category) {
@@ -375,7 +374,6 @@ class DataPengukuran extends Model
                         }
 
                         // menentukan kategori gizi dari SD PB/U
-                        $data['tb_per_u'] = TBPerU::categoriesBySD0Until60Month()['status_awal'];
                         $giziCategoriesBySDPBPerU = TBPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDPBPerU as $category) {
@@ -385,7 +383,6 @@ class DataPengukuran extends Model
                         }
 
                         // menentukan kategori gizi dari SD BB/TB
-                        $data['bb_per_tb'] = BBPerTB::categoriesBySD0Until60Month()['status_awal'];
                         $giziCategoriesBySDBBPerTB = BBPerTB::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDBBPerTB as $category) {
@@ -395,7 +392,6 @@ class DataPengukuran extends Model
                         }
 
                         // menentukan kategori gizi dari SD IMT/U
-                        $data['imt_per_u'] = IMTPerU::categoriesBySD0Until60Month()['status_awal'];
                         $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD0Until60Month()['data'];
 
                         foreach ($giziCategoriesBySDIMTPerU as $category) {
@@ -404,7 +400,6 @@ class DataPengukuran extends Model
                             }
                         }
                     } else {
-                        $data['imt_per_u'] = IMTPerU::categoriesBySD5Until18Year()['status_awal'];
                         $giziCategoriesBySDIMTPerU = IMTPerU::categoriesBySD5Until18Year()['data'];
 
                         foreach ($giziCategoriesBySDIMTPerU as $category) {
@@ -414,7 +409,6 @@ class DataPengukuran extends Model
                         }
                     }
                 } else {
-                    $data['imt'] = IMTPerU::categoriesByIMT()['status_awal'];
                     $giziCategoriesByIMT = IMTPerU::categoriesByIMT()['data'];
 
                     foreach ($giziCategoriesByIMT as $category) {

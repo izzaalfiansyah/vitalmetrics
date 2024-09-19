@@ -1,7 +1,11 @@
+import 'package:vitalmetrics/models/sd.dart';
+
 class Pengukuran {
   dynamic id;
   dynamic userId;
   int userUmur;
+  int userBulan;
+  int userUmurBulan;
   dynamic perangkatId;
   double tinggi;
   double berat;
@@ -15,12 +19,16 @@ class Pengukuran {
   double massaProteinPersentase;
   double beratBadanIdeal;
   double skorBadan;
+  SD? sd;
+  SG? statusGizi;
   String createdAt;
 
   Pengukuran({
     this.id = '',
     this.userId = '',
     this.userUmur = 0,
+    this.userBulan = 0,
+    this.userUmurBulan = 0,
     this.perangkatId = '',
     this.tinggi = 0,
     this.berat = 0,
@@ -35,6 +43,8 @@ class Pengukuran {
     this.beratBadanIdeal = 0,
     this.skorBadan = 0,
     this.createdAt = '',
+    this.sd,
+    this.statusGizi,
   });
 
   factory Pengukuran.fromJson(Map<String, dynamic> map) {
@@ -42,6 +52,8 @@ class Pengukuran {
       id: map['id'] ?? '',
       userId: map['user_id'],
       userUmur: map['user_umur'],
+      userBulan: map['user_bulan'],
+      userUmurBulan: map['user_umur_bulan'],
       perangkatId: map['perangkat_id'],
       tinggi: map['tinggi'].toDouble(),
       berat: map['berat'].toDouble(),
@@ -55,6 +67,19 @@ class Pengukuran {
       massaProteinPersentase: map['massa_protein_persentase'].toDouble(),
       beratBadanIdeal: map['berat_badan_ideal'].toDouble(),
       skorBadan: map['skor_badan'].toDouble(),
+      sd: SD(
+        bbPerU: map['sd']['bb_per_u'],
+        tbPerU: map['sd']['tb_per_u'],
+        bbPerTB: map['sd']['bb_per_tb'],
+        imtPerU: map['sd']['imt_per_u'],
+      ),
+      statusGizi: SG(
+        bbPerU: map['status_gizi']?['bb_per_u'],
+        tbPerU: map['status_gizi']?['tb_per_u'],
+        bbPerTB: map['status_gizi']?['bb_per_tb'],
+        imtPerU: map['status_gizi']?['imt_per_u'],
+        imt: map['status_gizi']?['imt'],
+      ),
       createdAt: map['created_at'] ?? map['time'],
     );
   }

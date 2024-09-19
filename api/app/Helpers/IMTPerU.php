@@ -500,8 +500,12 @@ class IMTPerU
     public static function categoriesBySD0Until60Month()
     {
         return [
-            'status_awal' => 'Gizi Buruk',
+            'max' => 5,
             'data' => [
+                [
+                    'min' => -5,
+                    'status' => 'Gizi Buruk',
+                ],
                 [
                     'min' => -3,
                     'status' => 'Gizi Kurang',
@@ -529,8 +533,12 @@ class IMTPerU
     public static function categoriesBySD5Until18Year()
     {
         return [
-            'status_awal' => 'Gizi Buruk',
+            'max' => 5,
             'data' => [
+                [
+                    'min' => -5,
+                    'status' => 'Gizi Buruk',
+                ],
                 [
                     'min' => -3,
                     'status' => 'Gizi Kurang',
@@ -554,23 +562,33 @@ class IMTPerU
     static public function categoriesByIMT()
     {
         return [
-            'status_awal' => "Sangat Kurus",
+            'min' => 10,
+            'max' => 35,
             'data' => [
                 [
+                    'min' => 10,
+                    'status' => "Sangat Kurus",
+                    'color' => 'red',
+                ],
+                [
                     'min' => 17.0,
-                    'status' => 'Kurus'
+                    'status' => 'Kurus',
+                    'color' => 'yellow',
                 ],
                 [
                     'min' => 18.5,
                     'status' => 'Normal',
+                    'color' => 'green',
                 ],
                 [
                     'min' => 25.1,
-                    'status' => 'Gemuk'
+                    'status' => 'Gemuk',
+                    'color' => 'yellow',
                 ],
                 [
                     'min' => 27.0,
-                    'status' => 'Obesitas'
+                    'status' => 'Obesitas',
+                    'color' => 'red',
                 ],
             ]
         ];

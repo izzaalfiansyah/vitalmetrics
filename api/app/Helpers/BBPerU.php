@@ -140,8 +140,12 @@ class BBPerU
     public static function categoriesBySD0Until60Month()
     {
         return [
-            'status_awal' => "Berat Badan Sangat Kurang",
+            'max' => 5,
             'data' => [
+                [
+                    'min' => -5,
+                    'status' => "Berat Badan Sangat Kurang",
+                ],
                 [
                     'min' => -3,
                     'status' => 'Berat Badan Kurang',

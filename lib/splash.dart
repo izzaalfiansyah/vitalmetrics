@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vitalmetrics/bloc/categories_bloc.dart';
@@ -21,11 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void handleTimer() async {
-    const duration = Duration(seconds: 2);
-    await context.read<UserBloc>().getUser();
     await context.read<CategoriesBloc>().getAll();
+    await context.read<UserBloc>().getUser();
 
-    Timer(duration, () {
+    Future.delayed(Duration(milliseconds: 1500), () {
       bool isLogin = context.read<UserBloc>().state.isLogin;
       Navigator.of(context).pushReplacementNamed(isLogin ? '/' : '/login');
     });

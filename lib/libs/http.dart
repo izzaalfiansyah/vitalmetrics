@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
-const String apiUrl = 'http://localhost:8000/api';
+const String apiUrl = 'http://localhost:8000/api'; // development
+// const String apiUrl = 'https://penelitian.pnbpproject.my.id/api'; // production
 
 Dio http(String? token) {
   final options = BaseOptions(baseUrl: apiUrl, headers: {

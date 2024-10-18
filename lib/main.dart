@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           return MaterialApp(
-            title: 'Vitalmetrics',
+            title: 'E-Smart Record',
             theme: ThemeData(
               textTheme: GoogleFonts.interTextTheme(),
               colorScheme: ColorScheme.fromSeed(

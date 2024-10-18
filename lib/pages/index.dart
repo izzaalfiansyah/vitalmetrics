@@ -214,7 +214,7 @@ class _IndexScreenState extends State<IndexScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'VitalMetrics'.toUpperCase(),
+          'E-Smart Record'.toUpperCase(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),

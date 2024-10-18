@@ -137,24 +137,24 @@ class _AkunScreenState extends State<AkunScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: shadowBase,
-              ),
-              child: Column(
-                children: [
-                  tileItem(label: 'Target Bobot', icon: Icons.monitor_weight),
-                  Hr(),
-                  tileItem(
-                      icon: Icons.pie_chart_outline_rounded,
-                      label: 'Target Lemak'),
-                  Hr(),
-                  tileItem(icon: Icons.card_membership, label: 'Tujuan BMI'),
-                ],
-              ),
-            ),
+            // SizedBox(height: 20),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     boxShadow: shadowBase,
+            //   ),
+            //   child: Column(
+            //     children: [
+            //       tileItem(label: 'Target Bobot', icon: Icons.monitor_weight),
+            //       Hr(),
+            //       tileItem(
+            //           icon: Icons.pie_chart_outline_rounded,
+            //           label: 'Target Lemak'),
+            //       Hr(),
+            //       tileItem(icon: Icons.card_membership, label: 'Tujuan BMI'),
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(

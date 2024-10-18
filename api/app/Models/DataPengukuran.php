@@ -37,7 +37,7 @@ class DataPengukuran extends Model
 
     function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     function perangkat()
@@ -80,7 +80,7 @@ class DataPengukuran extends Model
 
                 if ($this->user_umur < 18) {
                     if ($this->user_umur_bulan > 60) {
-                        $bmi = $bmi / 4;
+                        $bmi /= 4;
                     }
                 }
 
@@ -95,7 +95,7 @@ class DataPengukuran extends Model
             get: function () {
                 $lemak_tubuh = (1.2 * $this->bmi) + (0.23 * $this->user_umur) - 5.4;
 
-                if ($this->user->jenis_kelamin == 'l') {
+                if ($this->user?->jenis_kelamin == 'l') {
                     $lemak_tubuh = $lemak_tubuh - 10.8;
                 }
 
@@ -108,7 +108,7 @@ class DataPengukuran extends Model
     {
         return new Attribute(
             get: function () {
-                if ($this->user->jenis_kelamin == 'l') {
+                if ($this->user?->jenis_kelamin == 'l') {
                     $air_dalam_tubuh = ((2.447 - 0.09156 * $this->user_umur + 0.1074 * $this->tinggi + 0.3362 * $this->berat) / $this->berat) * 100;
                 } else {
                     $air_dalam_tubuh = ((2.097 - 0.1069 * $this->user_umur + 0.2466 * $this->tinggi + 0.1069 * $this->berat) / $this->berat) * 100;
@@ -124,7 +124,7 @@ class DataPengukuran extends Model
         return new Attribute(
             get: function () {
                 $nilaiEtnis = "asia" == "asia" ? 0.4 : 0;
-                $nilaiJenisKelamin = $this->user->jenis_kelamin == 'l' ? 1 : 0;
+                $nilaiJenisKelamin = $this->user?->jenis_kelamin == 'l' ? 1 : 0;
                 $massa_otot_tubuh = 0.244 * $this->berat + 7.8 * ($this->tinggi / 100) - 0.098 * $this->user_umur + 6.6 * $nilaiJenisKelamin + $nilaiEtnis;
 
                 return $massa_otot_tubuh;
@@ -181,7 +181,7 @@ class DataPengukuran extends Model
     {
         return new Attribute(
             get: function () {
-                $nilaiJenisKelamin = $this->user->jenis_kelamin == 'l' ? 10 : 20;
+                $nilaiJenisKelamin = $this->user?->jenis_kelamin == 'l' ? 10 : 20;
                 $berat_badan_ideal = $this->tinggi - 100 - (($this->tinggi - 100) / $nilaiJenisKelamin);
 
                 return $berat_badan_ideal;
@@ -214,7 +214,7 @@ class DataPengukuran extends Model
                     $skorBmi = 0; // Default case, should not reach here.
                 }
 
-                if ($this->user->jenis_kelamin == 'l') {
+                if ($this->user?->jenis_kelamin == 'l') {
                     if ($bfp < 10) {
                         $skorBfp = 100;
                     } elseif ($bfp < 15) {
@@ -254,7 +254,7 @@ class DataPengukuran extends Model
         return new Attribute(
             get: function () {
                 $data = [];
-                $isMale = $this->user->jenis_kelamin == 'l';
+                $isMale = $this->user?->jenis_kelamin == 'l';
 
                 $sdBBPerU = null;
                 $sdTBPerU = null;
@@ -364,7 +364,7 @@ class DataPengukuran extends Model
     {
         return new Attribute(
             get: function () {
-                $isMale = $this->user->jenis_kelamin == 'l';
+                $isMale = $this->user?->jenis_kelamin == 'l';
 
                 $zBBPerU = null;
                 $zTBPerU = null;

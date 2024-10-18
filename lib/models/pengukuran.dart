@@ -54,7 +54,7 @@ class Pengukuran {
       id: map['id'] ?? '',
       userId: map['user_id'],
       userUmur: map['user_umur'],
-      userBulan: map['user_bulan'],
+      // userBulan: map['user_bulan'],
       userUmurBulan: map['user_umur_bulan'],
       perangkatId: map['perangkat_id'],
       tinggi: map['tinggi'].toDouble(),

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="vitalmetrics"
-        android:name="${applicationName}"
+        android:label="E-Smart Record"
+        android:name="E-Smart Record"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

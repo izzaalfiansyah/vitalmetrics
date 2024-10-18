@@ -36,7 +36,7 @@ class _AdminScreenState extends State<AdminScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'VitalMetrics'.toUpperCase(),
+          'E-Smart Record'.toUpperCase(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),

@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="E-Smart Record"
-        android:name="E-Smart Record"
+        android:name="ESmartRecord"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

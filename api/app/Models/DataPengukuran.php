@@ -30,6 +30,8 @@ class DataPengukuran extends Model
         return [
             'tinggi' => 'float',
             'berat' => 'float',
+            'user_umur' => 'int',
+            'user_bulan' => 'int',
         ];
     }
 

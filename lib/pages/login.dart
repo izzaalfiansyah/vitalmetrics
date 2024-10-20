@@ -18,8 +18,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool isLoading = false;
 
   handleLogin(ctx) async {
+    setState(() {
+      isLoading = true;
+    });
     final res = await UserService.login(
         username: username.text, password: password.text);
 
@@ -35,6 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Timer(Duration(seconds: 2), () {
         Navigator.of(context).pushReplacementNamed('/');
+      });
+
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -77,9 +85,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 40),
                     FilledButton(
-                      onPressed: () {
-                        handleLogin(context);
-                      },
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              handleLogin(context);
+                            },
                       style: FilledButton.styleFrom(
                         backgroundColor: cPrimary,
                         fixedSize: Size.fromWidth(size.width),

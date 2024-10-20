@@ -26,6 +26,8 @@ class PerangkatUser extends Model
         return [
             'kalibrasi_tinggi_on' => 'boolean',
             'kalibrasi_berat_on' => 'boolean',
+            'kalibrasi_tinggi' => 'float',
+            'kalibrasi_berat' => 'float',
         ];
     }
 }

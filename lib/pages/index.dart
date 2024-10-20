@@ -65,8 +65,6 @@ class _IndexScreenState extends State<IndexScreen> {
       ),
     );
 
-    pengukuranBloc.add(PengukuranGetLatest(userId: userId));
-
     Navigator.of(context).pop();
   }
 

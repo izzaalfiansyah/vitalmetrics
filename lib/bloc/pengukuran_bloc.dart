@@ -87,6 +87,8 @@ class PengukuranBloc extends Bloc<PengukuranEvent, PengukuranState> {
         isError: !res.success,
         message: res.message,
       ));
+
+      add(PengukuranGetLatest(userId: event.item.userId));
     });
 
     on<PengukuranRemove>((event, emit) async {

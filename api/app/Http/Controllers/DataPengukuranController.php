@@ -136,10 +136,11 @@ class DataPengukuranController extends Controller
         }
 
         $builder = $builder->groupBy(DB::raw("date_format(created_at, '$time_format')"));
+        $builder = $builder->orderBy(DB::raw("created_at"));
 
         $builder = $builder->limit(10);
 
-        $data = $builder->get();
+        $data = $builder->get()->reverse()->values();
 
         return Response([
             'success' => true,

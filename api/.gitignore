@@ -18,3 +18,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/public/e-smart-record.apk
+public/e-smart-record.apk

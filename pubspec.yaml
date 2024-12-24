@@ -40,8 +40,8 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.2
   shared_preferences: ^2.2.3
-  syncfusion_flutter_charts: ^26.1.42
-  syncfusion_flutter_gauges: ^26.1.42
+  syncfusion_flutter_charts: ^28.1.36
+  syncfusion_flutter_gauges: ^28.1.36
 
 dev_dependencies:
   flutter_lints: ^3.0.0

@@ -71,11 +71,14 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.heart_broken_rounded,
-                size: 140,
-                color: Colors.white,
-              )
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.asset(
+                  'assets/images/esmart.png',
+                  width: 140,
+                  height: 140,
+                ),
+              ),
             ],
           )
         ],

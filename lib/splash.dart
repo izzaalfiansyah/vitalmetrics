@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vitalmetrics/bloc/categories_bloc.dart';
 import 'package:vitalmetrics/bloc/user_bloc.dart';
-import 'package:vitalmetrics/constant.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: cPrimary,
+      backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -50,13 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
                           'assets/images/polijefull.png',
                           height: 60,
                         ),
-                        SizedBox(height: 10),
                         Text(
                           "powered by PNBP Politeknik Negeri Jember"
                               .toUpperCase(),
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.white,
+                            // color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 10),
@@ -75,8 +73,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 borderRadius: BorderRadius.circular(100),
                 child: Image.asset(
                   'assets/images/esmart.png',
-                  width: 140,
-                  height: 140,
+                  width: 250,
+                  height: 250,
                 ),
               ),
             ],

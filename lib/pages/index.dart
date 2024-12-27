@@ -534,6 +534,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                                 ),
                                               ),
                                               onPressed: () async {
+                                                timer?.cancel();
+
                                                 final result =
                                                     await Navigator.of(context)
                                                         .pushNamed(
@@ -548,6 +550,8 @@ class _IndexScreenState extends State<IndexScreen> {
                                                         userId: userId),
                                                   );
                                                 }
+
+                                                startRealtimeTimer();
                                               },
                                               child: Text(
                                                 'SELENGKAPNYA',
